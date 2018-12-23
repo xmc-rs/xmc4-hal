@@ -39,7 +39,7 @@ pub enum Month {
 }
 
 impl Month {
-    fn from(val: u8) -> Month{
+    fn from(val: u8) -> Month {
         match val {
             0 => Month::January,
             1 => Month::February,
@@ -53,7 +53,7 @@ impl Month {
             9 => Month::October,
             10 => Month::November,
             11 => Month::December,
-            _ => Month::January
+            _ => Month::January,
         }
     }
 }
@@ -79,7 +79,7 @@ impl Weekday {
             4 => Weekday::Thursday,
             5 => Weekday::Friday,
             6 => Weekday::Saturday,
-            _ => Weekday::Sunday
+            _ => Weekday::Sunday,
         }
     }
 }
