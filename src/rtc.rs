@@ -116,7 +116,7 @@ impl RtcExt for Rtc {
 pub struct Rtc {}
 
 impl Rtc {
-    pub fn start(self) {
+    pub fn start(&self) {
         let rtc = unsafe { &*RTC::ptr() };
         let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
 
@@ -126,7 +126,7 @@ impl Rtc {
         rtc.ctr.modify(|_, w| w.enb().set_bit());
     }
 
-    pub fn stop(self) {
+    pub fn stop(&self) {
         let rtc = unsafe { &*RTC::ptr() };
         let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
 
@@ -136,7 +136,7 @@ impl Rtc {
         rtc.ctr.modify(|_, w| w.enb().clear_bit());
     }
 
-    pub fn is_running(self) -> bool {
+    pub fn is_running(&self) -> bool {
         let rtc = unsafe { &*RTC::ptr() };
         let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
 
@@ -146,7 +146,7 @@ impl Rtc {
         rtc.ctr.read().enb().bit_is_set()
     }
 
-    pub fn set_prescaler(prescaler: u16) {
+    pub fn set_prescaler(&self, prescaler: u16) {
         let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
         while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
             // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
@@ -155,7 +155,7 @@ impl Rtc {
         rtc.ctr.modify(|_, w| unsafe { w.div().bits(prescaler) });
     }
 
-    pub fn set_time(self, time: Time) {
+    pub fn set_time(&self, time: Time) {
         assert!(time.second < MAX_SECONDS);
         assert!(time.minute < MAX_MINUTES);
         assert!(time.hour < MAX_HOURS);
@@ -184,7 +184,7 @@ impl Rtc {
         });
     }
 
-    pub fn get_time(self) -> Time {
+    pub fn get_time(&self) -> Time {
         let rtc = unsafe { &*RTC::ptr() };
         Time {
             second: rtc.tim0.read().se().bits(),
@@ -197,21 +197,21 @@ impl Rtc {
         }
     }
 
-    pub fn set_time_std_format(self, time: Time) {
+    pub fn set_time_std_format(&self, time: Time) {
         let mut std_time: Time = time;
         std_time.day -= 1;
         std_time.year += YEAR_OFFSET;
         self.set_time(std_time);
     }
 
-    pub fn get_time_std_format(self) -> Time {
+    pub fn get_time_std_format(&self) -> Time {
         let mut time = self.get_time();
         time.day += 1;
         time.year -= YEAR_OFFSET;
         time
     }
 
-    pub fn set_alarm(self, time: Time) {
+    pub fn set_alarm(&self, time: Time) {
         assert!(time.second < MAX_SECONDS);
         assert!(time.minute < MAX_MINUTES);
         assert!(time.hour < MAX_HOURS);
@@ -239,7 +239,7 @@ impl Rtc {
         });
     }
 
-    pub fn get_alarm(self) -> Time {
+    pub fn get_alarm(&self) -> Time {
         let rtc = unsafe { &*RTC::ptr() };
         Time {
             second: rtc.atim0.read().ase().bits(),
@@ -252,21 +252,21 @@ impl Rtc {
         }
     }
 
-    pub fn set_alarm_std_format(self, time: Time) {
+    pub fn set_alarm_std_format(&self, time: Time) {
         let mut std_time: Time = time;
         std_time.day -= 1;
         std_time.year += YEAR_OFFSET;
         self.set_alarm(std_time);
     }
 
-    pub fn get_alarm_std_format(self) -> Time {
+    pub fn get_alarm_std_format(&self) -> Time {
         let mut time = self.get_alarm();
         time.day += 1;
         time.year -= YEAR_OFFSET;
         time
     }
 
-    pub fn get_event_status(self) -> u32 {
+    pub fn get_event_status(&self) -> u32 {
         let rtc = unsafe { &*RTC::ptr() };
         rtc.stssr.read().bits()
     }
