@@ -1,5 +1,5 @@
-use crate::device::{RTC, SCU_GENERAL};
-use crate::scu::Scu;
+use crate::device::{RTC, SCU_GENERAL, SCU_POWER, SCU_RESET};
+// use crate::scu::Scu;
 
 /// Maximum number of seconds for the RTC time
 const MAX_SECONDS: u8 = 59;
@@ -271,14 +271,20 @@ impl Rtc {
         rtc.stssr.read().bits()
     }
 
-    pub fn enable(&self, scu_reg: &Scu) {
-        // TODO Address correct usage of register access
-        scu_reg.enable_hibernate_domain();
+    pub fn enable(&self) {
+        let scu = unsafe { &*SCU_POWER::ptr() };
+        if scu.pwrstat.read().hiben().bit_is_clear() {
+            scu.pwrset.write(|w| w.hib().set_bit());
+            while scu.pwrstat.read().hiben().bit_is_clear() {}
+        }
     }
 
-    pub fn is_enabled(&self, scu_reg: &Scu) -> bool {
-        // TODO Address correct usage of register access
-        scu_reg.is_hibernate_domain_enabled()
+    pub fn is_enabled(&self) -> bool {
+        let scu_power = unsafe { &*SCU_POWER::ptr() };
+        let scu_reset = unsafe { &*SCU_RESET::ptr() };
+
+        scu_power.pwrstat.read().hiben().bit_is_set()
+            && !scu_reset.rststat.read().hibrs().bit_is_set()
     }
 
     fn enable_event(&self) {
