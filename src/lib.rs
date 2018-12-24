@@ -5,4 +5,3 @@ pub use xmc4100 as device;
 
 pub mod rtc;
 pub mod scu;
-pub mod time;
