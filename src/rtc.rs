@@ -280,4 +280,24 @@ impl Rtc {
         /// TODO Address correct usage of register access
         scu_reg.is_hibernate_domain_enabled()
     }
+
+    fn enable_event(&self) {
+        /// TODO Implement enable_event in Rtc
+    }
+
+    fn disable_event(&self) {
+        /// TODO Implement disable_event in Rtc
+    }
+
+    fn clear_event(&self) {
+        /// TODO Implement clear_event in Rtc
+    }
+
+    fn enable_hibernation_wake_up(&self) {
+        /// TODO Implement enable_hibernation_wake_up in Rtc
+    }
+
+    fn disable_hibernation_wake_up(&self) {
+        /// TODO Implement disable_hibernation_wake_up in Rtc
+    }
 }
