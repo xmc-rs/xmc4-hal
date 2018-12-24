@@ -271,33 +271,33 @@ impl Rtc {
         rtc.stssr.read().bits()
     }
 
-    pub fn enable(&self, scu_reg: &Scu){
-        /// TODO Address correct usage of register access
+    pub fn enable(&self, scu_reg: &Scu) {
+        // TODO Address correct usage of register access
         scu_reg.enable_hibernate_domain();
     }
 
     pub fn is_enabled(&self, scu_reg: &Scu) -> bool {
-        /// TODO Address correct usage of register access
+        // TODO Address correct usage of register access
         scu_reg.is_hibernate_domain_enabled()
     }
 
     fn enable_event(&self) {
-        /// TODO Implement enable_event in Rtc
+        // TODO Implement enable_event in Rtc
     }
 
     fn disable_event(&self) {
-        /// TODO Implement disable_event in Rtc
+        // TODO Implement disable_event in Rtc
     }
 
     fn clear_event(&self) {
-        /// TODO Implement clear_event in Rtc
+        // TODO Implement clear_event in Rtc
     }
 
     fn enable_hibernation_wake_up(&self) {
-        /// TODO Implement enable_hibernation_wake_up in Rtc
+        // TODO Implement enable_hibernation_wake_up in Rtc
     }
 
     fn disable_hibernation_wake_up(&self) {
-        /// TODO Implement disable_hibernation_wake_up in Rtc
+        // TODO Implement disable_hibernation_wake_up in Rtc
     }
 }

@@ -24,7 +24,7 @@ impl Scu {
         let scu_power = unsafe { &*SCU_POWER::ptr() };
         let scu_reset = unsafe { &*SCU_RESET::ptr() };
 
-        scu_power.pwrstat.read().hiben().bit_is_set() &&
-        !scu_reset.rststat.read().hibrs().bit_is_set()
+        scu_power.pwrstat.read().hiben().bit_is_set()
+            && !scu_reset.rststat.read().hibrs().bit_is_set()
     }
 }
