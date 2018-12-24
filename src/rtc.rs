@@ -1,4 +1,5 @@
 use crate::device::{RTC, SCU_GENERAL};
+use crate::scu::Scu;
 
 /// Maximum number of seconds for the RTC time
 const MAX_SECONDS: u8 = 59;
@@ -268,5 +269,15 @@ impl Rtc {
     pub fn get_event_status(self) -> u32 {
         let rtc = unsafe { &*RTC::ptr() };
         rtc.stssr.read().bits()
+    }
+
+    pub fn enable(&self, scu_reg: &Scu){
+        /// TODO Address correct usage of register access
+        scu_reg.enable_hibernate_domain();
+    }
+
+    pub fn is_enabled(&self, scu_reg: &Scu) -> bool {
+        /// TODO Address correct usage of register access
+        scu_reg.is_hibernate_domain_enabled()
     }
 }
