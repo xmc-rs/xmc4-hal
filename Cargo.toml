@@ -45,7 +45,7 @@ mfrc522 = "0.2.0"
 as-slice = "0.2.0"
 serde_derive = "1.0.82"
 serde-json-core = "0.0.1"
-mpu9250 = "0.7.3"
+mpu9250 = "0.12.2"
 
 [dev-dependencies.byteorder]
 default-features = false
