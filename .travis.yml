@@ -31,5 +31,5 @@ script:
   - cargo build --verbose --all # && cargo coverage --verbose && bash <(curl -s https://codecov.io/bash) -s target/kcov
   # - cargo coverage --verbose
   # - cargo test --verbose --all
-  - cargo doc --verbose --no-deps --document-private-items
-  - cargo doc-upload
+  # - cargo doc --verbose --no-deps --document-private-items
+  # - cargo doc-upload
