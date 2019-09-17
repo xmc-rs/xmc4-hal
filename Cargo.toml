@@ -5,10 +5,10 @@ name = "xmc4-hal"
 version = "0.1.0"
 
 [dependencies]
-xmc4100 = { version = "0.2.0", optional = true }
+xmc4100 = { version = "0.3.0", optional = true }
 xmc4200 = { version = "0.2.0", optional = true }
 xmc4500 = { version = "0.3.0", optional = true }
-xmc4700 = { version = "0.2.0", optional = true }
+xmc4700 = { version = "0.3.0", optional = true }
 cortex-m = "0.6.1"
 nb = "0.1.1"
 cortex-m-rt = "0.6.7"
