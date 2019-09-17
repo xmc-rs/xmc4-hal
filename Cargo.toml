@@ -7,8 +7,11 @@ version = "0.1.0"
 [dependencies]
 xmc4100 = { version = "0.3.0", optional = true }
 xmc4200 = { version = "0.2.0", optional = true }
+xmc4300 = { version = "0.1.0", optional = true }
+xmc4400 = { version = "0.3.0", optional = true }
 xmc4500 = { version = "0.2.0", optional = true }
 xmc4700 = { version = "0.3.0", optional = true }
+xmc4800 = { version = "0.2.0", optional = true }
 cortex-m = "0.6.1"
 nb = "0.1.1"
 cortex-m-rt = "0.6.7"
@@ -17,8 +20,11 @@ cortex-m-rt = "0.6.7"
 default = ["xmc4100"]
 xmc41xx = ["xmc4100"]
 xmc42xx = ["xmc4200"]
+xmc43xx = ["xmc4300"]
+xmc44xx = ["xmc4400"]
 xmc45xx = ["xmc4500"]
 xmc47xx = ["xmc4700"]
+xmc48xx = ["xmc4800"]
 
 [dependencies.void]
 default-features = false
