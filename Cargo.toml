@@ -3,6 +3,24 @@ authors = ["Lucas Brendel <lucasbrendel@gmail.com>"]
 edition = "2018"
 name = "xmc4-hal"
 version = "0.1.0"
+readme = "README.md"
+repository = "https://github.com/xmc-rs/xmc4-hal"
+description = "Peripheral access API for XMC4 series microcontrollers"
+documentation = "https://docs.rs/crate/xmc4-hal"
+categories = [
+    "embedded",
+    "hardware-support",
+    "no-std"
+]
+keywords = [
+    "arm",
+    "cortex-m",
+    "hal",
+    "xmc"
+]
+
+[package.metadata.docs.rs]
+features = ["xmc41xx"]
 
 [dependencies]
 xmc4100 = { version = "0.3.0", optional = true }
@@ -17,14 +35,14 @@ nb = "0.1.2"
 cortex-m-rt = "0.6.10"
 
 [features]
-default = ["xmc4100"]
-xmc41xx = ["xmc4100"]
-xmc42xx = ["xmc4200"]
-xmc43xx = ["xmc4300"]
-xmc44xx = ["xmc4400"]
-xmc45xx = ["xmc4500"]
-xmc47xx = ["xmc4700"]
-xmc48xx = ["xmc4800"]
+device-selected = []
+xmc41xx = ["xmc4100", "device-selected"]
+xmc42xx = ["xmc4200", "device-selected"]
+xmc43xx = ["xmc4300", "device-selected"]
+xmc44xx = ["xmc4400", "device-selected"]
+xmc45xx = ["xmc4500", "device-selected"]
+xmc47xx = ["xmc4700", "device-selected"]
+xmc48xx = ["xmc4800", "device-selected"]
 
 [dependencies.void]
 default-features = false

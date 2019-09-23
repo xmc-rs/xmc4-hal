@@ -1,7 +1,7 @@
-name: Rust
+name: XMC Devices
 
 on:
-  pull_request:
+  push:
     branches:
     - master
 
@@ -9,25 +9,24 @@ jobs:
   build:
     strategy:
       matrix:
-        rust-channel: [ 'stable', 'nightly' ]
-        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabi' ]
-    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}
+        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+    name: ${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
-            toolchain: ${{ matrix.rust-channel }}
-            target: ${{ matrix.rust-target }}
+            toolchain: 'stable'
+            target: 'thumbv7em-none-eabi'
             override: true
       - name: Cargo Check
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --target ${{ matrix.rust-target }} --features=xmc41xx
+          args: --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
       - name: Cargo Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --verbose --target ${{ matrix.rust-target }} --features=xmc41xx
+          args: --verbose --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
