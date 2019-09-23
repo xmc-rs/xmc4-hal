@@ -36,5 +36,7 @@ pub use xmc4800;
 #[cfg(feature = "xmc4800")]
 pub use xmc4800 as device;
 
+#[cfg(feature = "device-selected")]
 pub mod rtc;
+#[cfg(feature = "device-selected")]
 pub mod scu;
