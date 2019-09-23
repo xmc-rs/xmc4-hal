@@ -25,9 +25,9 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --target ${{ matrix.rust-target }}
+          args: --target ${{ matrix.rust-target }} --features=xmc41xx
       - name: Cargo Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --verbose --target ${{ matrix.rust-target }}
+          args: --verbose --target ${{ matrix.rust-target }} --features=xmc41xx
