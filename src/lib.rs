@@ -1,3 +1,4 @@
+#![no_std]
 #[cfg(feature = "xmc4100")]
 pub use xmc4100;
 #[cfg(feature = "xmc4100")]

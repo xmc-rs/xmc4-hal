@@ -1,0 +1,9 @@
+mergeMethod: squash
+updateBranch: true
+deleteBranchAfterMerge: true
+reportStatus: true
+blockingLabels:
+- dependencies
+rules:
+- requiredLabels:
+  - merge

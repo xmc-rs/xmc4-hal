@@ -1,0 +1,33 @@
+name: Rust
+
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        rust-channel: [ 'stable', 'nightly' ]
+        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabi' ]
+    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: ${{ matrix.rust-channel }}
+            target: ${{ matrix.rust-target }}
+            override: true
+      - name: Cargo Check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --target ${{ matrix.rust-target }}
+      - name: Cargo Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --verbose --target ${{ matrix.rust-target }}
