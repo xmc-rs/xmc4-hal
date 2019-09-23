@@ -1,0 +1,22 @@
+name: Doc Publish
+on:
+  push:
+    branches:
+    - master
+    
+jobs:
+  build:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 'stable'
+          target: 'x86_64-unknown-linux-gnu'
+      - name: Cargo Doc
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --verbose --no-deps --document-private-items
