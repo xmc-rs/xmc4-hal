@@ -24,9 +24,9 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
+          args: --target thumbv7em-none-eabi --features=${{ matrix.device }}
       - name: Cargo Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --verbose --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
+          args: --target thumbv7em-none-eabi --features=${{ matrix.device }}
