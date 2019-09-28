@@ -28,3 +28,14 @@ impl Scu {
             && !scu_reset.rststat.read().hibrs().bit_is_set()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn nothing() {
+        // Do nothing test
+    }
+}
