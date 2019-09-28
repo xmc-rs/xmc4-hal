@@ -40,3 +40,15 @@ pub use xmc4800 as device;
 pub mod rtc;
 #[cfg(feature = "device-selected")]
 pub mod scu;
+
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn nothing() {
+        // Do nothing test
+    }
+}
