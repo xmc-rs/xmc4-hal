@@ -307,3 +307,14 @@ impl Rtc {
         // TODO Implement disable_hibernation_wake_up in Rtc
     }
 }
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn nothing() {
+        // Do nothing test
+    }
+}
