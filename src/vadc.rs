@@ -103,11 +103,14 @@ pub enum GateMode {
 }
 
 impl Vadc {
+
+    /// Enable the clock for this peripheral.
     pub fn enable_module_clock(self) {
         let vadc = unsafe { &*VADC::ptr() };
         vadc.clc.modify(|_, w| w.disr().clear_bit());
     }
 
+    /// Disable the clock for this peripheral
     pub fn disable_module_clock(self) {
         let vadc = unsafe {&*VADC::ptr() };
         vadc.clc.modify(|_, w| w.disr().set_bit());
