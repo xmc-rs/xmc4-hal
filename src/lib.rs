@@ -37,9 +37,51 @@ pub use xmc4800;
 pub use xmc4800 as device;
 
 #[cfg(feature = "device-selected")]
+pub mod can;
+#[cfg(feature = "device-selected")]
+pub mod ccu40;
+#[cfg(feature = "device-selected")]
+pub mod ccu80;
+#[cfg(feature = "device-selected")]
+pub mod dac;
+#[cfg(feature = "device-selected")]
+pub mod dlr;
+#[cfg(feature = "device-selected")]
+pub mod eru;
+#[cfg(feature = "device-selected")]
+pub mod fce;
+#[cfg(feature = "device-selected")]
+pub mod flash;
+#[cfg(feature = "device-selected")]
+pub mod gpdma;
+#[cfg(feature = "device-selected")]
+pub mod hrpwm;
+#[cfg(feature = "device-selected")]
+pub mod ledts;
+#[cfg(feature = "device-selected")]
+pub mod pba;
+#[cfg(feature = "device-selected")]
+pub mod pmu;
+#[cfg(feature = "device-selected")]
+pub mod port;
+#[cfg(feature = "device-selected")]
+pub mod posif;
+#[cfg(feature = "device-selected")]
+pub mod ppb;
+#[cfg(feature = "device-selected")]
+pub mod pref;
+#[cfg(feature = "device-selected")]
 pub mod rtc;
 #[cfg(feature = "device-selected")]
 pub mod scu;
+#[cfg(feature = "device-selected")]
+pub mod usb;
+#[cfg(feature = "device-selected")]
+pub mod usic;
+#[cfg(feature = "device-selected")]
+pub mod vadc;
+#[cfg(feature = "device-selected")]
+pub mod wdt;
 
 
 #[cfg(test)]
