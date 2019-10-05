@@ -29,3 +29,6 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: ghp-upload
+          args: --branch HEAD
+        env:
+          'GH_TOKEN': ${{ secrets.GH_TOKEN }}
