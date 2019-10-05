@@ -16,6 +16,7 @@ pub struct Vadc {}
 
 /// Types of service requests. Each group can raise up to 4 service requests and all groups together can have 4 service
 /// requests.
+#[derive(Debug, PartialEq, PartialOrd, Copy, Clone)]
 pub enum ServiceRequest {
     GroupSR0,
     GroupSR1,
@@ -27,7 +28,40 @@ pub enum ServiceRequest {
     SharedSR3
 }
 
+impl From<ServiceRequest> for u8 {
+    fn from(bits: ServiceRequest) -> Self {
+        match bits {
+            ServiceRequest::GroupSR0 => 0,
+            ServiceRequest::GroupSR1 => 1,
+            ServiceRequest::GroupSR2 => 2,
+            ServiceRequest::GroupSR3 => 3,
+            ServiceRequest::SharedSR0 => 4,
+            ServiceRequest::SharedSR1 => 5,
+            ServiceRequest::SharedSR2 => 6,
+            ServiceRequest::SharedSR3 => 7,
+            _ => unimplemented!()
+        }
+    }
+}
+
+impl From<u8> for ServiceRequest {
+    fn from(bits: u8) -> Self {
+        match bits {
+            0 => ServiceRequest::GroupSR0,
+            1 => ServiceRequest::GroupSR1,
+            2 => ServiceRequest::GroupSR2,
+            3 => ServiceRequest::GroupSR3,
+            4 => ServiceRequest::SharedSR0,
+            5 => ServiceRequest::SharedSR1,
+            6 => ServiceRequest::SharedSR2,
+            7 => ServiceRequest::SharedSR3,
+            _ => unimplemented!()
+        }
+    }
+}
+
 /// Operational mode of a channel when a conversion is interrupted.
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum StartMode {
     /// Conversion completes without interruption
     WithoutInterruption,
@@ -37,7 +71,30 @@ pub enum StartMode {
     InterruptionStop,
 }
 
+impl From<StartMode> for u8 {
+    fn from(bits: StartMode) -> Self {
+        match bits {
+            StartMode::WithoutInterruption => 0,
+            StartMode::InterruptionResume => 1,
+            StartMode::InterruptionStop => 2,
+            _ => unimplemented!()
+        }
+    }
+}
+
+impl From<u8> for StartMode {
+    fn from(bits: u8) -> Self {
+        match bits {
+            0 => StartMode::WithoutInterruption,
+            1 => StartMode::InterruptionResume,
+            2 => StartMode::InterruptionStop,
+            _ => unimplemented!()
+        }
+    }
+}
+
 /// Types of edges that can start conversion based on an external source.
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum TriggerEdge {
     /// No external triggers
     None,
@@ -132,7 +189,7 @@ impl Vadc {
         // TODO: Implement global clock initialization
     }
 
-    
+
 }
 
 
