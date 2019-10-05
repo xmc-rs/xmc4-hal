@@ -1,4 +1,4 @@
-
+use crate::device::{VADC};
 
 pub trait VadcExt {
     fn constrain(self) -> Vadc;
@@ -103,7 +103,15 @@ pub enum GateMode {
 }
 
 impl Vadc {
+    pub fn enable_module_clock(self) {
+        let vadc = unsafe { &*VADC::ptr() };
+        vadc.clc.modify(|_, w| w.disr().clear_bit());
+    }
 
+    pub fn disable_module_clock(self) {
+        let vadc = unsafe {&*VADC::ptr() };
+        vadc.clc.modify(|_, w| w.disr().set_bit());
+    }
 }
 
 
