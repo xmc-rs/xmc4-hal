@@ -20,3 +20,12 @@ jobs:
         with:
           command: doc
           args: --verbose --no-deps --document-private-items --features=xmc41xx
+      - name: Cargo Install
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-ghp-upload
+      - name: GHP Upload
+        uses: actions-rs/cargo@v1
+        with:
+          command: ghp-upload
