@@ -110,10 +110,22 @@ impl Vadc {
         vadc.clc.modify(|_, w| w.disr().clear_bit());
     }
 
-    /// Disable the clock for this peripheral
+    /// Disable the clock for this peripheral.
     pub fn disable_module_clock(self) {
         let vadc = unsafe {&*VADC::ptr() };
         vadc.clc.modify(|_, w| w.disr().set_bit());
+    }
+
+    /// Allow peripheral to go to sleep if a request is received.
+    pub fn enable_sleep_mode(self) {
+        let vadc = unsafe {&*VADC::ptr() };
+        vadc.clc.modify(|_, w| w.edis().clear_bit());
+    }
+
+    /// Prevent peripheral to go to sleep if a request is received.
+    pub fn disable_sleep_mode(self) {
+        let vadc = unsafe {&*VADC::ptr() };
+        vadc.clc.modify(|_, w| w.edis().set_bit());
     }
 }
 
