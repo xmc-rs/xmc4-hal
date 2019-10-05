@@ -127,6 +127,12 @@ impl Vadc {
         let vadc = unsafe {&*VADC::ptr() };
         vadc.clc.modify(|_, w| w.edis().set_bit());
     }
+
+    pub fn clock_init(self) {
+        // TODO: Implement global clock initialization
+    }
+
+    
 }
 
 
