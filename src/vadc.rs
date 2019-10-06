@@ -106,9 +106,33 @@ pub enum TriggerEdge {
     Any
 }
 
+impl From<TriggerEdge> for u8 {
+    fn from(bits: TriggerEdge) -> Self {
+        match bits{
+            TriggerEdge::None => 0,
+            TriggerEdge::Falling => 1,
+            TriggerEdge::Rising => 2,
+            TriggerEdge::Any => 3,
+            _ => unimplemented~()
+        }
+    }
+}
+
+impl From<u8> for TriggerEdge {
+    fn from(bits: u8) -> Self {
+        match bits {
+            0 => TriggerEdge::None,
+            1 => TriggerEdge::Falling,
+            2 => TriggerEdge::Rising,
+            3 => TriggerEdge::Any,
+            _ => unimplemented!()
+        }
+    }
+}
+
 /// Different possibilities that can act as an external input for triggering conversion. The results of the chosen item
 /// differ per channel.
-pub enum  TriggerInputSelect {
+pub enum  GateInputSelect {
     A,
     B,
     C,
@@ -125,6 +149,54 @@ pub enum  TriggerInputSelect {
     N,
     O,
     P
+}
+
+impl From<GateInputSelect> for u8 {
+    fn from(bits: GateInputSelect) -> Self {
+        match bits {
+            GateInputSelect::A => 0,
+            GateInputSelect::B => 1,
+            GateInputSelect::C => 2,
+            GateInputSelect::D => 3,
+            GateInputSelect::E => 4,
+            GateInputSelect::F => 5,
+            GateInputSelect::G => 6,
+            GateInputSelect::H => 7,
+            GateInputSelect::I => 8,
+            GateInputSelect::J => 9,
+            GateInputSelect::K => 10,
+            GateInputSelect::L => 11,
+            GateInputSelect::M => 12,
+            GateInputSelect::N => 13,
+            GateInputSelect::O => 14,
+            GateInputSelect::P => 15,
+            _ => unimplemented!()
+        }
+    }
+}
+
+impl From<u8> for GateInputSelect {
+    fn from(bits: u8) -> Self {
+        match bits {
+			0 => GateInputSelect::A
+			1 => GateInputSelect::B
+			2 => GateInputSelect::C
+			3 => GateInputSelect::D
+			4 => GateInputSelect::E
+			5 => GateInputSelect::F
+			6 => GateInputSelect::G
+			7 => GateInputSelect::H
+			8 => GateInputSelect::I
+			9 => GateInputSelect::J
+			10 => GateInputSelect::K
+			11 => GateInputSelect::L
+			12 => GateInputSelect::M
+			13 => GateInputSelect::N
+			14 => GateInputSelect::O
+			15 => GateInputSelect::P
+            _ => unimplemented!()
+        }
+    }
 }
 
 /// Different gating input possibilities that can gate conversion requests.
@@ -147,6 +219,54 @@ pub enum GateInputSelect {
     P
 }
 
+impl From<GateInputSelect> for u8 {
+    fn from(bits: GateInputSelect) -> Self {
+        match bits {
+            GateInputSelect::A => 0,
+            GateInputSelect::B => 1,
+            GateInputSelect::C => 2,
+            GateInputSelect::D => 3,
+            GateInputSelect::E => 4,
+            GateInputSelect::F => 5,
+            GateInputSelect::G => 6,
+            GateInputSelect::H => 7,
+            GateInputSelect::I => 8,
+            GateInputSelect::J => 9,
+            GateInputSelect::K => 10,
+            GateInputSelect::L => 11,
+            GateInputSelect::M => 12,
+            GateInputSelect::N => 13,
+            GateInputSelect::O => 14,
+            GateInputSelect::P => 15,
+            _ => unimplemented!()
+        }
+    }
+}
+
+impl From<u8> for GateInputSelect {
+    fn from(bits: u8) -> Self {
+        match bits {
+			0 => GateInputSelect::A
+			1 => GateInputSelect::B
+			2 => GateInputSelect::C
+			3 => GateInputSelect::D
+			4 => GateInputSelect::E
+			5 => GateInputSelect::F
+			6 => GateInputSelect::G
+			7 => GateInputSelect::H
+			8 => GateInputSelect::I
+			9 => GateInputSelect::J
+			10 => GateInputSelect::K
+			11 => GateInputSelect::L
+			12 => GateInputSelect::M
+			13 => GateInputSelect::N
+			14 => GateInputSelect::O
+			15 => GateInputSelect::P
+            _ => unimplemented!()
+        }
+    }
+}
+
 /// Conditions for gating conversion requests.
 pub enum GateMode {
     /// No external triggers are passed
@@ -157,6 +277,30 @@ pub enum GateMode {
     ActiveHigh,
     /// Gate signals that are active low are passed
     ActiveLow
+}
+
+impl From<GateMode> for u8 {
+    fn from(bits: GateMode) -> Self {
+        match bits {
+            GateMode::Block => 0,
+            GateMode::Ignore => 1,
+            GateMode::ActiveHigh => 2,
+            GateMode::ActiveLow => 3,
+            _ => unimplemented!()
+        }
+    }
+}
+
+impl From<u8> for GateMode {
+    fn from(bits: u8) -> Self {
+        match bits {
+			0 => GateMode::Block
+			1 => GateMode::Ignore
+			2 => GateMode::ActiveHigh
+			3 => GateMode::ActiveLow
+            _ => unimplemented!()
+        }
+    }
 }
 
 impl Vadc {
