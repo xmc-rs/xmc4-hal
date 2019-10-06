@@ -113,7 +113,7 @@ impl From<TriggerEdge> for u8 {
             TriggerEdge::Falling => 1,
             TriggerEdge::Rising => 2,
             TriggerEdge::Any => 3,
-            _ => unimplemented~()
+            _ => unimplemented!()
         }
     }
 }
@@ -132,7 +132,7 @@ impl From<u8> for TriggerEdge {
 
 /// Different possibilities that can act as an external input for triggering conversion. The results of the chosen item
 /// differ per channel.
-pub enum  GateInputSelect {
+pub enum  TriggerInputSelect {
     A,
     B,
     C,
@@ -151,49 +151,49 @@ pub enum  GateInputSelect {
     P
 }
 
-impl From<GateInputSelect> for u8 {
-    fn from(bits: GateInputSelect) -> Self {
+impl From<TriggerInputSelect> for u8 {
+    fn from(bits: TriggerInputSelect) -> Self {
         match bits {
-            GateInputSelect::A => 0,
-            GateInputSelect::B => 1,
-            GateInputSelect::C => 2,
-            GateInputSelect::D => 3,
-            GateInputSelect::E => 4,
-            GateInputSelect::F => 5,
-            GateInputSelect::G => 6,
-            GateInputSelect::H => 7,
-            GateInputSelect::I => 8,
-            GateInputSelect::J => 9,
-            GateInputSelect::K => 10,
-            GateInputSelect::L => 11,
-            GateInputSelect::M => 12,
-            GateInputSelect::N => 13,
-            GateInputSelect::O => 14,
-            GateInputSelect::P => 15,
+            TriggerInputSelect::A => 0,
+            TriggerInputSelect::B => 1,
+            TriggerInputSelect::C => 2,
+            TriggerInputSelect::D => 3,
+            TriggerInputSelect::E => 4,
+            TriggerInputSelect::F => 5,
+            TriggerInputSelect::G => 6,
+            TriggerInputSelect::H => 7,
+            TriggerInputSelect::I => 8,
+            TriggerInputSelect::J => 9,
+            TriggerInputSelect::K => 10,
+            TriggerInputSelect::L => 11,
+            TriggerInputSelect::M => 12,
+            TriggerInputSelect::N => 13,
+            TriggerInputSelect::O => 14,
+            TriggerInputSelect::P => 15,
             _ => unimplemented!()
         }
     }
 }
 
-impl From<u8> for GateInputSelect {
+impl From<u8> for TriggerInputSelect {
     fn from(bits: u8) -> Self {
         match bits {
-			0 => GateInputSelect::A
-			1 => GateInputSelect::B
-			2 => GateInputSelect::C
-			3 => GateInputSelect::D
-			4 => GateInputSelect::E
-			5 => GateInputSelect::F
-			6 => GateInputSelect::G
-			7 => GateInputSelect::H
-			8 => GateInputSelect::I
-			9 => GateInputSelect::J
-			10 => GateInputSelect::K
-			11 => GateInputSelect::L
-			12 => GateInputSelect::M
-			13 => GateInputSelect::N
-			14 => GateInputSelect::O
-			15 => GateInputSelect::P
+			0 => TriggerInputSelect::A,
+			1 => TriggerInputSelect::B,
+			2 => TriggerInputSelect::C,
+			3 => TriggerInputSelect::D,
+			4 => TriggerInputSelect::E,
+			5 => TriggerInputSelect::F,
+			6 => TriggerInputSelect::G,
+			7 => TriggerInputSelect::H,
+			8 => TriggerInputSelect::I,
+			9 => TriggerInputSelect::J,
+			10 => TriggerInputSelect::K,
+			11 => TriggerInputSelect::L,
+			12 => TriggerInputSelect::M,
+			13 => TriggerInputSelect::N,
+			14 => TriggerInputSelect::O,
+			15 => TriggerInputSelect::P,
             _ => unimplemented!()
         }
     }
@@ -246,22 +246,22 @@ impl From<GateInputSelect> for u8 {
 impl From<u8> for GateInputSelect {
     fn from(bits: u8) -> Self {
         match bits {
-			0 => GateInputSelect::A
-			1 => GateInputSelect::B
-			2 => GateInputSelect::C
-			3 => GateInputSelect::D
-			4 => GateInputSelect::E
-			5 => GateInputSelect::F
-			6 => GateInputSelect::G
-			7 => GateInputSelect::H
-			8 => GateInputSelect::I
-			9 => GateInputSelect::J
-			10 => GateInputSelect::K
-			11 => GateInputSelect::L
-			12 => GateInputSelect::M
-			13 => GateInputSelect::N
-			14 => GateInputSelect::O
-			15 => GateInputSelect::P
+			0 => GateInputSelect::A,
+			1 => GateInputSelect::B,
+			2 => GateInputSelect::C,
+			3 => GateInputSelect::D,
+			4 => GateInputSelect::E,
+			5 => GateInputSelect::F,
+			6 => GateInputSelect::G,
+			7 => GateInputSelect::H,
+			8 => GateInputSelect::I,
+			9 => GateInputSelect::J,
+			10 => GateInputSelect::K,
+			11 => GateInputSelect::L,
+			12 => GateInputSelect::M,
+			13 => GateInputSelect::N,
+			14 => GateInputSelect::O,
+			15 => GateInputSelect::P,
             _ => unimplemented!()
         }
     }
@@ -294,10 +294,10 @@ impl From<GateMode> for u8 {
 impl From<u8> for GateMode {
     fn from(bits: u8) -> Self {
         match bits {
-			0 => GateMode::Block
-			1 => GateMode::Ignore
-			2 => GateMode::ActiveHigh
-			3 => GateMode::ActiveLow
+			0 => GateMode::Block,
+			1 => GateMode::Ignore,
+			2 => GateMode::ActiveHigh,
+			3 => GateMode::ActiveLow,
             _ => unimplemented!()
         }
     }
