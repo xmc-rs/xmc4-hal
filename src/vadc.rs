@@ -1,4 +1,4 @@
-use crate::device::{VADC};
+use crate::device::VADC;
 
 pub trait VadcExt {
     fn constrain(self) -> Vadc;
@@ -25,7 +25,7 @@ pub enum ServiceRequest {
     SharedSR0,
     SharedSR1,
     SharedSR2,
-    SharedSR3
+    SharedSR3,
 }
 
 impl From<ServiceRequest> for u8 {
@@ -38,7 +38,7 @@ impl From<ServiceRequest> for u8 {
             ServiceRequest::SharedSR0 => 4,
             ServiceRequest::SharedSR1 => 5,
             ServiceRequest::SharedSR2 => 6,
-            ServiceRequest::SharedSR3 => 7
+            ServiceRequest::SharedSR3 => 7,
         }
     }
 }
@@ -54,7 +54,7 @@ impl From<u8> for ServiceRequest {
             5 => ServiceRequest::SharedSR1,
             6 => ServiceRequest::SharedSR2,
             7 => ServiceRequest::SharedSR3,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
@@ -75,7 +75,7 @@ impl From<StartMode> for u8 {
         match bits {
             StartMode::WithoutInterruption => 0,
             StartMode::InterruptionResume => 1,
-            StartMode::InterruptionStop => 2
+            StartMode::InterruptionStop => 2,
         }
     }
 }
@@ -86,7 +86,7 @@ impl From<u8> for StartMode {
             0 => StartMode::WithoutInterruption,
             1 => StartMode::InterruptionResume,
             2 => StartMode::InterruptionStop,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
@@ -101,16 +101,16 @@ pub enum TriggerEdge {
     /// Conversion starts on rising edge of external source
     Rising,
     /// Falling and rising edge of external source can start conversion
-    Any
+    Any,
 }
 
 impl From<TriggerEdge> for u8 {
     fn from(bits: TriggerEdge) -> Self {
-        match bits{
+        match bits {
             TriggerEdge::None => 0,
             TriggerEdge::Falling => 1,
             TriggerEdge::Rising => 2,
-            TriggerEdge::Any => 3
+            TriggerEdge::Any => 3,
         }
     }
 }
@@ -122,14 +122,14 @@ impl From<u8> for TriggerEdge {
             1 => TriggerEdge::Falling,
             2 => TriggerEdge::Rising,
             3 => TriggerEdge::Any,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
 
 /// Different possibilities that can act as an external input for triggering conversion. The results of the chosen item
 /// differ per channel.
-pub enum  TriggerInputSelect {
+pub enum TriggerInputSelect {
     A,
     B,
     C,
@@ -145,7 +145,7 @@ pub enum  TriggerInputSelect {
     M,
     N,
     O,
-    P
+    P,
 }
 
 impl From<TriggerInputSelect> for u8 {
@@ -166,7 +166,7 @@ impl From<TriggerInputSelect> for u8 {
             TriggerInputSelect::M => 12,
             TriggerInputSelect::N => 13,
             TriggerInputSelect::O => 14,
-            TriggerInputSelect::P => 15
+            TriggerInputSelect::P => 15,
         }
     }
 }
@@ -174,23 +174,23 @@ impl From<TriggerInputSelect> for u8 {
 impl From<u8> for TriggerInputSelect {
     fn from(bits: u8) -> Self {
         match bits {
-			0 => TriggerInputSelect::A,
-			1 => TriggerInputSelect::B,
-			2 => TriggerInputSelect::C,
-			3 => TriggerInputSelect::D,
-			4 => TriggerInputSelect::E,
-			5 => TriggerInputSelect::F,
-			6 => TriggerInputSelect::G,
-			7 => TriggerInputSelect::H,
-			8 => TriggerInputSelect::I,
-			9 => TriggerInputSelect::J,
-			10 => TriggerInputSelect::K,
-			11 => TriggerInputSelect::L,
-			12 => TriggerInputSelect::M,
-			13 => TriggerInputSelect::N,
-			14 => TriggerInputSelect::O,
-			15 => TriggerInputSelect::P,
-            _ => unimplemented!()
+            0 => TriggerInputSelect::A,
+            1 => TriggerInputSelect::B,
+            2 => TriggerInputSelect::C,
+            3 => TriggerInputSelect::D,
+            4 => TriggerInputSelect::E,
+            5 => TriggerInputSelect::F,
+            6 => TriggerInputSelect::G,
+            7 => TriggerInputSelect::H,
+            8 => TriggerInputSelect::I,
+            9 => TriggerInputSelect::J,
+            10 => TriggerInputSelect::K,
+            11 => TriggerInputSelect::L,
+            12 => TriggerInputSelect::M,
+            13 => TriggerInputSelect::N,
+            14 => TriggerInputSelect::O,
+            15 => TriggerInputSelect::P,
+            _ => unimplemented!(),
         }
     }
 }
@@ -212,7 +212,7 @@ pub enum GateInputSelect {
     M,
     N,
     O,
-    P
+    P,
 }
 
 impl From<GateInputSelect> for u8 {
@@ -233,7 +233,7 @@ impl From<GateInputSelect> for u8 {
             GateInputSelect::M => 12,
             GateInputSelect::N => 13,
             GateInputSelect::O => 14,
-            GateInputSelect::P => 15
+            GateInputSelect::P => 15,
         }
     }
 }
@@ -241,23 +241,23 @@ impl From<GateInputSelect> for u8 {
 impl From<u8> for GateInputSelect {
     fn from(bits: u8) -> Self {
         match bits {
-			0 => GateInputSelect::A,
-			1 => GateInputSelect::B,
-			2 => GateInputSelect::C,
-			3 => GateInputSelect::D,
-			4 => GateInputSelect::E,
-			5 => GateInputSelect::F,
-			6 => GateInputSelect::G,
-			7 => GateInputSelect::H,
-			8 => GateInputSelect::I,
-			9 => GateInputSelect::J,
-			10 => GateInputSelect::K,
-			11 => GateInputSelect::L,
-			12 => GateInputSelect::M,
-			13 => GateInputSelect::N,
-			14 => GateInputSelect::O,
-			15 => GateInputSelect::P,
-            _ => unimplemented!()
+            0 => GateInputSelect::A,
+            1 => GateInputSelect::B,
+            2 => GateInputSelect::C,
+            3 => GateInputSelect::D,
+            4 => GateInputSelect::E,
+            5 => GateInputSelect::F,
+            6 => GateInputSelect::G,
+            7 => GateInputSelect::H,
+            8 => GateInputSelect::I,
+            9 => GateInputSelect::J,
+            10 => GateInputSelect::K,
+            11 => GateInputSelect::L,
+            12 => GateInputSelect::M,
+            13 => GateInputSelect::N,
+            14 => GateInputSelect::O,
+            15 => GateInputSelect::P,
+            _ => unimplemented!(),
         }
     }
 }
@@ -271,7 +271,7 @@ pub enum GateMode {
     /// Gate signals that are active high are passed
     ActiveHigh,
     /// Gate signals that are active low are passed
-    ActiveLow
+    ActiveLow,
 }
 
 impl From<GateMode> for u8 {
@@ -280,7 +280,7 @@ impl From<GateMode> for u8 {
             GateMode::Block => 0,
             GateMode::Ignore => 1,
             GateMode::ActiveHigh => 2,
-            GateMode::ActiveLow => 3
+            GateMode::ActiveLow => 3,
         }
     }
 }
@@ -288,17 +288,16 @@ impl From<GateMode> for u8 {
 impl From<u8> for GateMode {
     fn from(bits: u8) -> Self {
         match bits {
-			0 => GateMode::Block,
-			1 => GateMode::Ignore,
-			2 => GateMode::ActiveHigh,
-			3 => GateMode::ActiveLow,
-            _ => unimplemented!()
+            0 => GateMode::Block,
+            1 => GateMode::Ignore,
+            2 => GateMode::ActiveHigh,
+            3 => GateMode::ActiveLow,
+            _ => unimplemented!(),
         }
     }
 }
 
 impl Vadc {
-
     /// Enable the clock for this peripheral.
     pub fn enable_module_clock(self) {
         let vadc = unsafe { &*VADC::ptr() };
@@ -307,29 +306,26 @@ impl Vadc {
 
     /// Disable the clock for this peripheral.
     pub fn disable_module_clock(self) {
-        let vadc = unsafe {&*VADC::ptr() };
+        let vadc = unsafe { &*VADC::ptr() };
         vadc.clc.modify(|_, w| w.disr().set_bit());
     }
 
     /// Allow peripheral to go to sleep if a request is received.
     pub fn enable_sleep_mode(self) {
-        let vadc = unsafe {&*VADC::ptr() };
+        let vadc = unsafe { &*VADC::ptr() };
         vadc.clc.modify(|_, w| w.edis().clear_bit());
     }
 
     /// Prevent peripheral to go to sleep if a request is received.
     pub fn disable_sleep_mode(self) {
-        let vadc = unsafe {&*VADC::ptr() };
+        let vadc = unsafe { &*VADC::ptr() };
         vadc.clc.modify(|_, w| w.edis().set_bit());
     }
 
     pub fn clock_init(self) {
         // TODO: Implement global clock initialization
     }
-
-
 }
-
 
 #[cfg(test)]
 mod tests {
