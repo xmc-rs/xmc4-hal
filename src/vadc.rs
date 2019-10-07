@@ -318,8 +318,14 @@ impl Vadc {
         set!(VADC, clc, edis);
     }
 
+    /// Initialize clock to the analog converter
     pub fn clock_init(self) {
         set!(VADC, globcfg, divwc);
+    }
+
+    /// Disable calibration from channels occurring during startup
+    pub fn disable_startup_calibration(self) {
+        clear!(VADC, globcfg, sucal);
     }
 }
 
