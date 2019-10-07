@@ -319,7 +319,7 @@ impl Vadc {
     }
 
     pub fn clock_init(self) {
-        // TODO: Implement global clock initialization
+        set!(VADC, globcfg, divwc);
     }
 }
 
