@@ -300,26 +300,22 @@ impl From<u8> for GateMode {
 impl Vadc {
     /// Enable the clock for this peripheral.
     pub fn enable_module_clock(self) {
-        let vadc = unsafe { &*VADC::ptr() };
-        vadc.clc.modify(|_, w| w.disr().clear_bit());
+        set!(VADC, clc, disr);
     }
 
     /// Disable the clock for this peripheral.
     pub fn disable_module_clock(self) {
-        let vadc = unsafe { &*VADC::ptr() };
-        vadc.clc.modify(|_, w| w.disr().set_bit());
+        clear!(VADC, clc, disr);
     }
 
     /// Allow peripheral to go to sleep if a request is received.
     pub fn enable_sleep_mode(self) {
-        let vadc = unsafe { &*VADC::ptr() };
-        vadc.clc.modify(|_, w| w.edis().clear_bit());
+        clear!(VADC, clc, edis);
     }
 
     /// Prevent peripheral to go to sleep if a request is received.
     pub fn disable_sleep_mode(self) {
-        let vadc = unsafe { &*VADC::ptr() };
-        vadc.clc.modify(|_, w| w.edis().set_bit());
+        set!(VADC, clc, edis);
     }
 
     pub fn clock_init(self) {
