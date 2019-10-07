@@ -38,8 +38,7 @@ impl From<ServiceRequest> for u8 {
             ServiceRequest::SharedSR0 => 4,
             ServiceRequest::SharedSR1 => 5,
             ServiceRequest::SharedSR2 => 6,
-            ServiceRequest::SharedSR3 => 7,
-            _ => unimplemented!()
+            ServiceRequest::SharedSR3 => 7
         }
     }
 }
@@ -76,8 +75,7 @@ impl From<StartMode> for u8 {
         match bits {
             StartMode::WithoutInterruption => 0,
             StartMode::InterruptionResume => 1,
-            StartMode::InterruptionStop => 2,
-            _ => unimplemented!()
+            StartMode::InterruptionStop => 2
         }
     }
 }
@@ -112,8 +110,7 @@ impl From<TriggerEdge> for u8 {
             TriggerEdge::None => 0,
             TriggerEdge::Falling => 1,
             TriggerEdge::Rising => 2,
-            TriggerEdge::Any => 3,
-            _ => unimplemented!()
+            TriggerEdge::Any => 3
         }
     }
 }
@@ -169,8 +166,7 @@ impl From<TriggerInputSelect> for u8 {
             TriggerInputSelect::M => 12,
             TriggerInputSelect::N => 13,
             TriggerInputSelect::O => 14,
-            TriggerInputSelect::P => 15,
-            _ => unimplemented!()
+            TriggerInputSelect::P => 15
         }
     }
 }
@@ -237,8 +233,7 @@ impl From<GateInputSelect> for u8 {
             GateInputSelect::M => 12,
             GateInputSelect::N => 13,
             GateInputSelect::O => 14,
-            GateInputSelect::P => 15,
-            _ => unimplemented!()
+            GateInputSelect::P => 15
         }
     }
 }
@@ -285,8 +280,7 @@ impl From<GateMode> for u8 {
             GateMode::Block => 0,
             GateMode::Ignore => 1,
             GateMode::ActiveHigh => 2,
-            GateMode::ActiveLow => 3,
-            _ => unimplemented!()
+            GateMode::ActiveLow => 3
         }
     }
 }
