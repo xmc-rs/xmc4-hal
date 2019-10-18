@@ -32,7 +32,7 @@ impl From<u8> for Event {
             3 => Event::Days,
             4 => Event::Months,
             5 => Event::Years,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
@@ -40,12 +40,12 @@ impl From<u8> for Event {
 impl From<Event> for u8 {
     fn from(bits: Event) -> Self {
         match bits {
-			Event::Seconds => 0,
-			Event::Minutes => 1,
-			Event::Hours => 2,
-			Event::Days => 3,
-			Event::Months => 4,
-			Event::Years => 5,
+            Event::Seconds => 0,
+            Event::Minutes => 1,
+            Event::Hours => 2,
+            Event::Days => 3,
+            Event::Months => 4,
+            Event::Years => 5,
         }
     }
 }
@@ -89,18 +89,18 @@ impl From<u8> for Month {
 impl From<Month> for u8 {
     fn from(val: Month) -> Self {
         match val {
-			Month::January => 0,
-			Month::February => 1,
-			Month::March => 2,
-			Month::April => 3,
-			Month::May => 4,
-			Month::June => 5,
-			Month::July => 6,
-			Month::August => 7,
-			Month::September => 8,
-			Month::October => 9,
-			Month::November => 10,
-			Month::December => 11,
+            Month::January => 0,
+            Month::February => 1,
+            Month::March => 2,
+            Month::April => 3,
+            Month::May => 4,
+            Month::June => 5,
+            Month::July => 6,
+            Month::August => 7,
+            Month::September => 8,
+            Month::October => 9,
+            Month::November => 10,
+            Month::December => 11,
         }
     }
 }
@@ -134,13 +134,13 @@ impl From<u8> for Weekday {
 impl From<Weekday> for u8 {
     fn from(val: Weekday) -> Self {
         match val {
-			Weekday::Sunday => 0,
-			Weekday::Monday => 1,
-			Weekday::Tuesday => 2,
-			Weekday::Wednesday => 3,
-			Weekday::Thursday => 4,
-			Weekday::Friday => 5,
-			Weekday::Saturday => 6,
+            Weekday::Sunday => 0,
+            Weekday::Monday => 1,
+            Weekday::Tuesday => 2,
+            Weekday::Wednesday => 3,
+            Weekday::Thursday => 4,
+            Weekday::Friday => 5,
+            Weekday::Saturday => 6,
         }
     }
 }
