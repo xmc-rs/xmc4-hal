@@ -23,6 +23,33 @@ pub enum Event {
     Years,
 }
 
+impl From<u8> for Event {
+    fn from(bits: u8) -> Self {
+        match bits {
+            0 => Event::Seconds,
+            1 => Event::Minutes,
+            2 => Event::Hours,
+            3 => Event::Days,
+            4 => Event::Months,
+            5 => Event::Years,
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl From<Event> for u8 {
+    fn from(bits: Event) -> Self {
+        match bits {
+            Event::Seconds => 0,
+            Event::Minutes => 1,
+            Event::Hours => 2,
+            Event::Days => 3,
+            Event::Months => 4,
+            Event::Years => 5,
+        }
+    }
+}
+
 /// Current month in RTC time
 pub enum Month {
     January,
@@ -39,8 +66,8 @@ pub enum Month {
     December,
 }
 
-impl Month {
-    fn from(val: u8) -> Month {
+impl From<u8> for Month {
+    fn from(val: u8) -> Self {
         match val {
             0 => Month::January,
             1 => Month::February,
@@ -59,6 +86,25 @@ impl Month {
     }
 }
 
+impl From<Month> for u8 {
+    fn from(val: Month) -> Self {
+        match val {
+            Month::January => 0,
+            Month::February => 1,
+            Month::March => 2,
+            Month::April => 3,
+            Month::May => 4,
+            Month::June => 5,
+            Month::July => 6,
+            Month::August => 7,
+            Month::September => 8,
+            Month::October => 9,
+            Month::November => 10,
+            Month::December => 11,
+        }
+    }
+}
+
 /// Current weekday in RTC time
 pub enum Weekday {
     Sunday,
@@ -70,8 +116,8 @@ pub enum Weekday {
     Saturday,
 }
 
-impl Weekday {
-    fn from(val: u8) -> Weekday {
+impl From<u8> for Weekday {
+    fn from(val: u8) -> Self {
         match val {
             0 => Weekday::Sunday,
             1 => Weekday::Monday,
@@ -81,6 +127,20 @@ impl Weekday {
             5 => Weekday::Friday,
             6 => Weekday::Saturday,
             _ => Weekday::Sunday,
+        }
+    }
+}
+
+impl From<Weekday> for u8 {
+    fn from(val: Weekday) -> Self {
+        match val {
+            Weekday::Sunday => 0,
+            Weekday::Monday => 1,
+            Weekday::Tuesday => 2,
+            Weekday::Wednesday => 3,
+            Weekday::Thursday => 4,
+            Weekday::Friday => 5,
+            Weekday::Saturday => 6,
         }
     }
 }
