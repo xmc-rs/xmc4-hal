@@ -1,5 +1,3 @@
-
-
 pub trait GpdmaExt {
     fn constrain(self) -> Gpdma;
 }
@@ -13,7 +11,6 @@ impl GpdmaExt for Gpdma {
 pub struct Gpdma {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

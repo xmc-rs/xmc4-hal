@@ -1,5 +1,3 @@
-
-
 pub trait PosifExt {
     fn constrain(self) -> Posif;
 }
@@ -13,7 +11,6 @@ impl PosifExt for Posif {
 pub struct Posif {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

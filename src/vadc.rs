@@ -1,5 +1,3 @@
-
-
 pub trait VadcExt {
     fn constrain(self) -> Vadc;
 }
@@ -13,7 +11,6 @@ impl VadcExt for Vadc {
 pub struct Vadc {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

@@ -1,5 +1,3 @@
-
-
 pub trait UsicExt {
     fn constrain(self) -> Usic;
 }
@@ -13,7 +11,6 @@ impl UsicExt for Usic {
 pub struct Usic {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

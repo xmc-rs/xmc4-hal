@@ -83,7 +83,6 @@ pub mod vadc;
 #[cfg(feature = "device-selected")]
 pub mod wdt;
 
-
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
