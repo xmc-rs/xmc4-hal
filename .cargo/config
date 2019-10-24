@@ -1,0 +1,26 @@
+# This setting can be used to help debug what's going on with HTTP requests made
+# by Cargo. When set to `true` then Cargo's normal debug logging will be filled
+# in with HTTP information, which you can extract with
+# `CARGO_LOG=cargo::ops::registry=debug` (and `trace` may print more).
+#
+# Be wary when posting these logs elsewhere though, it may be the case that a
+# header has an authentication token in it you don't want leaked! Be sure to
+# briefly review logs before posting them.
+debug = false
+
+[test]
+target="stable-x86_64-unknown-linux-gnu"
+rustflags = ["-Zprofile", "-Ccodegen-units=1", "-Cinline-threshold=0",
+             "-Clink-dead-code", "-Coverflow-checks=off", "-Zno-landing-pads"]  # custom flags to pass to all compiler invocations
+incremental = true        # whether or not to enable incremental compilation
+                          # If `incremental` is not set, then the value from
+                          # the profile is used.
+
+# Alias cargo commands. The first 4 aliases are built in. If your
+# command requires grouped whitespace use the list format.
+[alias]
+b = "build"
+c = "check"
+t = "test --features xmc41xx"
+r = "run"
+rr = "run --release"
