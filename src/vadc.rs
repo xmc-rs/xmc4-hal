@@ -108,6 +108,7 @@ pub enum TriggerEdge {
 
 /// Different possibilities that can act as an external input for triggering conversion. The results of the chosen item
 /// differ per channel.
+#[derive(Debug, Clone, Copy)]
 pub enum  TriggerInputSelect {
     A,
     B,
@@ -128,6 +129,7 @@ pub enum  TriggerInputSelect {
 }
 
 /// Different gating input possibilities that can gate conversion requests.
+#[derive(Debug, Clone, Copy)]
 pub enum GateInputSelect {
     A,
     B,
@@ -148,6 +150,7 @@ pub enum GateInputSelect {
 }
 
 /// Conditions for gating conversion requests.
+#[derive(Debug, Clone, Copy)]
 pub enum GateMode {
     /// No external triggers are passed
     Block,
