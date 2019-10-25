@@ -1,0 +1,3 @@
+{
+    "rust.features": ["xmc41xx"]
+}
