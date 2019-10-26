@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::device::{WDT};
 
 pub trait WdtExt {
@@ -46,8 +48,8 @@ impl Wdt {
     }
 
     pub fn set_window_bounds(lower: u32, upper: u32) {
-        let wdt = unsafe {&*WDT::ptr()};
-        unsafe { wdt.wlb.modify(|_, w| w.bits(lower))};
+        set_reg!(WDT, wlb, lower);
+        set_reg!(WDT, wub, upper);
     }
 
     pub fn start() {
