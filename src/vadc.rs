@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::device::VADC;
 
 pub trait VadcExt {
