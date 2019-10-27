@@ -69,7 +69,13 @@ impl Wdt {
         set_reg!(WDT, wub, upper);
     }
 
-    pub fn start() {}
+    pub fn start() {
+        set!(WDT, ctr, enb);
+    }
+
+    pub fn stop() {
+        clear!(WDT, ctr, enb);
+    }
 
     pub fn set_mode(mode: Mode) {
         if Mode::Timeout == mode {
