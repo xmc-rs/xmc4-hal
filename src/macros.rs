@@ -1,5 +1,3 @@
-
-
 /// Set the bit of a register
 macro_rules! set {
     ($periph:ident, $reg:ident, $bits:ident) => {

@@ -132,7 +132,7 @@ impl From<u8> for TriggerEdge {
 /// Different possibilities that can act as an external input for triggering conversion. The results of the chosen item
 /// differ per channel.
 #[derive(Debug, Clone, Copy)]
-pub enum  TriggerInputSelect {
+pub enum TriggerInputSelect {
     A,
     B,
     C,
