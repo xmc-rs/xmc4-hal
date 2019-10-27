@@ -80,8 +80,7 @@ impl Wdt {
     pub fn set_mode(mode: Mode) {
         if Mode::Timeout == mode {
             clear!(WDT, ctr, pre);
-        }
-        else{
+        } else {
             set!(WDT, ctr, pre);
         }
     }
@@ -93,9 +92,7 @@ impl Wdt {
     pub fn set_debug_mode(mode: DebugMode) {
         if DebugMode::Run == mode {
             set!(WDT, ctr, dsp);
-        }
-        else
-        {
+        } else {
             clear!(WDT, ctr, dsp);
         }
     }
