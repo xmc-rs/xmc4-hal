@@ -17,6 +17,6 @@ macro_rules! clear {
 macro_rules! set_reg {
     ($periph:ident, $reg:ident, $value:expr) => {
         let periph = unsafe { &*$periph::ptr() };
-        unsafe { periph.$reg.modify(|_, w| w.bits($value))};
+        unsafe { periph.$reg.modify(|_, w| w.bits($value)) };
     };
 }

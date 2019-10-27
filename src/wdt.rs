@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::device::{WDT};
+use crate::device::WDT;
 
 pub trait WdtExt {
     fn constrain(self) -> Wdt;
@@ -19,42 +19,36 @@ pub struct Wdt {}
 // Todo: Verify the values of the enum
 pub enum Mode {
     Timeout,
-    Prewarning
+    Prewarning,
 }
 
 // Todo: Verify the values of the enum
 pub enum DebugMode {
     Stop,
-    Run
+    Run,
 }
 
 pub enum EventMode {
     Interrupt,
-    NmiRequest
+    NmiRequest,
 }
 
 pub enum Status {
     Success,
-    Failure
+    Failure,
 }
 
 impl Wdt {
-    pub fn enable() {
+    pub fn enable() {}
 
-    }
-
-    pub fn disable() {
-
-    }
+    pub fn disable() {}
 
     pub fn set_window_bounds(lower: u32, upper: u32) {
         set_reg!(WDT, wlb, lower);
         set_reg!(WDT, wub, upper);
     }
 
-    pub fn start() {
-
-    }
+    pub fn start() {}
 }
 
 #[cfg(test)]
