@@ -1,5 +1,3 @@
-
-
 pub trait PrefExt {
     fn constrain(self) -> Pref;
 }
@@ -13,7 +11,6 @@ impl PrefExt for Pref {
 pub struct Pref {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {
