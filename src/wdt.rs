@@ -99,6 +99,20 @@ impl Wdt {
             clear!(WDT, ctr, dsp);
         }
     }
+
+    pub fn get_counter() -> u32 {
+        get_reg!(WDT, tim)
+    }
+
+    pub fn service() {
+        // TODO: Turn in to a constant
+        set_reg!(WDT, srv, 0xABADCAFE);
+    }
+
+    pub fn clear_alarm() {
+        // TODO: Turn in to a constant
+        set_reg!(WDT, wdtclr, 2);
+    }
 }
 
 #[cfg(test)]
