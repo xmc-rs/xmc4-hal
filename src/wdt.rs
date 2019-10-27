@@ -1,5 +1,3 @@
-
-
 pub trait WdtExt {
     fn constrain(self) -> Wdt;
 }
@@ -13,7 +11,6 @@ impl WdtExt for Wdt {
 pub struct Wdt {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

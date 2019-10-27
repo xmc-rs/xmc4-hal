@@ -65,8 +65,6 @@ cortex-m-semihosting = "0.3.5"
 heapless = "0.5.1"
 libm = "0.1.4"
 as-slice = "0.2.0"
-serde_derive = "1.0.101"
-serde-json-core = "0.0.1"
 
 [dev-dependencies.byteorder]
 default-features = false
@@ -87,8 +85,4 @@ version = "1.5.3"
 [dev-dependencies.jnet]
 git = "https://github.com/japaric/jnet"
 rev = "df96b408049ca952ad7844d6552e87cf8fc18d2a"
-
-[dev-dependencies.serde]
-default-features = false
-version = "1.0.101"
 

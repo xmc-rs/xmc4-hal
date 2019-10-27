@@ -1,5 +1,3 @@
-
-
 pub trait PmuExt {
     fn constrain(self) -> Pmu;
 }
@@ -13,7 +11,6 @@ impl PmuExt for Pmu {
 pub struct Pmu {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

@@ -1,5 +1,3 @@
-
-
 pub trait LedtsExt {
     fn constrain(self) -> Ledts;
 }
@@ -13,7 +11,6 @@ impl LedtsExt for Ledts {
 pub struct Ledts {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {
