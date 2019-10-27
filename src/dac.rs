@@ -1,5 +1,3 @@
-
-
 pub trait DacExt {
     fn constrain(self) -> Dac;
 }
@@ -13,7 +11,6 @@ impl DacExt for Dac {
 pub struct Dac {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {
