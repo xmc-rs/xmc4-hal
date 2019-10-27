@@ -17,12 +17,33 @@ pub struct Wdt {}
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
 
 // Todo: Verify the values of the enum
+#[derive(PartialEq)]
 pub enum Mode {
     Timeout,
     Prewarning,
 }
 
+impl From<Mode> for u32 {
+    fn from(bits: Mode) -> Self {
+        match bits {
+            Mode::Timeout => 0,
+            Mode::Prewarning => 1,
+        }
+    }
+}
+
+impl From<u32> for Mode {
+    fn from(bits: u32) -> Self {
+        match bits {
+            0 => Mode::Timeout,
+            1 => Mode::Prewarning,
+            _ => unimplemented!(),
+        }
+    }
+}
+
 // Todo: Verify the values of the enum
+#[derive(PartialEq)]
 pub enum DebugMode {
     Stop,
     Run,
@@ -49,6 +70,29 @@ impl Wdt {
     }
 
     pub fn start() {}
+
+    pub fn set_mode(mode: Mode) {
+        if Mode::Timeout == mode {
+            clear!(WDT, ctr, pre);
+        }
+        else{
+            set!(WDT, ctr, pre);
+        }
+    }
+
+    pub fn set_service_pulse_width(pulse_width: u8) {
+        set_field!(WDT, ctr, spw, pulse_width);
+    }
+
+    pub fn set_debug_mode(mode: DebugMode) {
+        if DebugMode::Run == mode {
+            set!(WDT, ctr, dsp);
+        }
+        else
+        {
+            clear!(WDT, ctr, dsp);
+        }
+    }
 }
 
 #[cfg(test)]

@@ -20,3 +20,10 @@ macro_rules! set_reg {
         unsafe { periph.$reg.modify(|_, w| w.bits($value)) };
     };
 }
+
+macro_rules! set_field {
+    ($periph:ident, $reg:ident, $bits:ident, $value:expr) => {
+        let periph = unsafe { &*$periph::ptr() };
+        unsafe {periph.$reg.modify(|_, w| w.$bits().bits($value))};
+    };
+}
