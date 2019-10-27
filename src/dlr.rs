@@ -1,5 +1,3 @@
-
-
 pub trait DlrExt {
     fn constrain(self) -> Dlr;
 }
@@ -13,7 +11,6 @@ impl DlrExt for Dlr {
 pub struct Dlr {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {

@@ -1,5 +1,3 @@
-
-
 pub trait HrpwmExt {
     fn constrain(self) -> Hrpwm;
 }
@@ -13,7 +11,6 @@ impl HrpwmExt for Hrpwm {
 pub struct Hrpwm {}
 
 // IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 
 #[cfg(test)]
 mod tests {
