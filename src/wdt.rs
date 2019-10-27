@@ -2,6 +2,10 @@
 
 use crate::device::WDT;
 
+const ALARM_CLEAR: u32 = 2;
+
+const SERVICE_KEY: u32 = 0xABAD_CAFE;
+
 pub trait WdtExt {
     fn constrain(self) -> Wdt;
 }
@@ -102,13 +106,11 @@ impl Wdt {
     }
 
     pub fn service() {
-        // TODO: Turn in to a constant
-        set_reg!(WDT, srv, 0xABADCAFE);
+        set_reg!(WDT, srv, SERVICE_KEY);
     }
 
     pub fn clear_alarm() {
-        // TODO: Turn in to a constant
-        set_reg!(WDT, wdtclr, 2);
+        set_reg!(WDT, wdtclr, ALARM_CLEAR);
     }
 }
 
