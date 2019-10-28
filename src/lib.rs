@@ -1,6 +1,9 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 
+#[macro_use]
+pub mod macros;
+
 #[cfg(feature = "xmc4100")]
 pub use xmc4100;
 #[cfg(feature = "xmc4100")]
