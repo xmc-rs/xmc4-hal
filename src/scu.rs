@@ -14,24 +14,19 @@ impl ScuExt for Scu {
 
 impl Scu {
     pub fn enable_hibernate_domain(&self) {
-        let scu = unsafe { &*SCU_POWER::ptr() };
+        let scu = periph!(SCU_POWER);
         if scu.pwrstat.read().hiben().bit_is_clear() {
             scu.pwrset.write(|w| w.hib().set_bit());
             while scu.pwrstat.read().hiben().bit_is_clear() {}
         }
     }
     pub fn is_hibernate_domain_enabled(&self) -> bool {
-        let scu_power = unsafe { &*SCU_POWER::ptr() };
-        let scu_reset = unsafe { &*SCU_RESET::ptr() };
-
-        scu_power.pwrstat.read().hiben().bit_is_set()
-            && !scu_reset.rststat.read().hibrs().bit_is_set()
+        get_field!(SCU_POWER, pwrstat, hiben).bit_is_set() && ! get_field!(SCU_RESET, rststat, hibrs).bit_is_set()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
 
     #[test]
