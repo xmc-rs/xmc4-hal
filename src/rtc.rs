@@ -178,43 +178,32 @@ impl RtcExt for Rtc {
 pub struct Rtc {}
 
 impl Rtc {
-    pub fn start(&self) {
-        let rtc = unsafe { &*RTC::ptr() };
-        let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
 
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
+    #[inline(always)]
+    fn wait_for_mirrsts(&self) {
+        while get_field!(SCU_GENERAL, mirrsts, rtc_ctr).bit_is_clear() {
             // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
         }
-        rtc.ctr.modify(|_, w| w.enb().set_bit());
+    }
+
+    pub fn start(&self) {
+        self.wait_for_mirrsts();
+        set!(RTC, ctr, enb);
     }
 
     pub fn stop(&self) {
-        let rtc = unsafe { &*RTC::ptr() };
-        let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
-
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
-        rtc.ctr.modify(|_, w| w.enb().clear_bit());
+        self.wait_for_mirrsts();
+        clear!(RTC, ctr, enb);
     }
 
     pub fn is_running(&self) -> bool {
-        let rtc = unsafe { &*RTC::ptr() };
-        let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
-
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
-        rtc.ctr.read().enb().bit_is_set()
+        self.wait_for_mirrsts();
+        get_field!(RTC, ctr, enb).bit_is_set()
     }
 
     pub fn set_prescaler(&self, prescaler: u16) {
-        let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
-        let rtc = unsafe { &*RTC::ptr() };
-        rtc.ctr.modify(|_, w| unsafe { w.div().bits(prescaler) });
+        self.wait_for_mirrsts();
+        set_field!(RTC, ctr, div, prescaler);
     }
 
     pub fn set_time(&self, time: Time) {
@@ -225,9 +214,7 @@ impl Rtc {
         assert!(time.year < MAX_YEAR);
 
         let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        self.wait_for_mirrsts();
         let rtc = unsafe { &*RTC::ptr() };
         // TODO: Not sure if this is fully correct. The C code does a single struct assignment.
         rtc.tim0.modify(|_, w| unsafe {
@@ -236,9 +223,7 @@ impl Rtc {
             w.ho().bits(time.hour);
             w.da().bits(time.day)
         });
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        self.wait_for_mirrsts();
         rtc.tim1.modify(|_, w| unsafe {
             w.dawe().bits(time.weekday as u8);
             w.mo().bits(time.month as u8);
@@ -281,9 +266,7 @@ impl Rtc {
         assert!(time.year < MAX_YEAR);
 
         let scu_gen = unsafe { &*SCU_GENERAL::ptr() };
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        self.wait_for_mirrsts();
         let rtc = unsafe { &*RTC::ptr() };
         // TODO: Not sure if this is fully correct. The C code does a single struct assignment.
         rtc.atim0.modify(|_, w| unsafe {
@@ -292,9 +275,7 @@ impl Rtc {
             w.aho().bits(time.hour);
             w.ada().bits(time.day)
         });
-        while scu_gen.mirrsts.read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        self.wait_for_mirrsts();
         rtc.atim1.modify(|_, w| unsafe {
             w.amo().bits(time.month as u8);
             w.aye().bits(time.year)
