@@ -41,8 +41,8 @@ macro_rules! get_reg {
     };
 }
 
-// macro_rules! get_field {
-//     ($periph:ident, $reg:ident, $field:ident) => {
-//         unsafe { &*$periph::ptr() }.$reg.read().$field.bits()
-//     };
-// }
+macro_rules! get_field {
+    ($periph:ident, $reg:ident, $field:ident) => {
+        unsafe { &*$periph::ptr() }.$reg.read().$field()
+    };
+}
