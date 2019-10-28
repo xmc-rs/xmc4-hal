@@ -42,6 +42,15 @@
             "problemMatcher": [
                 "$rustc"
             ]
+        },
+        {
+            "label": "clippy",
+            "type": "process",
+            "command": "cargo",
+            "args": ["clippy", "--features", "xmc41xx"],
+            "problemMatcher": [
+                "$rustc"
+            ]
         }
     ]
 }
