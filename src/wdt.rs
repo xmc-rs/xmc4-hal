@@ -11,8 +11,6 @@ pub struct Wdt {
     wdt: *const RegisterBlock,
 }
 
-// IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 // Todo: Verify the values of the enum
 #[derive(PartialEq)]
 pub enum Mode {
