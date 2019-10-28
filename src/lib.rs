@@ -5,6 +5,9 @@
 #[macro_use]
 pub mod macros;
 
+#[macro_use]
+pub mod macros;
+
 #[cfg(feature = "xmc4100")]
 pub use xmc4100;
 #[cfg(feature = "xmc4100")]
