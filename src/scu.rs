@@ -21,7 +21,8 @@ impl Scu {
         }
     }
     pub fn is_hibernate_domain_enabled(&self) -> bool {
-        get_field!(SCU_POWER, pwrstat, hiben).bit_is_set() && ! get_field!(SCU_RESET, rststat, hibrs).bit_is_set()
+        get_field!(SCU_POWER, pwrstat, hiben).bit_is_set()
+            && !get_field!(SCU_RESET, rststat, hibrs).bit_is_set()
     }
 }
 
