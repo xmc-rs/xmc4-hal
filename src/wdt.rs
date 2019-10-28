@@ -37,7 +37,6 @@ impl From<u32> for Mode {
     }
 }
 
-// Todo: Verify the values of the enum
 #[derive(PartialEq)]
 pub enum DebugMode {
     Stop,
