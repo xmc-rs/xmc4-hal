@@ -31,7 +31,7 @@ macro_rules! set_reg {
 macro_rules! set_field {
     ($periph:ident, $reg:ident, $bits:ident, $value:expr) => {
         let periph = periph!($periph);
-        unsafe { periph.$reg.write(|w| w.$bits().bits($value)) };
+        unsafe { periph.$reg.modify(|_, w| w.$bits().bits($value)) };
     };
 }
 

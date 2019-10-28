@@ -214,15 +214,14 @@ impl Rtc {
 
         self.wait_for_mirrsts();
         let rtc = periph!(RTC);
-        // TODO: Not sure if this is fully correct. The C code does a single struct assignment.
-        rtc.tim0.write(|w| unsafe {
+        rtc.tim0.modify(|_, w| unsafe {
             w.se().bits(time.second);
             w.mi().bits(time.minute);
             w.ho().bits(time.hour);
             w.da().bits(time.day)
         });
         self.wait_for_mirrsts();
-        rtc.tim1.write(|w| unsafe {
+        rtc.tim1.modify(|_, w| unsafe {
             w.dawe().bits(time.weekday as u8);
             w.mo().bits(time.month as u8);
             w.ye().bits(time.year)
@@ -265,15 +264,14 @@ impl Rtc {
 
         self.wait_for_mirrsts();
         let rtc = periph!(RTC);
-        // TODO: Not sure if this is fully correct. The C code does a single struct assignment.
-        rtc.atim0.write(|w| unsafe {
+        rtc.atim0.modify(|_, w| unsafe {
             w.ase().bits(time.second);
             w.ami().bits(time.minute);
             w.aho().bits(time.hour);
             w.ada().bits(time.day)
         });
         self.wait_for_mirrsts();
-        rtc.atim1.write(|w| unsafe {
+        rtc.atim1.modify(|_, w| unsafe {
             w.amo().bits(time.month as u8);
             w.aye().bits(time.year)
         });
