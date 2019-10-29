@@ -9,18 +9,14 @@
 //! # Example
 //!
 //! ``` no_run
-//! use stm32f0xx_hal as hal;
+//! use xmc4_hal as hal;
 //!
-//! use crate::hal::stm32;
-//! use crate::hal::prelude::*;
 //! use crate::hal::delay::Delay;
 //! use cortex_m::peripheral::Peripherals;
 //!
-//! let mut p = stm32::Peripherals::take().unwrap();
 //! let mut cp = cortex_m::Peripherals::take().unwrap();
 //!
-//! let mut rcc = p.RCC.configure().freeze(&mut p.FLASH);
-//! let mut delay = Delay::new(cp.SYST, &rcc);
+//! let mut delay = Delay::new(cp.SYST);
 //! loop {
 //!     delay.delay_ms(1_000_u16);
 //! }
