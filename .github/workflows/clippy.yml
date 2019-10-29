@@ -5,19 +5,17 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v1
-
-      - name: Install nightly toolchain with clippy available
-        uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v1
+      - id: component
+        uses: actions-rs/components-nightly@v1
         with:
-          profile: minimal
-          toolchain: nightly
-          override: true
-          components: clippy
-
-      - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
+          component: clippy
+      - uses: actions-rs/toolchain@v1
         with:
-          command: clippy
-          args: --features xmc41xx -- -D warnings
+            toolchain: ${{ steps.component.outputs.toolchain }}
+            override: true
+      - run: rustup component add clippy
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          args: --features xmc41xx
