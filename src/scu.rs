@@ -1,4 +1,4 @@
-use crate::device::{SCU_POWER, SCU_RESET};
+use crate::device::{SCU_GENERAL, SCU_POWER, SCU_RESET};
 /// PDIV for main PLL
 const PLL_PDIV_XTAL_8MHZ: u32 = 1;
 
@@ -129,6 +129,7 @@ pub enum Clock {
     Wdt,
 }
 
+#[cfg(not(feature = "xmc4500"))]
 pub enum PeripheralClock {
     Vadc,
     Dsd,
@@ -191,7 +192,7 @@ pub enum ExtOutClockSource {
     Sys,
     Usb,
     Pll,
-    #[cfg(feature = "ecat")]
+    #[cfg(any(feature = "xmc4100", feature = "xmc4200"))]
     Stdby,
 }
 
@@ -219,6 +220,37 @@ pub enum BootMode {
     Abm0,
     Abm1,
     Fabm,
+}
+
+impl From<BootMode> for u8 {
+    fn from(bits: BootMode) -> u8 {
+        match bits {
+            BootMode::Normal => 0,
+            BootMode::AscBsl => 1,
+            BootMode::Bmi => 2,
+            BootMode::CanBsl => 3,
+            BootMode::PsramBoot => 4,
+            BootMode::Abm0 => 5,
+            BootMode::Abm1 => 6,
+            BootMode::Fabm => 7,
+        }
+    }
+}
+
+impl From<u8> for BootMode {
+    fn from(bits: u8) -> BootMode {
+        match bits {
+            0 => BootMode::Normal,
+            1 => BootMode::AscBsl,
+            2 => BootMode::Bmi,
+            3 => BootMode::CanBsl,
+            4 => BootMode::PsramBoot,
+            5 => BootMode::Abm0,
+            6 => BootMode::Abm1,
+            7 => BootMode::Fabm,
+            _ => unimplemented!(),
+        }
+    }
 }
 
 pub enum SysPllMode {
@@ -314,6 +346,16 @@ impl Scu {
     pub fn is_hibernate_domain_enabled(&self) -> bool {
         get_field!(SCU_POWER, pwrstat, hiben).bit_is_set()
             && !get_field!(SCU_RESET, rststat, hibrs).bit_is_set()
+    }
+
+    /// Access the currently programmed boot mode
+    pub fn get_boot_mode(&self) -> BootMode {
+        BootMode::from(get_field!(SCU_GENERAL, stcon, swcon).bits())
+    }
+
+    /// Program a new device boot mode. The newly set boot mode can be launched by a software reset after updating.
+    pub fn set_boot_mode(&self, mode: BootMode) {
+        set_field!(SCU_GENERAL, stcon, swcon, u8::from(mode));
     }
 }
 
