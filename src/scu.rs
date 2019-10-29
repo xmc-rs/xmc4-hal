@@ -1,11 +1,12 @@
 use crate::device::{SCU_POWER, SCU_RESET};
-
-const PLL_PDIV_XTAL_8MHZ: u32 = 1;
 /// PDIV for main PLL
-const PLL_NDIV_XTAL_8MHZ: u32 = 89;
+const PLL_PDIV_XTAL_8MHZ: u32 = 1;
+
 /// NDIV for main PLL
-const PLL_K2DIV_XTAL_8MHZ: u32 = 2;
+const PLL_NDIV_XTAL_8MHZ: u32 = 89;
+
 /// K2DIV for main PLL
+const PLL_K2DIV_XTAL_8MHZ: u32 = 2;
 
 pub trait ScuExt {
     fn constrain(self) -> Scu;
@@ -196,7 +197,7 @@ pub enum ExtOutClockSource {
 
 pub enum RtcClockSource {
     Osi,
-    Ulp
+    Ulp,
 }
 
 pub enum StdbyClockSource {
@@ -217,13 +218,13 @@ pub enum BootMode {
     PsramBoot,
     Abm0,
     Abm1,
-    Fabm
+    Fabm,
 }
 
 pub enum SysPllMode {
     Disabled,
     Normal,
-    Prescaler
+    Prescaler,
 }
 
 pub enum SleepModeConfig {
@@ -240,7 +241,7 @@ pub enum SleepModeConfig {
     DisableCcu,
     EnableCcu,
     DisableWdt,
-    EnableWdt
+    EnableWdt,
 }
 
 pub enum DeepSleepModeConfig {
@@ -260,7 +261,7 @@ pub enum DeepSleepModeConfig {
     DisableCcu,
     EnableCcu,
     DisableWdt,
-    EnableWdt
+    EnableWdt,
 }
 
 pub enum PowerEvrStatus {
@@ -270,10 +271,10 @@ pub enum PowerEvrStatus {
 
 pub enum CtrlStatus {
     NoActive,
-    Active
+    Active,
 }
 
-pub enum HibernateEvent{
+pub enum HibernateEvent {
     OnPosEdge,
     OnNegEdge,
     OnRtc,
@@ -299,7 +300,7 @@ pub enum HibernatePinMode {
 
 pub enum HibernateIoOutputLevel {
     Low,
-    High
+    High,
 }
 
 impl Scu {
