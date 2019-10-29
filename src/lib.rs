@@ -1,6 +1,7 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 #![allow(clippy::new_without_default)]
+#![allow(dead_code)]
 
 #[macro_use]
 pub mod macros;
