@@ -42,7 +42,7 @@ xmc43xx = ["xmc4300", "device-selected", "ecat"]
 xmc44xx = ["xmc4400", "device-selected"]
 xmc45xx = ["xmc4500", "device-selected"]
 xmc47xx = ["xmc4700", "device-selected"]
-xmc48xx = ["xmc4800", "device-selected"]
+xmc48xx = ["xmc4800", "device-selected", "ecat"]
 ecat = []
 
 [dependencies.void]
