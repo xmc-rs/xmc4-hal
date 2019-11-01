@@ -23,7 +23,7 @@ pub enum Event {
     Days = 0x08,
     Months = 0x20,
     Years = 0x40,
-    Alarm = 0x100
+    Alarm = 0x100,
 }
 
 impl From<u32> for Event {
@@ -50,7 +50,7 @@ impl From<Event> for u32 {
             Event::Days => 0x08,
             Event::Months => 0x20,
             Event::Years => 0x40,
-            Event::Alarm => 0x100
+            Event::Alarm => 0x100,
         }
     }
 }
@@ -175,7 +175,7 @@ pub enum WakeupEvent {
     Hours,
     Days,
     Months,
-    Years
+    Years,
 }
 
 pub trait RtcExt {
@@ -337,26 +337,54 @@ impl Rtc {
     fn enable_event(&self, event: Event) {
         while get_field!(SCU_GENERAL, mirrsts, rtc_msksr).bit_is_set() {}
         match event {
-            Event::Seconds => {set!(RTC, msksr, mpse);},
-            Event::Minutes => {set!(RTC, msksr, mpmi);},
-            Event::Hours => {set!(RTC, msksr, mpho);},
-            Event::Days => {set!(RTC, msksr, mpda);},
-            Event::Months => {set!(RTC, msksr, mpmo);},
-            Event::Years => {set!(RTC, msksr, mpye);},
-            Event::Alarm => {set!(RTC, msksr, mai);}
+            Event::Seconds => {
+                set!(RTC, msksr, mpse);
+            }
+            Event::Minutes => {
+                set!(RTC, msksr, mpmi);
+            }
+            Event::Hours => {
+                set!(RTC, msksr, mpho);
+            }
+            Event::Days => {
+                set!(RTC, msksr, mpda);
+            }
+            Event::Months => {
+                set!(RTC, msksr, mpmo);
+            }
+            Event::Years => {
+                set!(RTC, msksr, mpye);
+            }
+            Event::Alarm => {
+                set!(RTC, msksr, mai);
+            }
         };
     }
 
     fn disable_event(&self, event: Event) {
         while get_field!(SCU_GENERAL, mirrsts, rtc_msksr).bit_is_set() {}
         match event {
-            Event::Seconds => {clear!(RTC, msksr, mpse);},
-            Event::Minutes => {clear!(RTC, msksr, mpmi);},
-            Event::Hours => {clear!(RTC, msksr, mpho);},
-            Event::Days => {clear!(RTC, msksr, mpda);},
-            Event::Months => {clear!(RTC, msksr, mpmo);},
-            Event::Years => {clear!(RTC, msksr, mpye);},
-            Event::Alarm => {clear!(RTC, msksr, mai);}
+            Event::Seconds => {
+                clear!(RTC, msksr, mpse);
+            }
+            Event::Minutes => {
+                clear!(RTC, msksr, mpmi);
+            }
+            Event::Hours => {
+                clear!(RTC, msksr, mpho);
+            }
+            Event::Days => {
+                clear!(RTC, msksr, mpda);
+            }
+            Event::Months => {
+                clear!(RTC, msksr, mpmo);
+            }
+            Event::Years => {
+                clear!(RTC, msksr, mpye);
+            }
+            Event::Alarm => {
+                clear!(RTC, msksr, mai);
+            }
         };
     }
 
@@ -367,25 +395,53 @@ impl Rtc {
 
     fn enable_hibernation_wake_up(&self, event: WakeupEvent) {
         match event {
-            WakeupEvent::Alarm => {set!(RTC, ctr, tae);},
-            WakeupEvent::Seconds => {set!(RTC, ctr, esec);},
-            WakeupEvent::Minutes => {set!(RTC, ctr, emic);},
-            WakeupEvent::Hours => {set!(RTC, ctr, ehoc);},
-            WakeupEvent::Days => {set!(RTC, ctr, edac);},
-            WakeupEvent::Months => {set!(RTC, ctr, emoc);},
-            WakeupEvent::Years => {set!(RTC, ctr, eyec);},
+            WakeupEvent::Alarm => {
+                set!(RTC, ctr, tae);
+            }
+            WakeupEvent::Seconds => {
+                set!(RTC, ctr, esec);
+            }
+            WakeupEvent::Minutes => {
+                set!(RTC, ctr, emic);
+            }
+            WakeupEvent::Hours => {
+                set!(RTC, ctr, ehoc);
+            }
+            WakeupEvent::Days => {
+                set!(RTC, ctr, edac);
+            }
+            WakeupEvent::Months => {
+                set!(RTC, ctr, emoc);
+            }
+            WakeupEvent::Years => {
+                set!(RTC, ctr, eyec);
+            }
         };
     }
 
     fn disable_hibernation_wake_up(&self, event: WakeupEvent) {
         match event {
-            WakeupEvent::Alarm => {clear!(RTC, ctr, tae);},
-            WakeupEvent::Seconds => {clear!(RTC, ctr, esec);},
-            WakeupEvent::Minutes => {clear!(RTC, ctr, emic);},
-            WakeupEvent::Hours => {clear!(RTC, ctr, ehoc);},
-            WakeupEvent::Days => {clear!(RTC, ctr, edac);},
-            WakeupEvent::Months => {clear!(RTC, ctr, emoc);},
-            WakeupEvent::Years => {clear!(RTC, ctr, eyec);},
+            WakeupEvent::Alarm => {
+                clear!(RTC, ctr, tae);
+            }
+            WakeupEvent::Seconds => {
+                clear!(RTC, ctr, esec);
+            }
+            WakeupEvent::Minutes => {
+                clear!(RTC, ctr, emic);
+            }
+            WakeupEvent::Hours => {
+                clear!(RTC, ctr, ehoc);
+            }
+            WakeupEvent::Days => {
+                clear!(RTC, ctr, edac);
+            }
+            WakeupEvent::Months => {
+                clear!(RTC, ctr, emoc);
+            }
+            WakeupEvent::Years => {
+                clear!(RTC, ctr, eyec);
+            }
         };
     }
 }
