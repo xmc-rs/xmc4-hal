@@ -165,6 +165,16 @@ pub struct Time {
     pub year: u16,
 }
 
+pub enum WakeupEvent {
+    Alarm,
+    Seconds,
+    Minutes,
+    Hours,
+    Days,
+    Months,
+    Years
+}
+
 pub trait RtcExt {
     fn constrain(self) -> Rtc;
 }
@@ -333,12 +343,28 @@ impl Rtc {
         // TODO Implement clear_event in Rtc
     }
 
-    fn enable_hibernation_wake_up(&self) {
-        // TODO Implement enable_hibernation_wake_up in Rtc
+    fn enable_hibernation_wake_up(&self, event: WakeupEvent) {
+        match event {
+            WakeupEvent::Alarm => {set!(RTC, ctr, tae);},
+            WakeupEvent::Seconds => {set!(RTC, ctr, esec);},
+            WakeupEvent::Minutes => {set!(RTC, ctr, emic);},
+            WakeupEvent::Hours => {set!(RTC, ctr, ehoc);},
+            WakeupEvent::Days => {set!(RTC, ctr, edac);},
+            WakeupEvent::Months => {set!(RTC, ctr, emoc);},
+            WakeupEvent::Years => {set!(RTC, ctr, eyec);},
+        };
     }
 
-    fn disable_hibernation_wake_up(&self) {
-        // TODO Implement disable_hibernation_wake_up in Rtc
+    fn disable_hibernation_wake_up(&self, event: WakeupEvent) {
+        match event {
+            WakeupEvent::Alarm => {clear!(RTC, ctr, tae);},
+            WakeupEvent::Seconds => {clear!(RTC, ctr, esec);},
+            WakeupEvent::Minutes => {clear!(RTC, ctr, emic);},
+            WakeupEvent::Hours => {clear!(RTC, ctr, ehoc);},
+            WakeupEvent::Days => {clear!(RTC, ctr, edac);},
+            WakeupEvent::Months => {clear!(RTC, ctr, emoc);},
+            WakeupEvent::Years => {clear!(RTC, ctr, eyec);},
+        };
     }
 }
 
