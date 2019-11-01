@@ -1,1 +1,1 @@
-initSidebarItems({});
+initSidebarItems({"mod":[["can",""],["ccu40",""],["ccu80",""],["dac",""],["dlr",""],["eru",""],["fce",""],["flash",""],["gpdma",""],["hrpwm",""],["ledts",""],["macros",""],["pba",""],["pmu",""],["port",""],["posif",""],["ppb",""],["pref",""],["rtc",""],["scu",""],["usb",""],["usic",""],["vadc",""],["wdt",""]]});

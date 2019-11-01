@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Posif",""]],"trait":[["PosifExt",""]]});
