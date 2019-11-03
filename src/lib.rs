@@ -81,7 +81,12 @@ pub mod pref;
 #[cfg(feature = "device-selected")]
 pub mod rtc;
 
-#[cfg(any(feature = "xmc4300", feature = "xmc4500", feature = "xmc4700", feature = "xmc4800"))]
+#[cfg(any(
+    feature = "xmc4300",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
 pub mod sdmmc;
 
 #[cfg(feature = "device-selected")]
