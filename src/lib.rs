@@ -51,6 +51,10 @@ pub mod ccu80;
 pub mod dac;
 #[cfg(feature = "device-selected")]
 pub mod dlr;
+
+#[cfg(any(feature = "xmc4300", feature = "xmc4800"))]
+pub mod ecat;
+
 #[cfg(feature = "device-selected")]
 pub mod eru;
 #[cfg(feature = "device-selected")]
@@ -77,6 +81,15 @@ pub mod ppb;
 pub mod pref;
 #[cfg(feature = "device-selected")]
 pub mod rtc;
+
+#[cfg(any(
+    feature = "xmc4300",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
+pub mod sdmmc;
+
 #[cfg(feature = "device-selected")]
 pub mod scu;
 #[cfg(feature = "device-selected")]

@@ -1,3 +1,11 @@
 {
-    "rust.features": ["xmc41xx"]
+    "rust.features": [
+        "xmc41xx"
+    ],
+    "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+    "rust-analyzer.rainbowHighlightingOn": true,
+    "rust-analyzer.trace.cargo-watch": "error",
+    "rust-analyzer.trace.server": "messages",
+    "rust-analyzer.cargo-watch.arguments": "--features=xmc41xx",
+    "rust-analyzer.highlightingOn": true,
 }
