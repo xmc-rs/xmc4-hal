@@ -62,7 +62,7 @@ impl Wdt {
         w
     }
 
-    // TODO: Implement Scu API's
+    // TODO [$5dcaac064d7f810007841cc7]: Implement Scu API's
     pub fn enable(&self) {
         //Scu Clock enable_clock()
         //Scu Clock ungate_peripheral_clock
