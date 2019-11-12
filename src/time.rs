@@ -52,15 +52,33 @@ impl Into<Hertz> for KiloHertz {
     }
 }
 
+impl Into<KiloHertz> for Hertz {
+    fn into(self) -> KiloHertz {
+        KiloHertz(self.0 / 1_000)
+    }
+}
+
 impl Into<Hertz> for MegaHertz {
     fn into(self) -> Hertz {
         Hertz(self.0 * 1_000_000)
     }
 }
 
+impl Into<MegaHertz> for Hertz {
+    fn into(self) -> MegaHertz {
+        MegaHertz(self.0 / 1_000_000)
+    }
+}
+
 impl Into<KiloHertz> for MegaHertz {
     fn into(self) -> KiloHertz {
         KiloHertz(self.0 * 1_000)
+    }
+}
+
+impl Into<MegaHertz> for KiloHertz {
+    fn into(self) -> MegaHertz {
+        MegaHertz(self.0 / 1_000)
     }
 }
 
@@ -95,5 +113,33 @@ mod tests {
         let hz32: u32 = 64;
         let hz = Bps(64);
         assert_eq!(hz, hz32.bps());
+    }
+
+    #[test]
+    fn to_hz_from_khz(){
+        let hz = Hertz(55000);
+        let khz = KiloHertz(55);
+        assert_eq!(hz, khz.into());
+    }
+
+    #[test]
+    fn to_hz_from_mhz(){
+        let hz = Hertz(55000000);
+        let mhz = MegaHertz(55);
+        assert_eq!(hz, mhz.into());
+    }
+
+    #[test]
+    fn to_khz_from_hz(){
+        let hz = Hertz(55000000);
+        let khz = KiloHertz(55000);
+        assert_eq!(khz, hz.into());
+    }
+
+    #[test]
+    fn to_khz_from_mhz(){
+        let mhz = MegaHertz(55);
+        let khz = KiloHertz(55000);
+        assert_eq!(khz, mhz.into());
     }
 }
