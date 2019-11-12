@@ -336,6 +336,15 @@ pub enum HibernateIoOutputLevel {
 }
 
 impl Scu {
+
+    pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32){
+        // let reg = get_reg!(SCU_GENERAL, gorcen);
+    }
+
+    pub fn disable_out_of_range_comparator(&self, group: u32, channel: u32){
+
+    }
+
     pub fn enable_hibernate_domain(&self) {
         let scu = periph!(SCU_POWER);
         if scu.pwrstat.read().hiben().bit_is_clear() {
