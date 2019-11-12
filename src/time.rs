@@ -1,16 +1,16 @@
 /// Shameless reuse from https://github.com/stm32-rs
 
 /// Bits per second
-#[derive(PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
 pub struct Bps(pub u32);
 
-#[derive(PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
 pub struct Hertz(pub u32);
 
-#[derive(PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
 pub struct KiloHertz(pub u32);
 
-#[derive(PartialEq, PartialOrd, Clone, Copy)]
+#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
 pub struct MegaHertz(pub u32);
 
 /// Extension trait that adds convenience methods to the `u32` type
@@ -67,8 +67,33 @@ impl Into<KiloHertz> for MegaHertz {
 #[cfg(test)]
 mod tests {
 
+    use super::*;
+
     #[test]
-    fn nothing() {
-        // Do nothing test
+    fn to_hertz() {
+        let hz32: u32 = 64;
+        let hz = Hertz(64);
+        assert_eq!(hz, hz32.hz());
+    }
+
+    #[test]
+    fn to_kilohertz(){
+        let hz32: u32 = 64;
+        let hz = KiloHertz(64);
+        assert_eq!(hz, hz32.khz());
+    }
+
+    #[test]
+    fn to_megahertz(){
+        let hz32: u32 = 64;
+        let hz = MegaHertz(64);
+        assert_eq!(hz, hz32.mhz());
+    }
+
+    #[test]
+    fn to_bps(){
+        let hz32: u32 = 64;
+        let hz = Bps(64);
+        assert_eq!(hz, hz32.bps());
     }
 }
