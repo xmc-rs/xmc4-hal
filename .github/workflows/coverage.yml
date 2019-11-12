@@ -14,7 +14,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --no-fail-fast --features xmc41xx --tests
+          args: --no-fail-fast --features xmc41xx --tests --target x86_64-unknown-linux-gnu
         env:
           'CARGO_INCREMENTAL': '0'
           'RUSTFLAGS': '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads'

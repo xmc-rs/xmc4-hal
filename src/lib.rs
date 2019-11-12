@@ -6,6 +6,9 @@
 #[macro_use]
 pub mod macros;
 
+pub mod delay;
+pub mod time;
+
 #[cfg(feature = "xmc4100")]
 pub use xmc4100;
 #[cfg(feature = "xmc4100")]
