@@ -62,14 +62,14 @@ impl Wdt {
         w
     }
 
-    // TODO [#66]: Implement Scu API's
+    // TODO [#66]: Implement Scu API's for watchdog enable
     pub fn enable(&self) {
         //Scu Clock enable_clock()
         //Scu Clock ungate_peripheral_clock
         //Scu Clock deassert_peripheral_reset
     }
 
-    // TODO Implement Scu API's
+    // TODO Implement Scu API's for watchdog disable
     pub fn disable(&self) {
         //Scu Clock assert_peripheral_reset
         //Scu Clock gate_peripheral_clock
