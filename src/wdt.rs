@@ -2,6 +2,7 @@
 
 use crate::device::wdt::RegisterBlock;
 use crate::device::WDT;
+use crate::scu::{Clock, PeripheralClock, PeripheralReset, Scu};
 
 const ALARM_CLEAR: u32 = 2;
 
@@ -9,6 +10,7 @@ const SERVICE_KEY: u32 = 0xABAD_CAFE;
 
 pub struct Wdt {
     wdt: *const RegisterBlock,
+    scu: Scu,
 }
 
 // Todo: Verify the values of the enum
@@ -54,26 +56,29 @@ pub enum Status {
 }
 
 impl Wdt {
-    pub fn new() -> Wdt {
+    pub fn new(scu: Scu) -> Wdt {
         // Haven't resolved yet fully how i want to deal with this.
         // Need to do more reading.
-        let w = Wdt { wdt: WDT::ptr() };
+        let w = Wdt {
+            wdt: WDT::ptr(),
+            scu,
+        };
         w.enable();
         w
     }
 
     // TODO [#66]: Implement Scu API's for watchdog enable
     pub fn enable(&self) {
-        //Scu Clock enable_clock()
-        //Scu Clock ungate_peripheral_clock
-        //Scu Clock deassert_peripheral_reset
+        self.scu.enable_clock(Clock::Wdt);
+        self.scu.ungate_peripheral_clock(PeripheralClock::Wdt);
+        self.scu.deassert_peripheral_reset(PeripheralReset::Wdt);
     }
 
     // TODO Implement Scu API's for watchdog disable
     pub fn disable(&self) {
-        //Scu Clock assert_peripheral_reset
-        //Scu Clock gate_peripheral_clock
-        //Scu Clock disable_clock()
+        self.scu.assert_peripheral_reset(PeripheralReset::Wdt);
+        self.scu.gate_peripheral_clock(PeripheralClock::Wdt);
+        self.scu.disable_clock(Clock::Wdt);
     }
 
     pub fn set_window_bounds(self, lower: u32, upper: u32) {

@@ -1,4 +1,4 @@
-use crate::device::{SCU_GENERAL, SCU_POWER, SCU_RESET};
+use crate::device::{SCU_CLK, SCU_GENERAL, SCU_POWER, SCU_RESET};
 /// PDIV for main PLL
 const PLL_PDIV_XTAL_8MHZ: u32 = 1;
 
@@ -127,6 +127,19 @@ pub enum Clock {
     Ebu,
     Ccu,
     Wdt,
+}
+
+impl From<Clock> for u32 {
+    fn from(bits: Clock) -> Self {
+        match bits {
+            Clock::Usb => 0x01,
+            Clock::Mmc => 0x02,
+            Clock::Eth => 0x04,
+            Clock::Ebu => 0x08,
+            Clock::Ccu => 0x10,
+            Clock::Wdt => 0x20,
+        }
+    }
 }
 
 #[cfg(not(feature = "xmc4500"))]
@@ -367,6 +380,46 @@ impl Scu {
     /// Program a new device boot mode. The newly set boot mode can be launched by a software reset after updating.
     pub fn set_boot_mode(&self, mode: BootMode) {
         set_field!(SCU_GENERAL, stcon, swcon, u8::from(mode));
+    }
+
+    /// Enable a specific clock in the Scu peripheral
+    pub fn enable_clock(&self, clock: Clock) {
+        set_reg!(SCU_CLK, clkset, u32::from(clock));
+    }
+
+    /// Disable a specific clock in the Scu peripheral
+    pub fn disable_clock(&self, clock: Clock) {
+        set_reg!(SCU_CLK, clkclr, u32::from(clock));
+    }
+
+    /// Check if a peripheral clock is enabled.
+    pub fn is_clock_enabled(&self, clock: Clock) -> bool {
+        return (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0;
+    }
+
+    pub fn gate_peripheral_clock(&self, clock: PeripheralClock) {}
+
+    pub fn ungate_peripheral_clock(&self, clock: PeripheralClock) {}
+
+    // TODO: Update assert_peripheral_reset to const fn once stable
+    pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
+        
+        match peripheral {
+            PeripheralReset::Wdt => {
+                set!(SCU_RESET, prset2, wdtrs);
+            }
+            _ => unimplemented!(),
+        };
+    }
+
+    // TODO: Update deassert_peripheral_reset to const fn once stable
+    pub fn deassert_peripheral_reset(&self, peripheral: PeripheralReset) {
+        match peripheral {
+            PeripheralReset::Wdt => {
+                set!(SCU_RESET, prclr2, wdtrs);
+            }
+            _ => unimplemented!(),
+        };
     }
 }
 
