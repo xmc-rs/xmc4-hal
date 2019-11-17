@@ -397,8 +397,10 @@ impl Scu {
         return (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0;
     }
 
+    #[cfg(not(feature = "xmc4500"))]
     pub fn gate_peripheral_clock(&self, _clock: PeripheralClock) {}
 
+    #[cfg(not(feature = "xmc4500"))]
     pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {}
 
     // TODO: Update assert_peripheral_reset to const fn once stable

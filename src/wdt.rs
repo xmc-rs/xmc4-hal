@@ -2,7 +2,9 @@
 
 use crate::device::wdt::RegisterBlock;
 use crate::device::WDT;
-use crate::scu::{Clock, PeripheralClock, PeripheralReset, Scu};
+use crate::scu::{Clock, PeripheralReset, Scu};
+#[cfg(not(feature = "xmc4500"))]
+use crate::scu::PeripheralClock;
 
 const ALARM_CLEAR: u32 = 2;
 
@@ -69,12 +71,14 @@ impl Wdt {
 
     pub fn enable(&self) {
         self.scu.enable_clock(Clock::Wdt);
+        #[cfg(not(feature = "xmc4500"))]
         self.scu.ungate_peripheral_clock(PeripheralClock::Wdt);
         self.scu.deassert_peripheral_reset(PeripheralReset::Wdt);
     }
 
     pub fn disable(&self) {
         self.scu.assert_peripheral_reset(PeripheralReset::Wdt);
+        #[cfg(not(feature = "xmc4500"))]
         self.scu.gate_peripheral_clock(PeripheralClock::Wdt);
         self.scu.disable_clock(Clock::Wdt);
     }
