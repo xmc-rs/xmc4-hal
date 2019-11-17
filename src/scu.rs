@@ -403,7 +403,7 @@ impl Scu {
     #[cfg(not(feature = "xmc4500"))]
     pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {}
 
-    // TODO: Update assert_peripheral_reset to const fn once stable
+    // TODO [#71]: Update assert_peripheral_reset to const fn once stable
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
@@ -413,7 +413,7 @@ impl Scu {
         };
     }
 
-    // TODO: Update deassert_peripheral_reset to const fn once stable
+    // TODO [#72]: Update deassert_peripheral_reset to const fn once stable
     pub fn deassert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
