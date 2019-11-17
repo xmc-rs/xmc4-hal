@@ -401,7 +401,7 @@ impl Scu {
 
     pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {}
 
-    // TODO [$5dd0cea1a35dcb0007005264]: Update assert_peripheral_reset to const fn once stable
+    // TODO [#71]: Update assert_peripheral_reset to const fn once stable
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
@@ -411,7 +411,7 @@ impl Scu {
         };
     }
 
-    // TODO [$5dd0cea1a35dcb0007005265]: Update deassert_peripheral_reset to const fn once stable
+    // TODO [#72]: Update deassert_peripheral_reset to const fn once stable
     pub fn deassert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
