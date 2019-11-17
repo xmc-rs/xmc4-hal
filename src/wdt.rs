@@ -67,14 +67,12 @@ impl Wdt {
         w
     }
 
-    // TODO [#66]: Implement Scu API's for watchdog enable
     pub fn enable(&self) {
         self.scu.enable_clock(Clock::Wdt);
         self.scu.ungate_peripheral_clock(PeripheralClock::Wdt);
         self.scu.deassert_peripheral_reset(PeripheralReset::Wdt);
     }
 
-    // TODO Implement Scu API's for watchdog disable
     pub fn disable(&self) {
         self.scu.assert_peripheral_reset(PeripheralReset::Wdt);
         self.scu.gate_peripheral_clock(PeripheralClock::Wdt);
