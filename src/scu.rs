@@ -403,7 +403,6 @@ impl Scu {
 
     // TODO: Update assert_peripheral_reset to const fn once stable
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
-        
         match peripheral {
             PeripheralReset::Wdt => {
                 set!(SCU_RESET, prset2, wdtrs);
