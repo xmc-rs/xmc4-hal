@@ -350,13 +350,13 @@ pub enum HibernateIoOutputLevel {
 
 impl Scu {
     // TODO [#68]: Add implementation to enabling out of range comparator.
-    pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
+    pub fn enable_out_of_range_comparator(&self, _group: u32, _channel: u32) {
         // let reg = get_reg!(SCU_GENERAL, gorcen);
         unimplemented!();
     }
 
     // TODO [#69]: Add implementation to disabling out of range comparator.
-    pub fn disable_out_of_range_comparator(&self, group: u32, channel: u32) {
+    pub fn disable_out_of_range_comparator(&self, _group: u32, _channel: u32) {
         unimplemented!();
     }
 
@@ -397,9 +397,9 @@ impl Scu {
         return (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0;
     }
 
-    pub fn gate_peripheral_clock(&self, clock: PeripheralClock) {}
+    pub fn gate_peripheral_clock(&self, _clock: PeripheralClock) {}
 
-    pub fn ungate_peripheral_clock(&self, clock: PeripheralClock) {}
+    pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {}
 
     // TODO: Update assert_peripheral_reset to const fn once stable
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
