@@ -1,3 +1,33 @@
+//! # Watchdog Module
+//!
+//! The watchdog module allows for use of the internal peripheral module that can be serviced periodically to ensure
+//! that the program is staying alive and not trailing off or getting stuck somewhere in a loop.
+//!
+//! ## Examples
+//!
+//! ### Window Watchdog
+//! ```
+//! #![no_main]
+//! #![no_std]
+//!
+//! #[allow(unused)]
+//! use panic_halt;
+//!
+//! use crate::hal::wdt::Wdt;
+//! use crate::hal::scu::Scu;
+//! use xmc4_hal as hal;
+//!
+//! use cortex_m_rt::entry;
+//!
+//! #[entry]
+//! fn main() -> ! {
+//!     let watchdog = Wdt::new(Scu::new());
+//!     watchdog.start();
+//!     loop {
+//!         continue;
+//!     }
+//! }
+//! ```
 #![allow(dead_code)]
 
 use crate::device::wdt::RegisterBlock;
@@ -6,16 +36,20 @@ use crate::scu::{Clock, PeripheralReset, Scu};
 #[cfg(not(feature = "xmc4500"))]
 use crate::scu::PeripheralClock;
 
+///
 const ALARM_CLEAR: u32 = 2;
 
+///Key applied to watchdog when serviced to reset timers.
 const SERVICE_KEY: u32 = 0xABAD_CAFE;
 
+/// Main Watchdog module to configure and utilize.
 pub struct Wdt {
+    /// Watchdog registers based on the peripheral registers crate.
     wdt: *const RegisterBlock,
+    /// System Control Unit module to configure clock registers
     scu: Scu,
 }
 
-// Todo: Verify the values of the enum
 #[derive(PartialEq)]
 pub enum Mode {
     Timeout,
@@ -69,6 +103,9 @@ impl Wdt {
         w
     }
 
+    /// Activate the watchdog peripheral, including the clock.
+    ///
+    /// Must be called after `disable()` has been called to use watchdog again.
     pub fn enable(&self) {
         self.scu.enable_clock(Clock::Wdt);
         #[cfg(not(feature = "xmc4500"))]
@@ -76,6 +113,7 @@ impl Wdt {
         self.scu.deassert_peripheral_reset(PeripheralReset::Wdt);
     }
 
+    /// Completely shut off the watchdog peripheral, including resetting registers and stopping clocks.
     pub fn disable(&self) {
         self.scu.assert_peripheral_reset(PeripheralReset::Wdt);
         #[cfg(not(feature = "xmc4500"))]
@@ -83,20 +121,29 @@ impl Wdt {
         self.scu.disable_clock(Clock::Wdt);
     }
 
-    pub fn set_window_bounds(self, lower: u32, upper: u32) {
+    pub fn set_window_bounds(&self, lower: u32, upper: u32) {
         set_reg!(WDT, wlb, lower);
         set_reg!(WDT, wub, upper);
     }
 
-    pub fn start(self) {
+    /// Start Watchdog peripheral so that it can be serviced.
+    pub fn start(&self) {
         set!(WDT, ctr, enb);
     }
 
-    pub fn stop(self) {
+    /// Stop the watchdog so that it does not need to be serviced.
+    ///
+    /// This should be called when debugging code and wanting to step through
+    /// as the timer will not stop for the debugger.
+    pub fn stop(&self) {
         clear!(WDT, ctr, enb);
     }
 
-    pub fn set_mode(self, mode: Mode) {
+    /// Set operating mode of watchdog.
+    ///
+    /// # Arugments
+    /// - `mode` -- Timeout or Prewarning.
+    pub fn set_mode(&self, mode: Mode) {
         if Mode::Timeout == mode {
             clear!(WDT, ctr, pre);
         } else {
@@ -104,11 +151,19 @@ impl Wdt {
         }
     }
 
-    pub fn set_service_pulse_width(self, pulse_width: u8) {
+    /// Set the window of time for the watchdog servicing.
+    ///
+    /// # Arguments
+    /// - `pulse_width` -- Width of ticks to service watchdog.
+    pub fn set_service_pulse_width(&self, pulse_width: u8) {
         set_field!(WDT, ctr, spw, pulse_width);
     }
 
-    pub fn set_debug_mode(self, mode: DebugMode) {
+    /// Activate or deactivate the debug mode of the peripheral when the CPU is in the HALT mode.
+    ///
+    /// # Arugments
+    /// - `mode` -- Run for run during debugging and halting, Stop to stop the watchdog during debugging.
+    pub fn set_debug_mode(&self, mode: DebugMode) {
         if DebugMode::Run == mode {
             set!(WDT, ctr, dsp);
         } else {
@@ -116,15 +171,21 @@ impl Wdt {
         }
     }
 
-    pub fn get_counter(self) -> u32 {
+    /// Access current watchdog counter value.
+    ///
+    /// # Returns
+    /// Current value of watchdog timer counter.
+    pub fn get_counter(&self) -> u32 {
         get_reg!(WDT, tim)
     }
 
-    pub fn service(self) {
+    /// Alert watchdog to be serviced. This will reset the timer.
+    pub fn service(&self) {
         set_reg!(WDT, srv, SERVICE_KEY);
     }
 
-    pub fn clear_alarm(self) {
+    /// Clear the previously trigged pre-warning alarm flag.
+    pub fn clear_alarm(&self) {
         set_reg!(WDT, wdtclr, ALARM_CLEAR);
     }
 }
