@@ -32,9 +32,9 @@
 
 use crate::device::wdt::RegisterBlock;
 use crate::device::WDT;
-use crate::scu::{Clock, PeripheralReset, Scu};
 #[cfg(not(feature = "xmc4500"))]
 use crate::scu::PeripheralClock;
+use crate::scu::{Clock, PeripheralReset, Scu};
 
 ///
 const ALARM_CLEAR: u32 = 2;
