@@ -14,5 +14,5 @@ jobs:
             override: true
       - uses: actions-rs/clippy-check@v1.0.5
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           args: --features xmc41xx
