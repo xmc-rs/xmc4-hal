@@ -39,12 +39,13 @@ cortex-m-rt = "0.6.10"
 device-selected = []
 xmc41xx = ["xmc4100", "device-selected"]
 xmc42xx = ["xmc4200", "device-selected"]
-xmc43xx = ["xmc4300", "device-selected", "ecat"]
+xmc43xx = ["xmc4300", "device-selected", "ecat", "sdmmc"]
 xmc44xx = ["xmc4400", "device-selected"]
-xmc45xx = ["xmc4500", "device-selected"]
-xmc47xx = ["xmc4700", "device-selected"]
-xmc48xx = ["xmc4800", "device-selected", "ecat"]
+xmc45xx = ["xmc4500", "device-selected", "sdmmc"]
+xmc47xx = ["xmc4700", "device-selected", "sdmmc"]
+xmc48xx = ["xmc4800", "device-selected", "ecat", "sdmmc"]
 ecat = []
+sdmmc = []
 
 [dependencies.void]
 default-features = false
