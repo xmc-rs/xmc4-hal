@@ -4,14 +4,15 @@
 #[allow(unused)]
 use panic_halt;
 
-use crate::hal::wdt::Wdt;
+use crate::hal::{scu::Scu, wdt::Wdt};
 use xmc4_hal as hal;
 
 use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
-    let watchdog = Wdt::new();
+    let scu = Scu::new();
+    let watchdog = Wdt::new(scu);
     watchdog.start();
     loop {
         continue;

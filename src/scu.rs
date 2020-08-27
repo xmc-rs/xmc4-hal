@@ -349,6 +349,10 @@ pub enum HibernateIoOutputLevel {
 }
 
 impl Scu {
+    pub fn new() -> Self {
+        Scu {}
+    }
+
     // TODO [#68]: Add implementation to enabling out of range comparator.
     pub fn enable_out_of_range_comparator(&self, _group: u32, _channel: u32) {
         // let reg = get_reg!(SCU_GENERAL, gorcen);
