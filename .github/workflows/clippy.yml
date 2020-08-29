@@ -5,14 +5,14 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.2
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: 'stable'
             target: 'thumbv7em-none-eabi'
             components: clippy
             override: true
-      - uses: actions-rs/clippy-check@v1.0.5
+      - uses: actions-rs/clippy-check@v1.0.7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --features xmc41xx
