@@ -7,7 +7,7 @@ use crate::device::PORT0;
 const IOCR_PC_SIZE: u32 = 8;
 
 pub struct Gpio {
-    port0: *const RegisterBlock
+    // port0: *const RegisterBlock
 }
 
 pub enum OutputLevel {
@@ -63,6 +63,15 @@ impl From<HardwareControl> for u32 {
             HardwareConrtol::Peripheral1 => 1,
             HardwareControl::Peripheral2 => 2,
         }
+    }
+}
+
+impl Gpio {
+    pub fn new() -> Gpio {
+        let gpio = Gpio {
+
+        };
+        gpio
     }
 }
 
