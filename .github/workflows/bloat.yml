@@ -19,3 +19,4 @@ jobs:
         uses: orf/cargo-bloat-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          bloat_args: "--features=xmc41xx"
