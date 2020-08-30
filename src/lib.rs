@@ -67,6 +67,8 @@ pub mod flash;
 #[cfg(feature = "device-selected")]
 pub mod gpdma;
 #[cfg(feature = "device-selected")]
+pub mod gpio;
+#[cfg(feature = "device-selected")]
 pub mod hrpwm;
 #[cfg(feature = "device-selected")]
 pub mod ledts;
