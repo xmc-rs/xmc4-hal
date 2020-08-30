@@ -2,10 +2,9 @@
     "rust.features": [
         "xmc41xx"
     ],
-    "rust-analyzer.enableCargoWatchOnStartup": "enabled",
-    "rust-analyzer.rainbowHighlightingOn": true,
-    "rust-analyzer.trace.cargo-watch": "error",
     "rust-analyzer.trace.server": "messages",
-    "rust-analyzer.cargo-watch.arguments": "--features=xmc41xx",
-    "rust-analyzer.highlightingOn": true,
+    "rust-client.disableRustup": true,
+    "rust-client.engine": "rust-analyzer",
+    "rust.all_targets": false,
+    "rust.rustflags": "-C link-arg=-Tlink.x",
 }
