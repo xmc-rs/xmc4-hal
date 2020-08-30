@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         rust-channel: [ 'stable', 'nightly' ]
-        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabi' ]
+        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
     name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}
     runs-on: ubuntu-latest
     steps:

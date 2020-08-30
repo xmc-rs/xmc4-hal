@@ -14,7 +14,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: 'stable'
-          target: 'thumbv7em-none-eabi'
+          target: 'thumbv7em-none-eabihf'
           override: true
       - name: Cargo Doc
         uses: actions-rs/cargo@v1
