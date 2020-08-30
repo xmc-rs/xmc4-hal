@@ -1,4 +1,3 @@
-
 #![allow(dead_code)]
 
 use crate::device::port0::RegisterBlock;
@@ -14,7 +13,7 @@ pub enum OutputLevel {
     /// Reset bit
     Low = 0x10000,
     ///Set bit
-    High = 1
+    High = 1,
 }
 
 impl From<u32> for OutputLevel {
@@ -42,7 +41,7 @@ pub enum HardwareControl {
     /// HWI0/HWO0 control path can override the software configuration
     Peripheral1,
     /// HWI1/HWO1 control path can override the software configuration
-    Peripheral2
+    Peripheral2,
 }
 
 impl From<u32> for HardwareControl {
@@ -68,9 +67,7 @@ impl From<HardwareControl> for u32 {
 
 impl Gpio {
     pub fn new() -> Gpio {
-        let gpio = Gpio {
-
-        };
+        let gpio = Gpio {};
         gpio
     }
 }
