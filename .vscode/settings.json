@@ -3,8 +3,9 @@
         "xmc41xx"
     ],
     "rust-analyzer.trace.server": "messages",
-    "rust-client.disableRustup": true,
     "rust-client.engine": "rust-analyzer",
     "rust.all_targets": false,
     "rust.rustflags": "-C link-arg=-Tlink.x",
+    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
+    "rust-analyzer.cargo.target": "thumbv7em-none-eabi",
 }
