@@ -387,7 +387,7 @@ impl Scu {
 
     /// Check if a peripheral clock is enabled.
     pub fn is_clock_enabled(&self, clock: Clock) -> bool {
-        return (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0;
+        (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0
     }
 
     #[cfg(not(feature = "xmc4500"))]
