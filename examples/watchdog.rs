@@ -12,8 +12,7 @@ use cortex_m_rt::entry;
 
 #[entry]
 fn main() -> ! {
-    let d = device::Peripherals::take().unwrap();
-    let watchdog = wdt::Wdt::new();
+    let watchdog = wdt::Wdt::new(scu::Scu::new());
     watchdog.start();
     loop {
         continue;
