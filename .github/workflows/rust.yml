@@ -35,4 +35,4 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --verbose --examples --target ${{ matrix.rust-target }} --features=xmc41xx
+          args: --verbose --examples --target thumbv7em-none-eabihf --features=xmc41xx
