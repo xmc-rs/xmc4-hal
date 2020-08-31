@@ -339,7 +339,6 @@ pub enum HibernateIoOutputLevel {
 }
 
 impl Scu {
-
     pub fn new() -> Self {
         Scu {}
     }

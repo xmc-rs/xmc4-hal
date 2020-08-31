@@ -4,9 +4,8 @@
 #[allow(unused)]
 use panic_halt;
 
-use xmc4_hal as hal;
 use hal::{device, scu, wdt};
-
+use xmc4_hal as hal;
 
 use cortex_m_rt::entry;
 
