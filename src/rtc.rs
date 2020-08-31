@@ -191,6 +191,10 @@ impl RtcExt for RTC {
 pub struct Rtc {}
 
 impl Rtc {
+    pub fn new() -> Self {
+        Rtc {}
+    }
+
     #[inline(always)]
     fn wait_for_mirrsts(&self) {
         while get_field!(SCU_GENERAL, mirrsts, rtc_ctr).bit_is_clear() {
