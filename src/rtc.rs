@@ -182,7 +182,7 @@ pub trait RtcExt {
     fn constrain(self) -> Rtc;
 }
 
-impl RtcExt for Rtc {
+impl RtcExt for RTC {
     fn constrain(self) -> Rtc {
         Rtc {}
     }
