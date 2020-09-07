@@ -11,7 +11,7 @@ jobs:
       matrix:
         rust-channel: [ 'stable', 'nightly' ]
         rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
-    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}
+    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.os }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
