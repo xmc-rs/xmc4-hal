@@ -1,0 +1,27 @@
+name: Examples
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+    name: ${{ matrix.device }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.2
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: 'stable'
+            target: 'thumbv7em-none-eabihf'
+            override: true
+      - name: Cargo Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --examples --features=${{ matrix.device }}

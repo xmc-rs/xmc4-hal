@@ -8,17 +8,7 @@ const PLL_NDIV_XTAL_8MHZ: u32 = 89;
 /// K2DIV for main PLL
 const PLL_K2DIV_XTAL_8MHZ: u32 = 2;
 
-pub trait ScuExt {
-    fn constrain(self) -> Scu;
-}
-
 pub struct Scu {}
-
-impl ScuExt for Scu {
-    fn constrain(self) -> Scu {
-        Scu {}
-    }
-}
 
 pub enum Status {
     /// Scu operations completed
@@ -349,6 +339,9 @@ pub enum HibernateIoOutputLevel {
 }
 
 impl Scu {
+    pub fn new() -> Self {
+        Scu {}
+    }
     // TODO [#68]: Add implementation to enabling out of range comparator.
     pub fn enable_out_of_range_comparator(&self, _group: u32, _channel: u32) {
         // let reg = get_reg!(SCU_GENERAL, gorcen);
@@ -394,7 +387,7 @@ impl Scu {
 
     /// Check if a peripheral clock is enabled.
     pub fn is_clock_enabled(&self, clock: Clock) -> bool {
-        return (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0;
+        (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0
     }
 
     #[cfg(not(feature = "xmc4500"))]
