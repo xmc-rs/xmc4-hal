@@ -11,8 +11,9 @@ jobs:
       matrix:
         rust-channel: [ 'stable', 'nightly' ]
         rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
     name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2.3.2
       - name: Install toolchain
