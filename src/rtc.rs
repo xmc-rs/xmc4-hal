@@ -182,7 +182,7 @@ pub trait RtcExt {
     fn constrain(self) -> Rtc;
 }
 
-impl RtcExt for Rtc {
+impl RtcExt for RTC {
     fn constrain(self) -> Rtc {
         Rtc {}
     }
@@ -191,6 +191,10 @@ impl RtcExt for Rtc {
 pub struct Rtc {}
 
 impl Rtc {
+    pub fn new() -> Self {
+        Rtc {}
+    }
+
     #[inline(always)]
     fn wait_for_mirrsts(&self) {
         while get_field!(SCU_GENERAL, mirrsts, rtc_ctr).bit_is_clear() {

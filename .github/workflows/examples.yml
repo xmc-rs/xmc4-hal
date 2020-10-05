@@ -1,4 +1,4 @@
-name: XMC Devices
+name: Examples
 
 on:
   push:
@@ -20,13 +20,8 @@ jobs:
             toolchain: 'stable'
             target: 'thumbv7em-none-eabihf'
             override: true
-      - name: Cargo Check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: --features=${{ matrix.device }}
       - name: Cargo Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --features=${{ matrix.device }}
+          args: --examples --features=${{ matrix.device }}
