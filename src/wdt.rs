@@ -2,32 +2,7 @@
 //!
 //! The watchdog module allows for use of the internal peripheral module that can be serviced periodically to ensure
 //! that the program is staying alive and not trailing off or getting stuck somewhere in a loop.
-//!
-//! ## Examples
-//!
-//! ### Window Watchdog
-//! ```
-//! #![no_main]
-//! #![no_std]
-//!
-//! #[allow(unused)]
-//! use panic_halt;
-//!
-//! use crate::hal::wdt::Wdt;
-//! use crate::hal::scu::Scu;
-//! use xmc4_hal as hal;
-//!
-//! use cortex_m_rt::entry;
-//!
-//! #[entry]
-//! fn main() -> ! {
-//!     let watchdog = Wdt::new(Scu::new());
-//!     watchdog.start();
-//!     loop {
-//!         continue;
-//!     }
-//! }
-//! ```
+
 #![allow(dead_code)]
 
 use crate::device::wdt::RegisterBlock;
