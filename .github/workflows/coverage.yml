@@ -20,7 +20,7 @@ jobs:
           'RUSTFLAGS': '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off'
       - name: Code coverage
         id: coverage
-        uses: actions-rs/grcov@v0.1
+        uses: actions-rs/grcov@v0.1.6
       - name: Coveralls upload
         uses: coverallsapp/github-action@v1.1.2
         with:
