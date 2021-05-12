@@ -11,7 +11,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
-      - uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v1.0.3
         with:
           command: test
           args: --no-fail-fast --features xmc41xx --tests --target x86_64-unknown-linux-gnu
