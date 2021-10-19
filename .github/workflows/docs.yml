@@ -11,23 +11,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.3
       - name: Install Toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.7
         with:
           toolchain: 'stable'
           target: 'thumbv7em-none-eabihf'
           override: true
       - name: Cargo Doc
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v1.0.3
         with:
           command: doc
           args: --verbose --no-deps --document-private-items --features=xmc41xx
       # - name: Cargo Install
-      #   uses: actions-rs/cargo@v1
+      #   uses: actions-rs/cargo@v1.0.3
       #   with:
       #     command: install
       #     args: cargo-ghp-upload
       # - name: GHP Upload
-      #   uses: actions-rs/cargo@v1
+      #   uses: actions-rs/cargo@v1.0.3
       #   with:
       #     command: ghp-upload
       #   env:

@@ -11,23 +11,23 @@ jobs:
       matrix:
         rust-channel: [ 'stable', 'nightly' ]
         rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
-    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}
+    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.os }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.3
       - name: Install toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.7
         with:
             toolchain: ${{ matrix.rust-channel }}
             target: ${{ matrix.rust-target }}
             override: true
       - name: Cargo Check
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v1.0.3
         with:
           command: check
           args: --target ${{ matrix.rust-target }} --features=xmc41xx
       - name: Cargo Build
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v1.0.3
         with:
           command: build
           args: --verbose --target ${{ matrix.rust-target }} --features=xmc41xx

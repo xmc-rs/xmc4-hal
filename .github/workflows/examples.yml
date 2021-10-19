@@ -15,13 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.3
       - name: Install toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.7
         with:
             toolchain: 'stable'
             target: 'thumbv7em-none-eabihf'
             override: true
       - name: Cargo Build
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v1.0.3
         with:
           command: build
           args: --examples --features=${{ matrix.device }}

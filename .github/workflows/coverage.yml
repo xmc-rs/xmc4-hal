@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.3
-      - uses: actions-rs/toolchain@v1.0.0
+      - uses: actions-rs/toolchain@v1.0.7
         with:
           toolchain: nightly
           override: true
-      - uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v1.0.3
         with:
           command: test
           args: --no-fail-fast --features xmc41xx --tests --target x86_64-unknown-linux-gnu
@@ -20,7 +20,7 @@ jobs:
           'RUSTFLAGS': '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off'
       - name: Code coverage
         id: coverage
-        uses: actions-rs/grcov@v0.1
+        uses: actions-rs/grcov@v0.1.6
       - name: Coveralls upload
         uses: coverallsapp/github-action@v1.1.2
         with:
