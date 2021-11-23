@@ -25,7 +25,7 @@ features = ["xmc41xx"]
 
 [dependencies]
 xmc4100 = { version = "0.4.0", optional = true }
-xmc4200 = { version = "0.4.0", optional = true }
+xmc4200 = { version = "0.5.0", optional = true }
 xmc4300 = { version = "0.4.0", optional = true }
 xmc4400 = { version = "0.5.0", optional = true }
 xmc4500 = { version = "0.4.0", optional = true }
