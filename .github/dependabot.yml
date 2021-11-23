@@ -2,16 +2,26 @@
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
 # https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
+ 
 version: 2
 updates:
   - package-ecosystem: "cargo" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "rust"
+      - "automerge"
       
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "github_actions"
+      - "automerge"
+    
+ 
