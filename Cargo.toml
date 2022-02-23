@@ -57,7 +57,7 @@ version = "0.3.0"
 
 [dependencies.embedded-hal]
 features = ["unproven"]
-version = "0.2.4"
+version = "0.2.7"
 
 [dev-dependencies]
 panic-halt = "0.2.0"
