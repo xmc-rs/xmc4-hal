@@ -33,7 +33,7 @@ xmc4700 = { version = "0.5.0", optional = true }
 xmc4800 = { version = "0.5.0", optional = true }
 cortex-m = "0.7.4"
 nb = "1.0.0"
-cortex-m-rt = "0.6.12"
+cortex-m-rt = "0.7.1"
 
 [features]
 device-selected = []
