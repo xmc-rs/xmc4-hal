@@ -75,7 +75,7 @@ version = "1.4.3"
 
 [dev-dependencies.cobs]
 default-features = false
-version = "0.1.4"
+version = "0.2.3"
 
 [dev-dependencies.crc16]
 default-features = false
