@@ -66,7 +66,7 @@ panic-itm = "0.4.2"
 cortex-m-rtfm = "0.5.3"
 cortex-m-semihosting = "0.5.0"
 heapless = "0.8.0"
-libm = "0.2.6"
+libm = "0.2.8"
 as-slice = "0.2.1"
 
 [dev-dependencies.byteorder]
