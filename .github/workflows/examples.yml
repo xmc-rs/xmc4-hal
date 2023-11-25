@@ -15,13 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
       - name: Install toolchain
-        uses: actions-rs/toolchain@v1.0.7
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
             toolchain: 'stable'
             target: 'thumbv7em-none-eabihf'
-            override: true
       - name: Cargo Build
-        uses: actions-rs/cargo@v1.0.3
-        with:
-          command: build
-          args: --examples --features=${{ matrix.device }}
+        run: cargo build --examples --features=${{ matrix.device }}

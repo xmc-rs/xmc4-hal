@@ -11,24 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
       - name: Install Toolchain
-        uses: actions-rs/toolchain@v1.0.7
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: 'stable'
           target: 'thumbv7em-none-eabihf'
-          override: true
       - name: Cargo Doc
-        uses: actions-rs/cargo@v1.0.3
-        with:
-          command: doc
-          args: --verbose --no-deps --document-private-items --features=xmc41xx
-      # - name: Cargo Install
-      #   uses: actions-rs/cargo@v1.0.3
-      #   with:
-      #     command: install
-      #     args: cargo-ghp-upload
-      # - name: GHP Upload
-      #   uses: actions-rs/cargo@v1.0.3
-      #   with:
-      #     command: ghp-upload
-      #   env:
-      #     'GH_TOKEN': ${{ secrets.GH_TOKEN }}
+        run: cargo doc --verbose --no-deps --document-private-items --features=xmc41xx
