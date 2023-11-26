@@ -9,7 +9,7 @@ macro_rules! periph {
 macro_rules! set {
     ($periph:ident, $reg:ident, $bits:ident) => {
         let periph = periph!($periph);
-        periph.$reg.write(|w| w.$bits().set_bit());
+        periph.$reg().write(|w| w.$bits().set_bit());
     };
 }
 
@@ -17,32 +17,32 @@ macro_rules! set {
 macro_rules! clear {
     ($periph:ident, $reg:ident, $bits:ident) => {
         let periph = periph!($periph);
-        periph.$reg.write(|w| w.$bits().clear_bit());
+        periph.$reg().write(|w| w.$bits().clear_bit());
     };
 }
 
 macro_rules! set_reg {
     ($periph:ident, $reg:ident, $value:expr) => {
         let periph = periph!($periph);
-        unsafe { periph.$reg.write(|w| w.bits($value)) };
+        unsafe { periph.$reg().write(|w| w.bits($value)) };
     };
 }
 
 macro_rules! set_field {
     ($periph:ident, $reg:ident, $bits:ident, $value:expr) => {
         let periph = periph!($periph);
-        unsafe { periph.$reg.modify(|_, w| w.$bits().bits($value)) };
+        unsafe { periph.$reg().write(|w| w.$bits().bits($value)) };
     };
 }
 
 macro_rules! get_reg {
     ($periph:ident, $reg:ident) => {
-        unsafe { &*$periph::ptr() }.$reg.read().bits()
+        unsafe { &*$periph::ptr() }.$reg().read().bits()
     };
 }
 
 macro_rules! get_field {
     ($periph:ident, $reg:ident, $field:ident) => {
-        unsafe { &*$periph::ptr() }.$reg.read().$field()
+        unsafe { &*$periph::ptr() }.$reg().read().$field()
     };
 }
