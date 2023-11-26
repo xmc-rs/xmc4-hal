@@ -1,15 +1,8 @@
 {
-    "rust-client.channel": "nightly",
-    "rust-client.engine": "rust-analyzer",
-    "rust.all_features": false,
-    "rust.build_on_save": true,
-    "rust.features": [
-        "xmc41xx"
-    ],
     "rust-analyzer.cargo.features": [
-        "xmc41xx"
+        "xmc42xx"
     ],
-    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
-    "rust-analyzer.cargo.target": "thumbv7em-none-eabihf"
+    "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
+    "editor.tabSize": 4
 
 }

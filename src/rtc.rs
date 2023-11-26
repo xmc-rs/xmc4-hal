@@ -231,14 +231,14 @@ impl Rtc {
 
         self.wait_for_mirrsts();
         let rtc = periph!(RTC);
-        rtc.tim0.modify(|_, w| unsafe {
+        rtc.tim0().modify(|_, w| unsafe {
             w.se().bits(time.second);
             w.mi().bits(time.minute);
             w.ho().bits(time.hour);
             w.da().bits(time.day)
         });
         self.wait_for_mirrsts();
-        rtc.tim1.modify(|_, w| unsafe {
+        rtc.tim1().modify(|_, w| unsafe {
             w.dawe().bits(time.weekday as u8);
             w.mo().bits(time.month as u8);
             w.ye().bits(time.year)
@@ -248,13 +248,13 @@ impl Rtc {
     pub fn get_time(&self) -> Time {
         let rtc = periph!(RTC);
         Time {
-            second: rtc.tim0.read().se().bits(),
-            minute: rtc.tim0.read().mi().bits(),
-            hour: rtc.tim0.read().ho().bits(),
-            day: rtc.tim0.read().da().bits(),
-            weekday: Weekday::from(rtc.tim1.read().dawe().bits()),
-            month: Month::from(rtc.tim1.read().mo().bits()),
-            year: rtc.tim1.read().ye().bits(),
+            second: rtc.tim0().read().se().bits(),
+            minute: rtc.tim0().read().mi().bits(),
+            hour: rtc.tim0().read().ho().bits(),
+            day: rtc.tim0().read().da().bits(),
+            weekday: Weekday::from(rtc.tim1().read().dawe().bits()),
+            month: Month::from(rtc.tim1().read().mo().bits()),
+            year: rtc.tim1().read().ye().bits(),
         }
     }
 
@@ -281,14 +281,14 @@ impl Rtc {
 
         self.wait_for_mirrsts();
         let rtc = periph!(RTC);
-        rtc.atim0.modify(|_, w| unsafe {
+        rtc.atim0().modify(|_, w| unsafe {
             w.ase().bits(time.second);
             w.ami().bits(time.minute);
             w.aho().bits(time.hour);
             w.ada().bits(time.day)
         });
         self.wait_for_mirrsts();
-        rtc.atim1.modify(|_, w| unsafe {
+        rtc.atim1().modify(|_, w| unsafe {
             w.amo().bits(time.month as u8);
             w.aye().bits(time.year)
         });
@@ -297,13 +297,13 @@ impl Rtc {
     pub fn get_alarm(&self) -> Time {
         let rtc = periph!(RTC);
         Time {
-            second: rtc.atim0.read().ase().bits(),
-            minute: rtc.atim0.read().ami().bits(),
-            hour: rtc.atim0.read().aho().bits(),
-            day: rtc.atim0.read().ada().bits(),
+            second: rtc.atim0().read().ase().bits(),
+            minute: rtc.atim0().read().ami().bits(),
+            hour: rtc.atim0().read().aho().bits(),
+            day: rtc.atim0().read().ada().bits(),
             weekday: Weekday::Sunday,
-            month: Month::from(rtc.atim1.read().amo().bits()),
-            year: rtc.atim1.read().aye().bits(),
+            month: Month::from(rtc.atim1().read().amo().bits()),
+            year: rtc.atim1().read().aye().bits(),
         }
     }
 
@@ -327,9 +327,9 @@ impl Rtc {
 
     pub fn enable(&self) {
         let scu = periph!(SCU_POWER);
-        if scu.pwrstat.read().hiben().bit_is_clear() {
-            scu.pwrset.write(|w| w.hib().set_bit());
-            while scu.pwrstat.read().hiben().bit_is_clear() {}
+        if scu.pwrstat().read().hiben().bit_is_clear() {
+            scu.pwrset().write(|w| w.hib().set_bit());
+            while scu.pwrstat().read().hiben().bit_is_clear() {}
         }
     }
 
