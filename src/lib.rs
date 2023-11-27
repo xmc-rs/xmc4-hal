@@ -4,39 +4,39 @@
 
 // Error if not target feature provided
 #[cfg(not(any(
-    feature="xmc41xx",
-    feature="xmc42xx",
-    feature="xmc43xx",
-    feature="xmc44xx",
-    feature="xmc45xx",
-    feature="xmc47xx",
-    feature="xmc48xx",
+    feature = "xmc41xx",
+    feature = "xmc42xx",
+    feature = "xmc43xx",
+    feature = "xmc44xx",
+    feature = "xmc45xx",
+    feature = "xmc47xx",
+    feature = "xmc48xx",
 )))]
 compile_error!("Target not provided. Give `--features <target>` is required.");
 
 // Error if more than one target feature provided
 #[cfg(any(
-    all(feature="xmc41xx", feature="xmc42xx"),
-    all(feature="xmc41xx", feature="xmc43xx"),
-    all(feature="xmc41xx", feature="xmc44xx"),
-    all(feature="xmc41xx", feature="xmc45xx"),
-    all(feature="xmc41xx", feature="xmc47xx"),
-    all(feature="xmc41xx", feature="xmc48xx"),
-    all(feature="xmc42xx", feature="xmc43xx"),
-    all(feature="xmc42xx", feature="xmc44xx"),
-    all(feature="xmc42xx", feature="xmc45xx"),
-    all(feature="xmc42xx", feature="xmc47xx"),
-    all(feature="xmc42xx", feature="xmc48xx"),
-    all(feature="xmc43xx", feature="xmc44xx"),
-    all(feature="xmc43xx", feature="xmc45xx"),
-    all(feature="xmc43xx", feature="xmc47xx"),
-    all(feature="xmc43xx", feature="xmc48xx"),
-    all(feature="xmc44xx", feature="xmc45xx"),
-    all(feature="xmc44xx", feature="xmc47xx"),
-    all(feature="xmc44xx", feature="xmc48xx"),
-    all(feature="xmc45xx", feature="xmc47xx"),
-    all(feature="xmc45xx", feature="xmc48xx"),
-    all(feature="xmc47xx", feature="xmc48xx"),
+    all(feature = "xmc41xx", feature = "xmc42xx"),
+    all(feature = "xmc41xx", feature = "xmc43xx"),
+    all(feature = "xmc41xx", feature = "xmc44xx"),
+    all(feature = "xmc41xx", feature = "xmc45xx"),
+    all(feature = "xmc41xx", feature = "xmc47xx"),
+    all(feature = "xmc41xx", feature = "xmc48xx"),
+    all(feature = "xmc42xx", feature = "xmc43xx"),
+    all(feature = "xmc42xx", feature = "xmc44xx"),
+    all(feature = "xmc42xx", feature = "xmc45xx"),
+    all(feature = "xmc42xx", feature = "xmc47xx"),
+    all(feature = "xmc42xx", feature = "xmc48xx"),
+    all(feature = "xmc43xx", feature = "xmc44xx"),
+    all(feature = "xmc43xx", feature = "xmc45xx"),
+    all(feature = "xmc43xx", feature = "xmc47xx"),
+    all(feature = "xmc43xx", feature = "xmc48xx"),
+    all(feature = "xmc44xx", feature = "xmc45xx"),
+    all(feature = "xmc44xx", feature = "xmc47xx"),
+    all(feature = "xmc44xx", feature = "xmc48xx"),
+    all(feature = "xmc45xx", feature = "xmc47xx"),
+    all(feature = "xmc45xx", feature = "xmc48xx"),
+    all(feature = "xmc47xx", feature = "xmc48xx"),
 ))]
 compile_error!("Multiple targets specified. Can only specify `--features <target>` once.");
 
@@ -49,37 +49,37 @@ pub mod time;
 #[cfg(feature = "xmc4100")]
 pub use xmc4100;
 #[cfg(feature = "xmc4100")]
-pub use xmc4100 as device;
+pub use xmc4100 as pac;
 
 #[cfg(feature = "xmc4200")]
 pub use xmc4200;
 #[cfg(feature = "xmc4200")]
-pub use xmc4200 as device;
+pub use xmc4200 as pac;
 
 #[cfg(feature = "xmc4300")]
 pub use xmc4300;
 #[cfg(feature = "xmc4300")]
-pub use xmc4300 as device;
+pub use xmc4300 as pac;
 
 #[cfg(feature = "xmc4400")]
 pub use xmc4400;
 #[cfg(feature = "xmc4400")]
-pub use xmc4400 as device;
+pub use xmc4400 as pac;
 
 #[cfg(feature = "xmc4500")]
 pub use xmc4500;
 #[cfg(feature = "xmc4500")]
-pub use xmc4500 as device;
+pub use xmc4500 as pac;
 
 #[cfg(feature = "xmc4700")]
 pub use xmc4700;
 #[cfg(feature = "xmc4700")]
-pub use xmc4700 as device;
+pub use xmc4700 as pac;
 
 #[cfg(feature = "xmc4800")]
 pub use xmc4800;
 #[cfg(feature = "xmc4800")]
-pub use xmc4800 as device;
+pub use xmc4800 as pac;
 
 #[cfg(feature = "device-selected")]
 pub mod can;

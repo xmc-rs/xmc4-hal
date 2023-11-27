@@ -1,4 +1,4 @@
-use crate::device::{SCU_CLK, SCU_GENERAL, SCU_POWER, SCU_RESET};
+use crate::pac::{SCU_CLK, SCU_GENERAL, SCU_POWER, SCU_RESET};
 /// PDIV for main PLL
 const PLL_PDIV_XTAL_8MHZ: u32 = 1;
 

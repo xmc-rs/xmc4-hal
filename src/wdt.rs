@@ -5,8 +5,8 @@
 
 #![allow(dead_code)]
 
-use crate::device::wdt::RegisterBlock;
-use crate::device::WDT;
+use crate::pac::wdt::RegisterBlock;
+use crate::pac::WDT;
 #[cfg(not(feature = "xmc4500"))]
 use crate::scu::PeripheralClock;
 use crate::scu::{Clock, PeripheralReset, Scu};

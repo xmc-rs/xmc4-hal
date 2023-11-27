@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::device::VADC;
+use crate::pac::VADC;
 
 pub trait VadcExt {
     fn constrain(self) -> Vadc;

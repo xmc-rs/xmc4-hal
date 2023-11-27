@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::device::{RTC, SCU_GENERAL, SCU_POWER, SCU_RESET};
+use crate::pac::{RTC, SCU_GENERAL, SCU_POWER, SCU_RESET};
 // use crate::scu::Scu;
 
 /// Maximum number of seconds for the RTC time
