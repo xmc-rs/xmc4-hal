@@ -354,7 +354,7 @@ impl Scu {
     }
 
     pub fn enable_hibernate_domain(&self) {
-        let scu = unsafe{&*SCU_POWER::ptr()};
+        let scu = unsafe { &*SCU_POWER::ptr() };
         if scu.pwrstat().read().hiben().bit_is_clear() {
             scu.pwrset().write(|w| w.hib().set_bit());
             while scu.pwrstat().read().hiben().bit_is_clear() {}
