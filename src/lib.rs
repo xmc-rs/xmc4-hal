@@ -1,7 +1,44 @@
 #![no_std]
-#![allow(non_camel_case_types)]
 #![allow(clippy::new_without_default)]
 #![allow(dead_code)]
+
+// Error if not target feature provided
+#[cfg(not(any(
+    feature="xmc41xx",
+    feature="xmc42xx",
+    feature="xmc43xx",
+    feature="xmc44xx",
+    feature="xmc45xx",
+    feature="xmc47xx",
+    feature="xmc48xx",
+)))]
+compile_error!("Target not provided. Give `--features <target>` is required.");
+
+// Error if more than one target feature provided
+#[cfg(any(
+    all(feature="xmc41xx", feature="xmc42xx"),
+    all(feature="xmc41xx", feature="xmc43xx"),
+    all(feature="xmc41xx", feature="xmc44xx"),
+    all(feature="xmc41xx", feature="xmc45xx"),
+    all(feature="xmc41xx", feature="xmc47xx"),
+    all(feature="xmc41xx", feature="xmc48xx"),
+    all(feature="xmc42xx", feature="xmc43xx"),
+    all(feature="xmc42xx", feature="xmc44xx"),
+    all(feature="xmc42xx", feature="xmc45xx"),
+    all(feature="xmc42xx", feature="xmc47xx"),
+    all(feature="xmc42xx", feature="xmc48xx"),
+    all(feature="xmc43xx", feature="xmc44xx"),
+    all(feature="xmc43xx", feature="xmc45xx"),
+    all(feature="xmc43xx", feature="xmc47xx"),
+    all(feature="xmc43xx", feature="xmc48xx"),
+    all(feature="xmc44xx", feature="xmc45xx"),
+    all(feature="xmc44xx", feature="xmc47xx"),
+    all(feature="xmc44xx", feature="xmc48xx"),
+    all(feature="xmc45xx", feature="xmc47xx"),
+    all(feature="xmc45xx", feature="xmc48xx"),
+    all(feature="xmc47xx", feature="xmc48xx"),
+))]
+compile_error!("Multiple targets specified. Can only specify `--features <target>` once.");
 
 #[macro_use]
 pub mod macros;
