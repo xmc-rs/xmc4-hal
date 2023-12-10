@@ -2,7 +2,7 @@
 authors = ["Lucas Brendel <lucasbrendel@gmail.com>"]
 edition = "2018"
 name = "xmc4-hal"
-version = "0.1.0"
+version = "0.1.1"
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/xmc-rs/xmc4-hal"
