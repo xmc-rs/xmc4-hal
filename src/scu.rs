@@ -1,4 +1,4 @@
-use crate::pac::{SCU_CLK, SCU_GENERAL, SCU_POWER, SCU_RESET};
+use crate::pac::{SCU_CLK, SCU_GENERAL, SCU_POWER, SCU_RESET, SCU_INTERRUPT};
 /// PDIV for main PLL
 const PLL_PDIV_XTAL_8MHZ: u32 = 1;
 
@@ -338,9 +338,78 @@ pub enum HibernateIoOutputLevel {
     High,
 }
 
+pub enum EventTriggers {
+    WdtPreWarn,
+    RtcPeriodic,
+    RtcAlarm,
+    DlrRequestOverrun = 3,
+    Lpaclr = 6,Lpacth0,
+    Lpacth1,
+    Lpacst,
+    Lpacclr,
+    Lpacset,
+    Hintst,
+    Hintclr,
+    Hintset,
+    Hdcrclr= 17,
+    Hdcrset,
+    Hdcr,
+    Oscsictrl = 21,
+    Osculctrl = 23,
+    RtcCtr,
+    RtcAtim0,
+    RtcAtim1,
+    RtcTim1,
+    RetentionMemory
+}
+
 impl Scu {
     pub fn new() -> Self {
         Scu {}
+    }
+
+    pub fn enable_event(&self, event: EventTriggers) {
+        let scu = unsafe { &*SCU_INTERRUPT::ptr() };
+
+        scu.srmsk()
+            .modify(|r, w| unsafe { w.bits(r.bits() | event) });
+    }
+
+    pub fn disable_event(&self, event: EventTriggers) {
+        let scu = unsafe { &*SCU_INTERRUPT::ptr() };
+
+        scu.srmsk()
+            .modify(|r, w| unsafe { w.bits(r.bits() & !event) });
+    }
+
+    pub fn trigger_event(&self, event: EventTriggers) {
+        let scu = unsafe { &*SCU_INTERRUPT::ptr() };
+        scu.srset().write(|w| match event {
+            EventTriggers::WdtPreWarn => w.prwarn().set_bit(),
+            EventTriggers::RtcPeriodic => w.pi().set_bit(),
+            EventTriggers::RtcAlarm => todo!(),
+            EventTriggers::DlrRequestOverrun => todo!(),
+            EventTriggers::Lpaclr => todo!(),
+            EventTriggers::Lpacth0 => todo!(),
+            EventTriggers::Lpacth1 => todo!(),
+            EventTriggers::Lpacst => todo!(),
+            EventTriggers::Lpacclr => todo!(),
+            EventTriggers::Lpacset => todo!(),
+            EventTriggers::Hintst => todo!(),
+            EventTriggers::Hintclr => todo!(),
+            EventTriggers::Hintset => todo!(),
+            EventTriggers::Hdcrclr => todo!(),
+            EventTriggers::Hdcrset => todo!(),
+            EventTriggers::Hdcr => todo!(),
+            EventTriggers::Oscsictrl => todo!(),
+            EventTriggers::Osculctrl => todo!(),
+            EventTriggers::RtcCtr => todo!(),
+            EventTriggers::RtcAtim0 => todo!(),
+            EventTriggers::RtcAtim1 => todo!(),
+            EventTriggers::RtcTim1 => todo!(),
+            EventTriggers::RetentionMemory => todo!(),
+        }
+        );
     }
 
     pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
