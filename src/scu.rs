@@ -342,15 +342,41 @@ impl Scu {
     pub fn new() -> Self {
         Scu {}
     }
-    // TODO [#68]: Add implementation to enabling out of range comparator.
-    pub fn enable_out_of_range_comparator(&self, _group: u32, _channel: u32) {
-        // let reg = get_reg!(SCU_GENERAL, gorcen);
-        unimplemented!();
+
+    pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
+        let scu = unsafe {&*SCU_GENERAL::ptr()};
+
+        match group {
+            0 => match channel {
+                6 => scu.g0orcen().write(|w| w.enorc6().set_bit()),
+                7 => scu.g0orcen().write(|w| w.enorc7().set_bit()),
+                _ => unimplemented!("bad channel")
+            },
+            1 => match channel {
+                6 => scu.g1orcen().write(|w| w.enorc6().set_bit()),
+                7 => scu.g1orcen().write(|w| w.enorc7().set_bit()),
+                _ => unimplemented!("bad channel")
+            }
+            _ => unimplemented!("bad group")
+        }
     }
 
-    // TODO [#69]: Add implementation to disabling out of range comparator.
-    pub fn disable_out_of_range_comparator(&self, _group: u32, _channel: u32) {
-        unimplemented!();
+    pub fn disable_out_of_range_comparator(&self, group: u32, channel: u32) {
+        let scu = unsafe {&*SCU_GENERAL::ptr()};
+
+        match group {
+            0 => match channel {
+                6 => scu.g0orcen().write(|w| w.enorc6().clear_bit()),
+                7 => scu.g0orcen().write(|w| w.enorc7().clear_bit()),
+                _ => unimplemented!("bad channel")
+            },
+            1 => match channel {
+                6 => scu.g1orcen().write(|w| w.enorc6().clear_bit()),
+                7 => scu.g1orcen().write(|w| w.enorc7().clear_bit()),
+                _ => unimplemented!("bad channel")
+            }
+            _ => unimplemented!("bad group")
+        }
     }
 
     pub fn enable_hibernate_domain(&self) {
