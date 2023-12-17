@@ -344,38 +344,38 @@ impl Scu {
     }
 
     pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
-        let scu = unsafe {&*SCU_GENERAL::ptr()};
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
 
         match group {
             0 => match channel {
                 6 => scu.g0orcen().write(|w| w.enorc6().set_bit()),
                 7 => scu.g0orcen().write(|w| w.enorc7().set_bit()),
-                _ => unimplemented!("bad channel")
+                _ => (),
             },
             1 => match channel {
                 6 => scu.g1orcen().write(|w| w.enorc6().set_bit()),
                 7 => scu.g1orcen().write(|w| w.enorc7().set_bit()),
-                _ => unimplemented!("bad channel")
-            }
-            _ => unimplemented!("bad group")
+                _ => (),
+            },
+            _ => (),
         }
     }
 
     pub fn disable_out_of_range_comparator(&self, group: u32, channel: u32) {
-        let scu = unsafe {&*SCU_GENERAL::ptr()};
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
 
         match group {
             0 => match channel {
                 6 => scu.g0orcen().write(|w| w.enorc6().clear_bit()),
                 7 => scu.g0orcen().write(|w| w.enorc7().clear_bit()),
-                _ => unimplemented!("bad channel")
+                _ => (),
             },
             1 => match channel {
                 6 => scu.g1orcen().write(|w| w.enorc6().clear_bit()),
                 7 => scu.g1orcen().write(|w| w.enorc7().clear_bit()),
-                _ => unimplemented!("bad channel")
-            }
-            _ => unimplemented!("bad group")
+                _ => (),
+            },
+            _ => (),
         }
     }
 
