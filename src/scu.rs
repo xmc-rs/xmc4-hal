@@ -369,7 +369,7 @@ impl From<EventTriggers> for u32 {
     fn from(bits: EventTriggers) -> u32 {
         match bits {
             EventTriggers::WdtPreWarn => 0,
-            EventTriggers::RtcPeriodic =>1,
+            EventTriggers::RtcPeriodic => 1,
             EventTriggers::RtcAlarm => 2,
             EventTriggers::DlrRequestOverrun => 3,
             EventTriggers::Lpaclr => 6,
