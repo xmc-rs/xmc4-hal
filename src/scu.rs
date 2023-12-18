@@ -1,4 +1,4 @@
-use crate::pac::{SCU_CLK, SCU_GENERAL, SCU_POWER, SCU_RESET, SCU_INTERRUPT};
+use crate::pac::{SCU_CLK, SCU_GENERAL, SCU_INTERRUPT, SCU_POWER, SCU_RESET};
 /// PDIV for main PLL
 const PLL_PDIV_XTAL_8MHZ: u32 = 1;
 
@@ -342,8 +342,9 @@ pub enum EventTriggers {
     WdtPreWarn,
     RtcPeriodic,
     RtcAlarm,
-    DlrRequestOverrun = 3,
-    Lpaclr = 6,Lpacth0,
+    DlrRequestOverrun,
+    Lpaclr = 6,
+    Lpacth0,
     Lpacth1,
     Lpacst,
     Lpacclr,
@@ -351,7 +352,7 @@ pub enum EventTriggers {
     Hintst,
     Hintclr,
     Hintset,
-    Hdcrclr= 17,
+    Hdcrclr = 17,
     Hdcrset,
     Hdcr,
     Oscsictrl = 21,
@@ -359,8 +360,40 @@ pub enum EventTriggers {
     RtcCtr,
     RtcAtim0,
     RtcAtim1,
+    RtcTim0,
     RtcTim1,
-    RetentionMemory
+    RetentionMemory,
+}
+
+impl From<EventTriggers> for u32 {
+    fn from(bits: EventTriggers) -> u32 {
+        match bits {
+            EventTriggers::WdtPreWarn => 0,
+            EventTriggers::RtcPeriodic =>1,
+            EventTriggers::RtcAlarm => 2,
+            EventTriggers::DlrRequestOverrun => 3,
+            EventTriggers::Lpaclr => 6,
+            EventTriggers::Lpacth0 => 7,
+            EventTriggers::Lpacth1 => 8,
+            EventTriggers::Lpacst => 9,
+            EventTriggers::Lpacclr => 10,
+            EventTriggers::Lpacset => 11,
+            EventTriggers::Hintst => 12,
+            EventTriggers::Hintclr => 13,
+            EventTriggers::Hintset => 14,
+            EventTriggers::Hdcrclr => 17,
+            EventTriggers::Hdcrset => 18,
+            EventTriggers::Hdcr => 19,
+            EventTriggers::Oscsictrl => 21,
+            EventTriggers::Osculctrl => 23,
+            EventTriggers::RtcCtr => 24,
+            EventTriggers::RtcAtim0 => 25,
+            EventTriggers::RtcAtim1 => 26,
+            EventTriggers::RtcTim0 => 27,
+            EventTriggers::RtcTim1 => 28,
+            EventTriggers::RetentionMemory => 29,
+        }
+    }
 }
 
 impl Scu {
@@ -372,14 +405,14 @@ impl Scu {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
 
         scu.srmsk()
-            .modify(|r, w| unsafe { w.bits(r.bits() | event) });
+            .modify(|r, w| unsafe { w.bits(r.bits() | event as u32) });
     }
 
     pub fn disable_event(&self, event: EventTriggers) {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
 
         scu.srmsk()
-            .modify(|r, w| unsafe { w.bits(r.bits() & !event) });
+            .modify(|r, w| unsafe { w.bits(r.bits() & !(event as u32)) });
     }
 
     pub fn trigger_event(&self, event: EventTriggers) {
@@ -387,29 +420,29 @@ impl Scu {
         scu.srset().write(|w| match event {
             EventTriggers::WdtPreWarn => w.prwarn().set_bit(),
             EventTriggers::RtcPeriodic => w.pi().set_bit(),
-            EventTriggers::RtcAlarm => todo!(),
-            EventTriggers::DlrRequestOverrun => todo!(),
-            EventTriggers::Lpaclr => todo!(),
-            EventTriggers::Lpacth0 => todo!(),
-            EventTriggers::Lpacth1 => todo!(),
-            EventTriggers::Lpacst => todo!(),
-            EventTriggers::Lpacclr => todo!(),
-            EventTriggers::Lpacset => todo!(),
-            EventTriggers::Hintst => todo!(),
-            EventTriggers::Hintclr => todo!(),
-            EventTriggers::Hintset => todo!(),
-            EventTriggers::Hdcrclr => todo!(),
-            EventTriggers::Hdcrset => todo!(),
-            EventTriggers::Hdcr => todo!(),
-            EventTriggers::Oscsictrl => todo!(),
-            EventTriggers::Osculctrl => todo!(),
-            EventTriggers::RtcCtr => todo!(),
-            EventTriggers::RtcAtim0 => todo!(),
-            EventTriggers::RtcAtim1 => todo!(),
-            EventTriggers::RtcTim1 => todo!(),
-            EventTriggers::RetentionMemory => todo!(),
-        }
-        );
+            EventTriggers::RtcAlarm => w.ai().set_bit(),
+            EventTriggers::DlrRequestOverrun => w.dlrovr().set_bit(),
+            EventTriggers::Lpaclr => w.lpaccr().set_bit(),
+            EventTriggers::Lpacth0 => w.lpacth0().set_bit(),
+            EventTriggers::Lpacth1 => w.lpacth1().set_bit(),
+            EventTriggers::Lpacst => w.lpacst().set_bit(),
+            EventTriggers::Lpacclr => w.lpacclr().set_bit(),
+            EventTriggers::Lpacset => w.lpacset().set_bit(),
+            EventTriggers::Hintst => w.hintst().set_bit(),
+            EventTriggers::Hintclr => w.hintclr().set_bit(),
+            EventTriggers::Hintset => w.hintset().set_bit(),
+            EventTriggers::Hdcrclr => w.hdcrclr().set_bit(),
+            EventTriggers::Hdcrset => w.hdcrset().set_bit(),
+            EventTriggers::Hdcr => w.hdcr().set_bit(),
+            EventTriggers::Oscsictrl => w.oscsictrl().set_bit(),
+            EventTriggers::Osculctrl => w.osculctrl().set_bit(),
+            EventTriggers::RtcCtr => w.rtc_ctr().set_bit(),
+            EventTriggers::RtcAtim0 => w.rtc_atim0().set_bit(),
+            EventTriggers::RtcAtim1 => w.rtc_atim1().set_bit(),
+            EventTriggers::RtcTim0 => w.rtc_tim0().set_bit(),
+            EventTriggers::RtcTim1 => w.rtc_tim1().set_bit(),
+            EventTriggers::RetentionMemory => w.rmx().set_bit(),
+        });
     }
 
     pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
