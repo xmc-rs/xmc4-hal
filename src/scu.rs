@@ -552,6 +552,24 @@ impl Scu {
         }
     }
 
+    pub fn read_gpr(index: u32) -> u32 {
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        match index {
+            0 => scu.gpr0().read().bits(),
+            1 => scu.gpr1().read().bits(),
+            _ => unimplemented!()
+        }
+    }
+
+    pub fn write_gpr(index: u32, data :  u32) {
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        match index {
+            0 => scu.gpr0().write(|w| unsafe {w.bits(data)}),
+            1 => scu.gpr1().write(|w| unsafe {w.bits(data)}),
+            _ => unimplemented!()
+        }
+    }
+
     pub fn enable_hibernate_domain(&self) {
         let scu = unsafe { &*SCU_POWER::ptr() };
         if scu.pwrstat().read().hiben().bit_is_clear() {
