@@ -338,7 +338,7 @@ pub enum HibernateIoOutputLevel {
     High,
 }
 
-pub enum EventTriggers {
+pub enum InterruptEvent {
     WdtPreWarn,
     RtcPeriodic,
     RtcAlarm,
@@ -365,33 +365,33 @@ pub enum EventTriggers {
     RetentionMemory,
 }
 
-impl From<EventTriggers> for u32 {
-    fn from(bits: EventTriggers) -> u32 {
+impl From<InterruptEvent> for u32 {
+    fn from(bits: InterruptEvent) -> u32 {
         match bits {
-            EventTriggers::WdtPreWarn => 0,
-            EventTriggers::RtcPeriodic => 1,
-            EventTriggers::RtcAlarm => 2,
-            EventTriggers::DlrRequestOverrun => 3,
-            EventTriggers::Lpaclr => 6,
-            EventTriggers::Lpacth0 => 7,
-            EventTriggers::Lpacth1 => 8,
-            EventTriggers::Lpacst => 9,
-            EventTriggers::Lpacclr => 10,
-            EventTriggers::Lpacset => 11,
-            EventTriggers::Hintst => 12,
-            EventTriggers::Hintclr => 13,
-            EventTriggers::Hintset => 14,
-            EventTriggers::Hdcrclr => 17,
-            EventTriggers::Hdcrset => 18,
-            EventTriggers::Hdcr => 19,
-            EventTriggers::Oscsictrl => 21,
-            EventTriggers::Osculctrl => 23,
-            EventTriggers::RtcCtr => 24,
-            EventTriggers::RtcAtim0 => 25,
-            EventTriggers::RtcAtim1 => 26,
-            EventTriggers::RtcTim0 => 27,
-            EventTriggers::RtcTim1 => 28,
-            EventTriggers::RetentionMemory => 29,
+            InterruptEvent::WdtPreWarn => 0,
+            InterruptEvent::RtcPeriodic => 1,
+            InterruptEvent::RtcAlarm => 2,
+            InterruptEvent::DlrRequestOverrun => 3,
+            InterruptEvent::Lpaclr => 6,
+            InterruptEvent::Lpacth0 => 7,
+            InterruptEvent::Lpacth1 => 8,
+            InterruptEvent::Lpacst => 9,
+            InterruptEvent::Lpacclr => 10,
+            InterruptEvent::Lpacset => 11,
+            InterruptEvent::Hintst => 12,
+            InterruptEvent::Hintclr => 13,
+            InterruptEvent::Hintset => 14,
+            InterruptEvent::Hdcrclr => 17,
+            InterruptEvent::Hdcrset => 18,
+            InterruptEvent::Hdcr => 19,
+            InterruptEvent::Oscsictrl => 21,
+            InterruptEvent::Osculctrl => 23,
+            InterruptEvent::RtcCtr => 24,
+            InterruptEvent::RtcAtim0 => 25,
+            InterruptEvent::RtcAtim1 => 26,
+            InterruptEvent::RtcTim0 => 27,
+            InterruptEvent::RtcTim1 => 28,
+            InterruptEvent::RetentionMemory => 29,
         }
     }
 }
@@ -401,47 +401,47 @@ impl Scu {
         Scu {}
     }
 
-    pub fn enable_event(&self, event: EventTriggers) {
+    pub fn enable_event(&self, event: InterruptEvent) {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
 
         scu.srmsk()
             .modify(|r, w| unsafe { w.bits(r.bits() | event as u32) });
     }
 
-    pub fn disable_event(&self, event: EventTriggers) {
+    pub fn disable_event(&self, event: InterruptEvent) {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
 
         scu.srmsk()
             .modify(|r, w| unsafe { w.bits(r.bits() & !(event as u32)) });
     }
 
-    pub fn trigger_event(&self, event: EventTriggers) {
+    pub fn trigger_event(&self, event: InterruptEvent) {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
         scu.srset().write(|w| match event {
-            EventTriggers::WdtPreWarn => w.prwarn().set_bit(),
-            EventTriggers::RtcPeriodic => w.pi().set_bit(),
-            EventTriggers::RtcAlarm => w.ai().set_bit(),
-            EventTriggers::DlrRequestOverrun => w.dlrovr().set_bit(),
-            EventTriggers::Lpaclr => w.lpaccr().set_bit(),
-            EventTriggers::Lpacth0 => w.lpacth0().set_bit(),
-            EventTriggers::Lpacth1 => w.lpacth1().set_bit(),
-            EventTriggers::Lpacst => w.lpacst().set_bit(),
-            EventTriggers::Lpacclr => w.lpacclr().set_bit(),
-            EventTriggers::Lpacset => w.lpacset().set_bit(),
-            EventTriggers::Hintst => w.hintst().set_bit(),
-            EventTriggers::Hintclr => w.hintclr().set_bit(),
-            EventTriggers::Hintset => w.hintset().set_bit(),
-            EventTriggers::Hdcrclr => w.hdcrclr().set_bit(),
-            EventTriggers::Hdcrset => w.hdcrset().set_bit(),
-            EventTriggers::Hdcr => w.hdcr().set_bit(),
-            EventTriggers::Oscsictrl => w.oscsictrl().set_bit(),
-            EventTriggers::Osculctrl => w.osculctrl().set_bit(),
-            EventTriggers::RtcCtr => w.rtc_ctr().set_bit(),
-            EventTriggers::RtcAtim0 => w.rtc_atim0().set_bit(),
-            EventTriggers::RtcAtim1 => w.rtc_atim1().set_bit(),
-            EventTriggers::RtcTim0 => w.rtc_tim0().set_bit(),
-            EventTriggers::RtcTim1 => w.rtc_tim1().set_bit(),
-            EventTriggers::RetentionMemory => w.rmx().set_bit(),
+            InterruptEvent::WdtPreWarn => w.prwarn().set_bit(),
+            InterruptEvent::RtcPeriodic => w.pi().set_bit(),
+            InterruptEvent::RtcAlarm => w.ai().set_bit(),
+            InterruptEvent::DlrRequestOverrun => w.dlrovr().set_bit(),
+            InterruptEvent::Lpaclr => w.lpaccr().set_bit(),
+            InterruptEvent::Lpacth0 => w.lpacth0().set_bit(),
+            InterruptEvent::Lpacth1 => w.lpacth1().set_bit(),
+            InterruptEvent::Lpacst => w.lpacst().set_bit(),
+            InterruptEvent::Lpacclr => w.lpacclr().set_bit(),
+            InterruptEvent::Lpacset => w.lpacset().set_bit(),
+            InterruptEvent::Hintst => w.hintst().set_bit(),
+            InterruptEvent::Hintclr => w.hintclr().set_bit(),
+            InterruptEvent::Hintset => w.hintset().set_bit(),
+            InterruptEvent::Hdcrclr => w.hdcrclr().set_bit(),
+            InterruptEvent::Hdcrset => w.hdcrset().set_bit(),
+            InterruptEvent::Hdcr => w.hdcr().set_bit(),
+            InterruptEvent::Oscsictrl => w.oscsictrl().set_bit(),
+            InterruptEvent::Osculctrl => w.osculctrl().set_bit(),
+            InterruptEvent::RtcCtr => w.rtc_ctr().set_bit(),
+            InterruptEvent::RtcAtim0 => w.rtc_atim0().set_bit(),
+            InterruptEvent::RtcAtim1 => w.rtc_atim1().set_bit(),
+            InterruptEvent::RtcTim0 => w.rtc_tim0().set_bit(),
+            InterruptEvent::RtcTim1 => w.rtc_tim1().set_bit(),
+            InterruptEvent::RetentionMemory => w.rmx().set_bit(),
         });
     }
 
