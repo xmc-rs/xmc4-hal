@@ -10,6 +10,7 @@ const PLL_K2DIV_XTAL_8MHZ: u32 = 2;
 
 pub struct Scu {}
 
+#[derive(Copy, Clone, Debug)]
 pub enum Status {
     /// Scu operations completed
     Ok,
@@ -20,6 +21,7 @@ pub enum Status {
 }
 
 /// Triggers for global start of control of specified Ccu channels
+#[derive(Copy, Clone, Debug)]
 pub enum CcuTrigger {
     Ccu40,
     Ccu41,
@@ -29,6 +31,7 @@ pub enum CcuTrigger {
     Ccu81,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum Trap {
     OscWdg,
     VcoLock,
@@ -43,6 +46,7 @@ pub enum Trap {
     EcatReset,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum Parity {
     PsramMem,
     Dsram1Mem,
@@ -59,6 +63,7 @@ pub enum Parity {
     SdmmcMem1,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum ResetReason {
     Porst,
     Swd,
@@ -69,6 +74,7 @@ pub enum ResetReason {
     ParityError,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum NmiReq {
     WdtWarn,
     RtcPi,
@@ -79,6 +85,7 @@ pub enum NmiReq {
     Eru03,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum PeripheralReset {
     Vadc,
     Dsd,
@@ -110,6 +117,7 @@ pub enum PeripheralReset {
     Ebu,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum Clock {
     Usb,
     Mmc,
@@ -133,6 +141,7 @@ impl From<Clock> for u32 {
 }
 
 #[cfg(not(feature = "xmc4500"))]
+#[derive(Copy, Clone, Debug)]
 pub enum PeripheralClock {
     Vadc,
     Dsd,
@@ -164,33 +173,39 @@ pub enum PeripheralClock {
     Ebu,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum SysClockSource {
     Ofi,
     Pll,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum SysPllClockSource {
     Oschp,
     Ofi,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum UsbClockSource {
     UsbPll,
     SysPll,
 }
 
 #[cfg(feature = "ecat")]
+#[derive(Copy, Clone, Debug)]
 pub enum EcatClockSource {
     UsbPll,
     SysPll,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum WdtClockSource {
     Ofi,
     Stdby,
     Pll,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum ExtOutClockSource {
     Sys,
     Usb,
@@ -199,21 +214,25 @@ pub enum ExtOutClockSource {
     Stdby,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum RtcClockSource {
     Osi,
     Ulp,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum StdbyClockSource {
     Osi,
     Osculp,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum FofiCalibrationMode {
     Factory,
     Automatic,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum BootMode {
     Normal,
     AscBsl,
@@ -256,12 +275,14 @@ impl From<u8> for BootMode {
     }
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum SysPllMode {
     Disabled,
     Normal,
     Prescaler,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum SleepModeConfig {
     SysClkFofi,
     SysClkPll,
@@ -279,6 +300,7 @@ pub enum SleepModeConfig {
     EnableWdt,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum DeepSleepModeConfig {
     SysClkFofi,
     SysClkPll,
@@ -299,16 +321,19 @@ pub enum DeepSleepModeConfig {
     EnableWdt,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum PowerEvrStatus {
     Ok,
     Evr13OverVoltage,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum CtrlStatus {
     NoActive,
     Active,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum HibernateEvent {
     OnPosEdge,
     OnNegEdge,
@@ -316,11 +341,13 @@ pub enum HibernateEvent {
     UlpWdg,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum HibernateIo {
     Io0,
     Io1,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum HibernatePinMode {
     InputPullNone,
     InputPullDown,
@@ -333,6 +360,7 @@ pub enum HibernatePinMode {
     OutputOpenDrainGpio,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum HibernateIoOutputLevel {
     Low,
     High,
