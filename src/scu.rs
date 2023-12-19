@@ -424,7 +424,7 @@ impl From<u32> for InterruptEvent {
             27 => InterruptEvent::RtcTim0,
             28 => InterruptEvent::RtcTim1,
             29 => InterruptEvent::RetentionMemory,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
