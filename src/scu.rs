@@ -338,6 +338,7 @@ pub enum HibernateIoOutputLevel {
     High,
 }
 
+#[derive(Copy, Clone, Debug)]
 pub enum InterruptEvent {
     WdtPreWarn,
     RtcPeriodic,
@@ -396,6 +397,38 @@ impl From<InterruptEvent> for u32 {
     }
 }
 
+impl From<u32> for InterruptEvent {
+    fn from(bits: u32) -> InterruptEvent {
+        match bits {
+            0 => InterruptEvent::WdtPreWarn,
+            1 => InterruptEvent::RtcPeriodic,
+            2 => InterruptEvent::RtcAlarm,
+            3 => InterruptEvent::DlrRequestOverrun,
+            6 => InterruptEvent::Lpaclr,
+            7 => InterruptEvent::Lpacth0,
+            8 => InterruptEvent::Lpacth1,
+            9 => InterruptEvent::Lpacst,
+            10 => InterruptEvent::Lpacclr,
+            11 => InterruptEvent::Lpacset,
+            12 => InterruptEvent::Hintst,
+            13 => InterruptEvent::Hintclr,
+            14 => InterruptEvent::Hintset,
+            17 => InterruptEvent::Hdcrclr,
+            18 => InterruptEvent::Hdcrset,
+            19 => InterruptEvent::Hdcr,
+            21 => InterruptEvent::Oscsictrl,
+            23 => InterruptEvent::Osculctrl,
+            24 => InterruptEvent::RtcCtr,
+            25 => InterruptEvent::RtcAtim0,
+            26 => InterruptEvent::RtcAtim1,
+            27 => InterruptEvent::RtcTim0,
+            28 => InterruptEvent::RtcTim1,
+            29 => InterruptEvent::RetentionMemory,
+            _ => unimplemented!()
+        }
+    }
+}
+
 impl Scu {
     pub fn new() -> Self {
         Scu {}
@@ -443,6 +476,11 @@ impl Scu {
             InterruptEvent::RtcTim1 => w.rtc_tim1().set_bit(),
             InterruptEvent::RetentionMemory => w.rmx().set_bit(),
         });
+    }
+
+    pub fn get_event_status() -> InterruptEvent {
+        let scu = unsafe { &*SCU_INTERRUPT::ptr() };
+        scu.srraw().read().bits().into()
     }
 
     pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
