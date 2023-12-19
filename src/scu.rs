@@ -511,6 +511,11 @@ impl Scu {
         scu.srraw().read().bits().into()
     }
 
+    pub fn clear_event_status(event: InterruptEvent) {
+        let scu = unsafe { &*SCU_INTERRUPT::ptr() };
+        scu.srclr().write(|w| unsafe { w.bits(event as u32) });
+    }
+
     pub fn enable_out_of_range_comparator(&self, group: u32, channel: u32) {
         let scu = unsafe { &*SCU_GENERAL::ptr() };
 
