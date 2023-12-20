@@ -738,6 +738,26 @@ impl Scu {
     fn low_temperature() -> bool {
         unimplemented!();
     }
+
+    pub fn write_to_retention_memory(address: u32, data: u32) {
+        // TODO: Clean this up
+        let rmacr = ((address << 16) & 0xF0000) | 1;
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+
+        general.rmdata().write(|w| unsafe { w.data().bits(data) });
+        general.rmacr().write(|w| unsafe { w.bits(rmacr) });
+
+        while general.mirrsts().read().rmx().bit_is_set() {}
+    }
+
+    pub fn read_from_retention_memory(address: u32) -> u32 {
+        let rmacr = (address << 16) & 0xF0000;
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+
+        general.rmdata().write(|w| unsafe { w.data().bits(data) });
+        while general.mirrsts().read().rmx().bit_is_set() {}
+        general.rmdata().read().data().bits()
+    }
 }
 
 #[cfg(test)]
