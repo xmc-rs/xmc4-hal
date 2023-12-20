@@ -373,22 +373,40 @@ pub enum InterruptEvent {
     RtcAlarm,
     DlrRequestOverrun,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Lpaclr = 6,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Lpacth0,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Lpacth1,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Lpacst,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Lpacclr,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Lpacset,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Hintst,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Hintclr,
     #[cfg(not(feature = "xmc4300"))]
+    #[cfg(not(feature = "xmc4500"))]
+    #[cfg(not(feature = "xmc4700"))]
     Hintset,
     Hdcrclr = 17,
     Hdcrset,
@@ -411,22 +429,40 @@ impl From<InterruptEvent> for u32 {
             InterruptEvent::RtcAlarm => 2,
             InterruptEvent::DlrRequestOverrun => 3,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Lpaclr => 6,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Lpacth0 => 7,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Lpacth1 => 8,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Lpacst => 9,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Lpacclr => 10,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Lpacset => 11,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Hintst => 12,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Hintclr => 13,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
+            #[cfg(not(feature = "xmc4700"))]
             InterruptEvent::Hintset => 14,
             InterruptEvent::Hdcrclr => 17,
             InterruptEvent::Hdcrset => 18,
@@ -451,22 +487,30 @@ impl From<u32> for InterruptEvent {
             2 => InterruptEvent::RtcAlarm,
             3 => InterruptEvent::DlrRequestOverrun,
             #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
             6 => InterruptEvent::Lpaclr,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             7 => InterruptEvent::Lpacth0,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             8 => InterruptEvent::Lpacth1,
-            #[cfg(not(feature = "xmc4300"))]
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             9 => InterruptEvent::Lpacst,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             10 => InterruptEvent::Lpacclr,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             11 => InterruptEvent::Lpacset,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             12 => InterruptEvent::Hintst,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             13 => InterruptEvent::Hintclr,
+            #[cfg(not(feature = "xmc4500"))]
             #[cfg(not(feature = "xmc4300"))]
             14 => InterruptEvent::Hintset,
             17 => InterruptEvent::Hdcrclr,
@@ -506,41 +550,7 @@ impl Scu {
 
     pub fn trigger_event(&self, event: InterruptEvent) {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
-        scu.srset().write(|w| match event {
-            InterruptEvent::WdtPreWarn => w.prwarn().set_bit(),
-            InterruptEvent::RtcPeriodic => w.pi().set_bit(),
-            InterruptEvent::RtcAlarm => w.ai().set_bit(),
-            InterruptEvent::DlrRequestOverrun => w.dlrovr().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Lpaclr => w.lpaccr().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Lpacth0 => w.lpacth0().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Lpacth1 => w.lpacth1().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Lpacst => w.lpacst().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Lpacclr => w.lpacclr().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Lpacset => w.lpacset().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Hintst => w.hintst().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Hintclr => w.hintclr().set_bit(),
-            #[cfg(not(feature = "xmc4300"))]
-            InterruptEvent::Hintset => w.hintset().set_bit(),
-            InterruptEvent::Hdcrclr => w.hdcrclr().set_bit(),
-            InterruptEvent::Hdcrset => w.hdcrset().set_bit(),
-            InterruptEvent::Hdcr => w.hdcr().set_bit(),
-            InterruptEvent::Oscsictrl => w.oscsictrl().set_bit(),
-            InterruptEvent::Osculctrl => w.osculctrl().set_bit(),
-            InterruptEvent::RtcCtr => w.rtc_ctr().set_bit(),
-            InterruptEvent::RtcAtim0 => w.rtc_atim0().set_bit(),
-            InterruptEvent::RtcAtim1 => w.rtc_atim1().set_bit(),
-            InterruptEvent::RtcTim0 => w.rtc_tim0().set_bit(),
-            InterruptEvent::RtcTim1 => w.rtc_tim1().set_bit(),
-            InterruptEvent::RetentionMemory => w.rmx().set_bit(),
-        });
+        scu.srset().write(|w| unsafe { w.bits(event as u32) });
     }
 
     pub fn get_event_status() -> InterruptEvent {
