@@ -557,16 +557,16 @@ impl Scu {
         match index {
             0 => scu.gpr0().read().bits(),
             1 => scu.gpr1().read().bits(),
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 
-    pub fn write_gpr(index: u32, data :  u32) {
+    pub fn write_gpr(index: u32, data: u32) {
         let scu = unsafe { &*SCU_GENERAL::ptr() };
         match index {
-            0 => scu.gpr0().write(|w| unsafe {w.bits(data)}),
-            1 => scu.gpr1().write(|w| unsafe {w.bits(data)}),
-            _ => unimplemented!()
+            0 => scu.gpr0().write(|w| unsafe { w.bits(data) }),
+            1 => scu.gpr1().write(|w| unsafe { w.bits(data) }),
+            _ => unimplemented!(),
         }
     }
 
@@ -578,33 +578,44 @@ impl Scu {
         }
     }
     pub fn is_hibernate_domain_enabled(&self) -> bool {
-        get_field!(SCU_POWER, pwrstat, hiben).bit_is_set()
-            && !get_field!(SCU_RESET, rststat, hibrs).bit_is_set()
+        let power = unsafe { &*SCU_POWER::ptr() };
+        let reset = unsafe { &*SCU_RESET::ptr() };
+
+        power.pwrstat().read().hiben().bit_is_set() && reset.rststat().read().hibrs().bit_is_set()
     }
 
     /// Access the currently programmed boot mode
     pub fn get_boot_mode(&self) -> BootMode {
-        BootMode::from(get_field!(SCU_GENERAL, stcon, swcon).bits())
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+
+        BootMode::from(general.stcon().read().swcon().bits())
     }
 
     /// Program a new device boot mode. The newly set boot mode can be launched by a software reset after updating.
     pub fn set_boot_mode(&self, mode: BootMode) {
-        set_field!(SCU_GENERAL, stcon, swcon, u8::from(mode));
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+
+        general
+            .stcon()
+            .write(|w| unsafe { w.swcon().bits(u8::from(mode)) });
     }
 
     /// Enable a specific clock in the Scu peripheral
     pub fn enable_clock(&self, clock: Clock) {
-        set_reg!(SCU_CLK, clkset, u32::from(clock));
+        let clk = unsafe { &*SCU_CLK::ptr() };
+        clk.clkset().write(|w| unsafe { w.bits(u32::from(clock)) });
     }
 
     /// Disable a specific clock in the Scu peripheral
     pub fn disable_clock(&self, clock: Clock) {
-        set_reg!(SCU_CLK, clkclr, u32::from(clock));
+        let clk = unsafe { &*SCU_CLK::ptr() };
+        clk.clkclr().write(|w| unsafe { w.bits(u32::from(clock)) });
     }
 
     /// Check if a peripheral clock is enabled.
     pub fn is_clock_enabled(&self, clock: Clock) -> bool {
-        (get_reg!(SCU_CLK, clkstat) & u32::from(clock)) > 0
+        let clk = unsafe { &*SCU_CLK::ptr() };
+        (clk.clkstat().read().bits() & u32::from(clock)) > 0
     }
 
     #[cfg(not(feature = "xmc4500"))]
@@ -616,7 +627,8 @@ impl Scu {
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
-                set!(SCU_RESET, prset2, wdtrs);
+                let reset = unsafe { &*SCU_RESET::ptr() };
+                reset.prset2().write(|w| w.wdtrs().set_bit());
             }
             _ => unimplemented!(),
         };
