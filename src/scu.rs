@@ -439,6 +439,46 @@ impl Scu {
             _ => unimplemented!(),
         };
     }
+
+    fn calibrate_temperature_sensor(_offset: u32, _gain: u32) {
+        unimplemented!();
+    }
+
+    fn enable_temperature_sensor() {
+        unimplemented!();
+    }
+
+    fn disable_temperature_sensor() {
+        unimplemented!();
+    }
+
+    fn is_temperature_sensor_enabled() -> bool {
+        unimplemented!();
+    }
+
+    fn start_temperature_measurement() {
+        unimplemented!();
+    }
+
+    fn get_temperature_measurement() {
+        unimplemented!()
+    }
+
+    fn is_temperature_sensor_busy() -> bool {
+        unimplemented!();
+    }
+
+    fn high_temperature() -> bool {
+        unimplemented!();
+    }
+
+    fn set_raw_temp_limits(_lower: u32, _upper: u32) {
+        unimplemented!();
+    }
+
+    fn low_temperature() -> bool {
+        unimplemented!();
+    }
 }
 
 #[cfg(test)]
