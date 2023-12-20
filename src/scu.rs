@@ -753,10 +753,14 @@ impl Scu {
     pub fn read_from_retention_memory(address: u32) -> u32 {
         let rmacr = (address << 16) & 0xF0000;
         let general = unsafe { &*SCU_GENERAL::ptr() };
-        
+
         general.rmacr().write(|w| unsafe { w.bits(rmacr) });
         while general.mirrsts().read().rmx().bit_is_set() {}
         general.rmdata().read().data().bits()
+    }
+
+    fn clock_init() {
+        unimplemented!();
     }
 }
 
