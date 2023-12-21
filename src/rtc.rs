@@ -219,7 +219,7 @@ impl Rtc {
 
     pub fn is_running(&self) -> bool {
         self.wait_for_mirrsts();
-        let rtc = unsafe {&*RTC::ptr()};
+        let rtc = unsafe { &*RTC::ptr() };
         rtc.ctr().read().enb().bit_is_set()
     }
 
