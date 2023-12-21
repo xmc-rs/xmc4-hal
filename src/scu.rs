@@ -564,12 +564,12 @@ impl Scu {
         scu.srset().write(|w| unsafe { w.bits(event as u32) });
     }
 
-    pub fn get_event_status() -> InterruptEvent {
+    pub fn get_event_status(&self) -> InterruptEvent {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
         scu.srraw().read().bits().into()
     }
 
-    pub fn clear_event_status(event: InterruptEvent) {
+    pub fn clear_event_status(&self, event: InterruptEvent) {
         let scu = unsafe { &*SCU_INTERRUPT::ptr() };
         scu.srclr().write(|w| unsafe { w.bits(event as u32) });
     }
@@ -610,7 +610,7 @@ impl Scu {
         }
     }
 
-    pub fn read_gpr(index: u32) -> u32 {
+    pub fn read_gpr(&self, index: u32) -> u32 {
         let scu = unsafe { &*SCU_GENERAL::ptr() };
         match index {
             0 => scu.gpr0().read().bits(),
@@ -619,7 +619,7 @@ impl Scu {
         }
     }
 
-    pub fn write_gpr(index: u32, data: u32) {
+    pub fn write_gpr(&self, index: u32, data: u32) {
         let scu = unsafe { &*SCU_GENERAL::ptr() };
         match index {
             0 => scu.gpr0().write(|w| unsafe { w.bits(data) }),
@@ -701,47 +701,47 @@ impl Scu {
         };
     }
 
-    fn calibrate_temperature_sensor(_offset: u32, _gain: u32) {
+    fn calibrate_temperature_sensor(&self, _offset: u32, _gain: u32) {
         unimplemented!();
     }
 
-    fn enable_temperature_sensor() {
+    fn enable_temperature_sensor(&self) {
         unimplemented!();
     }
 
-    fn disable_temperature_sensor() {
+    fn disable_temperature_sensor(&self) {
         unimplemented!();
     }
 
-    fn is_temperature_sensor_enabled() -> bool {
+    fn is_temperature_sensor_enabled(&self) -> bool {
         unimplemented!();
     }
 
-    fn start_temperature_measurement() {
+    fn start_temperature_measurement(&self) {
         unimplemented!();
     }
 
-    fn get_temperature_measurement() {
+    fn get_temperature_measurement(&self) {
         unimplemented!()
     }
 
-    fn is_temperature_sensor_busy() -> bool {
+    fn is_temperature_sensor_busy(&self) -> bool {
         unimplemented!();
     }
 
-    fn high_temperature() -> bool {
+    fn high_temperature(&self) -> bool {
         unimplemented!();
     }
 
-    fn set_raw_temp_limits(_lower: u32, _upper: u32) {
+    fn set_raw_temp_limits(&self, _lower: u32, _upper: u32) {
         unimplemented!();
     }
 
-    fn low_temperature() -> bool {
+    fn low_temperature(&self) -> bool {
         unimplemented!();
     }
 
-    pub fn write_to_retention_memory(address: u32, data: u32) {
+    pub fn write_to_retention_memory(&self, address: u32, data: u32) {
         // TODO: Clean this up
         let rmacr = ((address << 16) & 0xF0000) | 1;
         let general = unsafe { &*SCU_GENERAL::ptr() };
@@ -752,7 +752,7 @@ impl Scu {
         while general.mirrsts().read().rmx().bit_is_set() {}
     }
 
-    pub fn read_from_retention_memory(address: u32) -> u32 {
+    pub fn read_from_retention_memory(&self, address: u32) -> u32 {
         let rmacr = (address << 16) & 0xF0000;
         let general = unsafe { &*SCU_GENERAL::ptr() };
 
@@ -765,31 +765,31 @@ impl Scu {
         unimplemented!();
     }
 
-    pub fn trap_enable(trap: u32) {
+    pub fn trap_enable(&self, trap: u32) {
         let scu = unsafe { &*SCU_TRAP::ptr() };
 
         scu.trapdis()
             .modify(|r, w| unsafe { w.bits(r.bits() & !trap) });
     }
 
-    pub fn trap_disable(trap: u32) {
+    pub fn trap_disable(&self, trap: u32) {
         let scu = unsafe { &*SCU_TRAP::ptr() };
 
         scu.trapdis()
             .modify(|r, w| unsafe { w.bits(r.bits() | trap) });
     }
 
-    pub fn trap_get_status() -> u32 {
+    pub fn trap_get_status(&self) -> u32 {
         let scu = unsafe { &*SCU_TRAP::ptr() };
         scu.trapraw().read().bits()
     }
 
-    pub fn trap_trigger(trap: u32) {
+    pub fn trap_trigger(&self, trap: u32) {
         let scu = unsafe { &*SCU_TRAP::ptr() };
         scu.trapset().write(|w| unsafe { w.bits(trap) });
     }
 
-    pub fn trap_clear_status(trap: u32) {
+    pub fn trap_clear_status(&self, trap: u32) {
         let scu = unsafe { &*SCU_TRAP::ptr() };
         scu.trapclr().write(|w| unsafe { w.bits(trap) });
     }
