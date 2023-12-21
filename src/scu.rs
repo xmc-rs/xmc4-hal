@@ -677,10 +677,14 @@ impl Scu {
     }
 
     #[cfg(not(feature = "xmc4500"))]
-    pub fn gate_peripheral_clock(&self, _clock: PeripheralClock) {}
+    pub fn gate_peripheral_clock(&self, _clock: PeripheralClock) {
+        unimplemented!();
+    }
 
     #[cfg(not(feature = "xmc4500"))]
-    pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {}
+    pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {
+        unimplemented!();
+    }
 
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
