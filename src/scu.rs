@@ -1,3 +1,5 @@
+use xmc4200::SCU_TRAP;
+
 use crate::pac::{SCU_CLK, SCU_GENERAL, SCU_INTERRUPT, SCU_POWER, SCU_RESET};
 /// PDIV for main PLL
 const PLL_PDIV_XTAL_8MHZ: u32 = 1;
@@ -761,6 +763,35 @@ impl Scu {
 
     fn clock_init() {
         unimplemented!();
+    }
+
+    pub fn trap_enable(trap: u32) {
+        let scu = unsafe { &*SCU_TRAP::ptr() };
+
+        scu.trapdis()
+            .modify(|r, w| unsafe { w.bits(r.bits() & !trap) });
+    }
+
+    pub fn trap_disable(trap: u32) {
+        let scu = unsafe { &*SCU_TRAP::ptr() };
+
+        scu.trapdis()
+            .modify(|r, w| unsafe { w.bits(r.bits() | trap) });
+    }
+
+    pub fn trap_get_status() -> u32 {
+        let scu = unsafe { &*SCU_TRAP::ptr() };
+        scu.trapraw().read().bits()
+    }
+
+    pub fn trap_trigger(trap: u32) {
+        let scu = unsafe { &*SCU_TRAP::ptr() };
+        scu.trapset().write(|w| unsafe { w.bits(trap) });
+    }
+
+    pub fn trap_clear_status(trap: u32) {
+        let scu = unsafe { &*SCU_TRAP::ptr() };
+        scu.trapclr().write(|w| unsafe { w.bits(trap) });
     }
 }
 
