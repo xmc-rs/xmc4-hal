@@ -197,24 +197,30 @@ impl Rtc {
 
     #[inline(always)]
     fn wait_for_mirrsts(&self) {
-        while get_field!(SCU_GENERAL, mirrsts, rtc_ctr).bit_is_clear() {
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
             // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
         }
     }
 
     pub fn start(&self) {
         self.wait_for_mirrsts();
-        set!(RTC, ctr, enb);
+        unsafe {
+            let _ = &(*RTC::ptr()).ctr().write(|w| w.enb().set_bit());
+        }
     }
 
     pub fn stop(&self) {
         self.wait_for_mirrsts();
-        clear!(RTC, ctr, enb);
+        unsafe {
+            let _ = &(*RTC::ptr()).ctr().write(|w| w.enb().clear_bit());
+        }
     }
 
     pub fn is_running(&self) -> bool {
         self.wait_for_mirrsts();
-        get_field!(RTC, ctr, enb).bit_is_set()
+        let rtc = unsafe {&*RTC::ptr()};
+        rtc.ctr().read().enb().bit_is_set()
     }
 
     pub fn set_prescaler(&self, prescaler: u16) {
@@ -322,7 +328,8 @@ impl Rtc {
     }
 
     pub fn get_event_status(&self) -> u32 {
-        get_reg!(RTC, stssr)
+        let read = unsafe { &(*RTC::ptr()).stssr().read() };
+        read.bits()
     }
 
     pub fn enable(&self) {
@@ -334,117 +341,127 @@ impl Rtc {
     }
 
     pub fn is_enabled(&self) -> bool {
-        get_field!(SCU_POWER, pwrstat, hiben).bit_is_set()
-            && !get_field!(SCU_RESET, rststat, hibrs).bit_is_set()
+        let power = unsafe { &*SCU_POWER::ptr() };
+        let reset = unsafe { &*SCU_RESET::ptr() };
+        return power.pwrstat().read().hiben().bit_is_set()
+            && !reset.rststat().read().hibrs().bit_is_set();
     }
 
     fn enable_event(&self, event: Event) {
-        while get_field!(SCU_GENERAL, mirrsts, rtc_msksr).bit_is_set() {}
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+        let rtc = unsafe { &*RTC::ptr() };
+        while general.mirrsts().read().rtc_msksr().bit_is_set() {}
         match event {
             Event::Seconds => {
-                set!(RTC, msksr, mpse);
+                rtc.msksr().write(|w| w.mpse().set_bit());
             }
             Event::Minutes => {
-                set!(RTC, msksr, mpmi);
+                rtc.msksr().write(|w| w.mpmi().set_bit());
             }
             Event::Hours => {
-                set!(RTC, msksr, mpho);
+                rtc.msksr().write(|w| w.mpho().set_bit());
             }
             Event::Days => {
-                set!(RTC, msksr, mpda);
+                rtc.msksr().write(|w| w.mpda().set_bit());
             }
             Event::Months => {
-                set!(RTC, msksr, mpmo);
+                rtc.msksr().write(|w| w.mpmo().set_bit());
             }
             Event::Years => {
-                set!(RTC, msksr, mpye);
+                rtc.msksr().write(|w| w.mpye().set_bit());
             }
             Event::Alarm => {
-                set!(RTC, msksr, mai);
+                rtc.msksr().write(|w| w.mai().set_bit());
             }
         };
     }
 
     fn disable_event(&self, event: Event) {
-        while get_field!(SCU_GENERAL, mirrsts, rtc_msksr).bit_is_set() {}
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+        let rtc = unsafe { &*RTC::ptr() };
+        while general.mirrsts().read().rtc_msksr().bit_is_set() {}
         match event {
             Event::Seconds => {
-                clear!(RTC, msksr, mpse);
+                rtc.msksr().write(|w| w.mpse().clear_bit());
             }
             Event::Minutes => {
-                clear!(RTC, msksr, mpmi);
+                rtc.msksr().write(|w| w.mpmi().clear_bit());
             }
             Event::Hours => {
-                clear!(RTC, msksr, mpho);
+                rtc.msksr().write(|w| w.mpho().clear_bit());
             }
             Event::Days => {
-                clear!(RTC, msksr, mpda);
+                rtc.msksr().write(|w| w.mpda().clear_bit());
             }
             Event::Months => {
-                clear!(RTC, msksr, mpmo);
+                rtc.msksr().write(|w| w.mpmo().clear_bit());
             }
             Event::Years => {
-                clear!(RTC, msksr, mpye);
+                rtc.msksr().write(|w| w.mpye().clear_bit());
             }
             Event::Alarm => {
-                clear!(RTC, msksr, mai);
+                rtc.msksr().write(|w| w.mai().clear_bit());
             }
         };
     }
 
     fn clear_event(&self, event: Event) {
-        while get_field!(SCU_GENERAL, mirrsts, rtc_clrsr).bit_is_set() {}
-        set_reg!(RTC, clrsr, u32::from(event));
+        let scu = unsafe { &(*SCU_GENERAL::ptr()) };
+        let rtc = unsafe { &*RTC::ptr() };
+        while scu.mirrsts().read().rtc_clrsr().bit_is_set() {}
+        rtc.clrsr().write(|w| unsafe { w.bits(u32::from(event)) });
     }
 
     fn enable_hibernation_wake_up(&self, event: WakeupEvent) {
+        let rtc = unsafe { &*RTC::ptr() };
         match event {
             WakeupEvent::Alarm => {
-                set!(RTC, ctr, tae);
+                rtc.ctr().write(|w| w.tae().set_bit());
             }
             WakeupEvent::Seconds => {
-                set!(RTC, ctr, esec);
+                rtc.ctr().write(|w| w.esec().set_bit());
             }
             WakeupEvent::Minutes => {
-                set!(RTC, ctr, emic);
+                rtc.ctr().write(|w| w.emic().set_bit());
             }
             WakeupEvent::Hours => {
-                set!(RTC, ctr, ehoc);
+                rtc.ctr().write(|w| w.ehoc().set_bit());
             }
             WakeupEvent::Days => {
-                set!(RTC, ctr, edac);
+                rtc.ctr().write(|w| w.edac().set_bit());
             }
             WakeupEvent::Months => {
-                set!(RTC, ctr, emoc);
+                rtc.ctr().write(|w| w.emoc().set_bit());
             }
             WakeupEvent::Years => {
-                set!(RTC, ctr, eyec);
+                rtc.ctr().write(|w| w.eyec().set_bit());
             }
         };
     }
 
     fn disable_hibernation_wake_up(&self, event: WakeupEvent) {
+        let rtc = unsafe { &*RTC::ptr() };
         match event {
             WakeupEvent::Alarm => {
-                clear!(RTC, ctr, tae);
+                rtc.ctr().write(|w| w.tae().clear_bit());
             }
             WakeupEvent::Seconds => {
-                clear!(RTC, ctr, esec);
+                rtc.ctr().write(|w| w.esec().clear_bit());
             }
             WakeupEvent::Minutes => {
-                clear!(RTC, ctr, emic);
+                rtc.ctr().write(|w| w.emic().clear_bit());
             }
             WakeupEvent::Hours => {
-                clear!(RTC, ctr, ehoc);
+                rtc.ctr().write(|w| w.ehoc().clear_bit());
             }
             WakeupEvent::Days => {
-                clear!(RTC, ctr, edac);
+                rtc.ctr().write(|w| w.edac().clear_bit());
             }
             WakeupEvent::Months => {
-                clear!(RTC, ctr, emoc);
+                rtc.ctr().write(|w| w.emoc().clear_bit());
             }
             WakeupEvent::Years => {
-                clear!(RTC, ctr, eyec);
+                rtc.ctr().write(|w| w.eyec().clear_bit());
             }
         };
     }
