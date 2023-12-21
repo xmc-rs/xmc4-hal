@@ -695,7 +695,8 @@ impl Scu {
     pub fn deassert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
-                set!(SCU_RESET, prclr2, wdtrs);
+                let scu = unsafe {&*SCU_RESET::ptr()};
+                scu.prclr2().write(|w| w.wdtrs().set_bit());
             }
             _ => unimplemented!(),
         };
