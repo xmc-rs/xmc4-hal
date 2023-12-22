@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.2.1...v0.3.0) (2023-12-22)
+
+
+### Features
+
+* cleaning up feature names ([#195](https://github.com/xmc-rs/xmc4-hal/issues/195)) ([930af83](https://github.com/xmc-rs/xmc4-hal/commit/930af833bab3913295a3f6254ce2a60295da7972))
+
+
+### Bug Fixes
+
+* **deps:** update rust crate xmc4400 to 0.8.1 ([#192](https://github.com/xmc-rs/xmc4-hal/issues/192)) ([4a560e0](https://github.com/xmc-rs/xmc4-hal/commit/4a560e0191fc6969754836340d673699988bf952))
+* **deps:** update rust crate xmc4500 to 0.8.1 ([#193](https://github.com/xmc-rs/xmc4-hal/issues/193)) ([a455b90](https://github.com/xmc-rs/xmc4-hal/commit/a455b902826fe1f34c60b6566b9cdbe749758ba3))
+* **deps:** update rust crate xmc4800 to 0.7.1 ([#194](https://github.com/xmc-rs/xmc4-hal/issues/194)) ([2911d20](https://github.com/xmc-rs/xmc4-hal/commit/2911d20b6faef96a458703ea600da08faa55ea1c))
+
 ## [0.2.1](https://github.com/xmc-rs/xmc4-hal/compare/v0.2.0...v0.2.1) (2023-12-22)
 
 
