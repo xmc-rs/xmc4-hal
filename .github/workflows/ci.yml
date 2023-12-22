@@ -3,21 +3,18 @@ on:
   push:
 
 jobs:
-  setup:
-    name: Setup
+  audit:
+    name: Audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-
-  security_audit:
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions-rust-lang/audit@v1
 
   docs:
     name: Docs
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4.1.1
       - name: Install Toolchains
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -30,6 +27,7 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4.1.1
       - name: Install nightly toolchain with rustfmt available
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -45,6 +43,7 @@ jobs:
     name: ${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4.1.1
       - name: Setup toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
