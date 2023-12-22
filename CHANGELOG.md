@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/xmc-rs/xmc4-hal/compare/v0.2.0...v0.2.1) (2023-12-22)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate xmc4700 to 0.8.1 ([#190](https://github.com/xmc-rs/xmc4-hal/issues/190)) ([b400793](https://github.com/xmc-rs/xmc4-hal/commit/b400793afaddf6a93e8d38fbe64f7b1320ec1f96))
+
 ## [0.2.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.1.1...v0.2.0) (2023-12-22)
 
 
