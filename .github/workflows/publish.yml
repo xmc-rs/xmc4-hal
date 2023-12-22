@@ -48,4 +48,5 @@ jobs:
           cargo publish
           --verbose
           --locked
+          --features xmc42xx
           --token ${{ secrets.CRATES_TOKEN }}
