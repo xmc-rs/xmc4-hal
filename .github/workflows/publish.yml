@@ -1,35 +1,15 @@
 name: Publish
 
 on:
-  push:
-    branches:
-    - master
+  workflow_run:
+    workflows: Rust
+    branches: master
+    types: completed
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        rust-channel: [ 'stable', 'nightly' ]
-        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
-        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
-    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.device }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4.1.1
-      - name: Install toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-            toolchain: ${{ matrix.rust-channel }}
-            target: ${{ matrix.rust-target }}
-      - name: Cargo Check
-        run: cargo check --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
-      - name: Cargo Build
-        run: cargo build --verbose --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
-
   release-please:
     name: Execute release chores
 
@@ -38,7 +18,6 @@ jobs:
       pull-requests: write
 
     runs-on: ubuntu-latest
-    needs: build
 
     outputs:
       created: ${{ steps.release.outputs.release_created }}
