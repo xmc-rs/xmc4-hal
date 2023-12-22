@@ -37,10 +37,11 @@ jobs:
         uses: actions-rust-lang/rustfmt@v1
 
   examples:
+    needs: [format]
     strategy:
       matrix:
         device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
-    name: ${{ matrix.device }}
+    name: Examples-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
