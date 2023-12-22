@@ -1,0 +1,55 @@
+name: CI
+on:
+  push:
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+  security_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions-rust-lang/audit@v1
+
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Toolchains
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: 'stable'
+          target: 'thumbv7em-none-eabihf'
+      - name: Cargo Doc
+        run: cargo doc --verbose --no-deps --document-private-items --features=xmc41xx
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install nightly toolchain with rustfmt available
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+      - name: Run cargo fmt
+        uses: actions-rust-lang/rustfmt@v1
+
+  examples:
+    strategy:
+      matrix:
+        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+    name: ${{ matrix.device }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+            toolchain: 'stable'
+            target: 'thumbv7em-none-eabihf'
+      - name: Build Examples
+        run: cargo build --examples --features=${{ matrix.device }}
+
