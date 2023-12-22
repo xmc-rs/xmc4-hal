@@ -1,4 +1,4 @@
-/* Linker script for the XMC41XX */
+/* Linker script for the xmc4100 */
 MEMORY
 {
   FLASH : ORIGIN = 0x08004000, LENGTH = 48K

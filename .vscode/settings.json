@@ -1,6 +1,6 @@
 {
     "rust-analyzer.cargo.features": [
-        "xmc42xx"
+        "xmc4200"
     ],
     "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
     "rust-analyzer.check.allTargets": false,
@@ -14,5 +14,4 @@
     },
     "editor.tabSize": 4,
     "editor.formatOnSave": true
-
 }
