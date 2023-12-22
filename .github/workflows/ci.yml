@@ -36,8 +36,50 @@ jobs:
       - name: Run cargo fmt
         uses: actions-rust-lang/rustfmt@v1
 
+  test:
+    needs: [format, docs]
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-channel: [ 'stable', 'nightly' ]
+        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
+        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+    name: ${{ matrix.rust-channel }}-x86_64-unknown-linux-gnu-${{ matrix.device }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: Install toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+            toolchain: ${{ matrix.rust-channel }}
+            target: 'x86_64-unknown-linux-gnu'
+      - name: Cargo Test
+        run: cargo test --lib --target x86_64-unknown-linux-gnu --features ${{ matrix.device }}
+
+  build:
+    needs: [test]
+    strategy:
+      fail-fast: false
+      matrix:
+        rust-channel: [ 'stable', 'nightly' ]
+        rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
+        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+    name: ${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.device }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: Install toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+            toolchain: ${{ matrix.rust-channel }}
+            target: ${{ matrix.rust-target }}
+      - name: Cargo Check
+        run: cargo check --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
+      - name: Cargo Build
+        run: cargo build --verbose --target ${{ matrix.rust-target }} --features=${{ matrix.device }}
+
   examples:
-    needs: [format]
+    needs: [build]
     strategy:
       matrix:
         device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
@@ -53,3 +95,48 @@ jobs:
       - name: Build Examples
         run: cargo build --examples --features=${{ matrix.device }}
 
+  release-please:
+    name: Execute release chores
+    needs: build
+    if: contains(github.ref, 'master')
+    permissions:
+      contents: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      created: ${{ steps.release.outputs.release_created }}
+
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        with:
+          release-type: rust
+          token: ${{ secrets.GH_PERSONAL_TOKEN }}
+
+  publish:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: needs.release-please.outputs.created
+
+    environment: crates.io
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+            toolchain: stable
+            target: thumbv7em-none-eabihf
+      - uses: swatinem/rust-cache@v2
+
+      - name: Publish
+      # https://doc.rust-lang.org/cargo/reference/config.html?highlight=CARGO_REGISTRY_TOKEN#credentials
+        run: >
+          cargo publish
+          --verbose
+          --locked
+          --features xmc42xx
+          --token ${{ secrets.CRATES_TOKEN }}
