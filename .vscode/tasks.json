@@ -7,7 +7,11 @@
             "label": "build",
             "type": "process",
             "command": "cargo",
-            "args": ["build", "--features", "xmc41xx"],
+            "args": [
+                "build",
+                "--features",
+                "xmc4100"
+            ],
             "problemMatcher": [
                 "$rustc"
             ],
@@ -20,7 +24,9 @@
             "label": "clean",
             "type": "process",
             "command": "cargo",
-            "args": ["clean"],
+            "args": [
+                "clean"
+            ],
             "problemMatcher": [
                 "$rustc"
             ],
@@ -29,7 +35,9 @@
             "label": "fmt",
             "type": "process",
             "command": "cargo",
-            "args": ["fmt"],
+            "args": [
+                "fmt"
+            ],
             "problemMatcher": [
                 "$rustc"
             ]
@@ -38,7 +46,11 @@
             "label": "check",
             "type": "process",
             "command": "cargo",
-            "args": ["check", "--features", "xmc41xx"],
+            "args": [
+                "check",
+                "--features",
+                "xmc4100"
+            ],
             "problemMatcher": [
                 "$rustc"
             ]
@@ -47,7 +59,11 @@
             "label": "clippy",
             "type": "process",
             "command": "cargo",
-            "args": ["clippy", "--features", "xmc41xx"],
+            "args": [
+                "clippy",
+                "--features",
+                "xmc4100"
+            ],
             "problemMatcher": [
                 "$rustc"
             ]

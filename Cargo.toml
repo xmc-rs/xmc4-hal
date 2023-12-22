@@ -8,20 +8,11 @@ license = "MIT"
 repository = "https://github.com/xmc-rs/xmc4-hal"
 description = "Peripheral access API for XMC4 series microcontrollers"
 documentation = "https://docs.rs/crate/xmc4-hal"
-categories = [
-    "embedded",
-    "hardware-support",
-    "no-std"
-]
-keywords = [
-    "arm",
-    "cortex-m",
-    "hal",
-    "xmc"
-]
+categories = ["embedded", "hardware-support", "no-std"]
+keywords = ["arm", "cortex-m", "hal", "xmc"]
 
 [package.metadata.docs.rs]
-features = ["xmc41xx"]
+features = ["xmc4100"]
 
 [dependencies]
 xmc4100 = { version = "0.8.1", optional = true }
@@ -49,13 +40,13 @@ version = "0.2.7"
 
 [features]
 device-selected = []
-xmc41xx = ["xmc4100", "device-selected"]
-xmc42xx = ["xmc4200", "device-selected"]
-xmc43xx = ["xmc4300", "device-selected", "ecat", "sdmmc"]
-xmc44xx = ["xmc4400", "device-selected"]
-xmc45xx = ["xmc4500", "device-selected", "sdmmc"]
-xmc47xx = ["xmc4700", "device-selected", "sdmmc"]
-xmc48xx = ["xmc4800", "device-selected", "ecat", "sdmmc"]
+xmc4100 = ["dep:xmc4100", "device-selected"]
+xmc4200 = ["dep:xmc4200", "device-selected"]
+xmc4300 = ["dep:xmc4300", "device-selected", "ecat", "sdmmc"]
+xmc4400 = ["dep:xmc4400", "device-selected"]
+xmc4500 = ["dep:xmc4500", "device-selected", "sdmmc"]
+xmc4700 = ["dep:xmc4700", "device-selected", "sdmmc"]
+xmc4800 = ["dep:xmc4800", "device-selected", "ecat", "sdmmc"]
 ecat = []
 sdmmc = []
 
