@@ -21,7 +21,7 @@ jobs:
           toolchain: 'stable'
           target: 'thumbv7em-none-eabihf'
       - name: Cargo Doc
-        run: cargo doc --verbose --no-deps --document-private-items --features=xmc41xx
+        run: cargo doc --verbose --no-deps --document-private-items --features=xmc4100
 
   format:
     name: Format
@@ -43,7 +43,7 @@ jobs:
       matrix:
         rust-channel: [ 'stable', 'nightly' ]
         rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
-        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+        device: ['xmc4100', 'xmc4200', 'xmc4300', 'xmc4400', 'xmc4500', 'xmc4700', 'xmc4800']
     name: Test-${{ matrix.rust-channel }}-x86_64-unknown-linux-gnu-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +63,7 @@ jobs:
       matrix:
         rust-channel: [ 'stable', 'nightly' ]
         rust-target: [ 'x86_64-unknown-linux-gnu', 'thumbv7em-none-eabihf' ]
-        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+        device: ['xmc4100', 'xmc4200', 'xmc4300', 'xmc4400', 'xmc4500', 'xmc4700', 'xmc4800']
     name: Build-${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
@@ -82,7 +82,7 @@ jobs:
     needs: [build]
     strategy:
       matrix:
-        device: ['xmc41xx', 'xmc42xx', 'xmc43xx', 'xmc44xx', 'xmc45xx', 'xmc47xx', 'xmc48xx']
+        device: ['xmc4100', 'xmc4200', 'xmc4300', 'xmc4400', 'xmc4500', 'xmc4700', 'xmc4800']
     name: Examples-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
@@ -138,5 +138,5 @@ jobs:
           cargo publish
           --verbose
           --locked
-          --features xmc42xx
+          --features xmc4200
           --token ${{ secrets.CRATES_TOKEN }}
