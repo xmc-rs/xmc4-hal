@@ -49,6 +49,7 @@ xmc4700 = ["dep:xmc4700", "device-selected", "sdmmc"]
 xmc4800 = ["dep:xmc4800", "device-selected", "ecat", "sdmmc"]
 ecat = []
 sdmmc = []
+rt = ["cortex-m-rt/device"]
 
 [dev-dependencies]
 panic-halt = "0.2.0"
