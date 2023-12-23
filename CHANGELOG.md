@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/xmc-rs/xmc4-hal/compare/v0.3.0...v0.3.1) (2023-12-23)
+
+
+### Bug Fixes
+
+* adding rt feature ([#197](https://github.com/xmc-rs/xmc4-hal/issues/197)) ([c0afe22](https://github.com/xmc-rs/xmc4-hal/commit/c0afe22f343690345400ad74c7d1de52c11e0647))
+
 ## [0.3.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.2.1...v0.3.0) (2023-12-22)
 
 
