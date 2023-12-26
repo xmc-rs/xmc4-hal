@@ -13,7 +13,6 @@ fn main() -> ! {
 
     rtc.enable();
 
-
     loop {
         continue;
     }
