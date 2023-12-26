@@ -1,18 +1,19 @@
-#![no_main]
 #![no_std]
+#![no_main]
 
-#[allow(unused)]
-use panic_halt;
-
-use hal::rtc;
-use xmc4_hal as hal;
-
+extern crate panic_semihosting;
 use cortex_m_rt::entry;
+use hal::pac;
+use xmc4_hal as hal;
 
 #[entry]
 fn main() -> ! {
-    let r = rtc::Rtc::new();
-    r.start();
+    let p = pac::Peripherals::take().unwrap();
+    let rtc = hal::rtc::Rtc::new(p.RTC);
+
+    rtc.enable();
+
+
     loop {
         continue;
     }
