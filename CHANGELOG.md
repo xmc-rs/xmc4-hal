@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.4](https://github.com/xmc-rs/xmc4-hal/compare/v0.3.3...v0.3.4) (2023-12-26)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate xmc4100 to 0.8.3 ([#208](https://github.com/xmc-rs/xmc4-hal/issues/208)) ([a65f008](https://github.com/xmc-rs/xmc4-hal/commit/a65f0087a0fea77489a70e6c80a6ae1933e7e44c))
+* **deps:** update rust crate xmc4300 to 0.8.0 ([#212](https://github.com/xmc-rs/xmc4-hal/issues/212)) ([a8a9e92](https://github.com/xmc-rs/xmc4-hal/commit/a8a9e924b3f76c7c88cb834f1bcd27dfc61f17ea))
+* **deps:** update rust crate xmc4400 to 0.8.3 ([#209](https://github.com/xmc-rs/xmc4-hal/issues/209)) ([769c219](https://github.com/xmc-rs/xmc4-hal/commit/769c21983a9be37fba282c4f11039690e3f1818f))
+* **deps:** update rust crate xmc4500 to 0.8.3 ([#210](https://github.com/xmc-rs/xmc4-hal/issues/210)) ([28df9fb](https://github.com/xmc-rs/xmc4-hal/commit/28df9fbdd5090f20ebd766ea2d63b91af618f5cc))
+* **deps:** update rust crate xmc4700 to 0.8.3 ([#211](https://github.com/xmc-rs/xmc4-hal/issues/211)) ([7de62ce](https://github.com/xmc-rs/xmc4-hal/commit/7de62ce535201a3a4266da014eee21507903bfb2))
+* **deps:** update rust crate xmc4800 to 0.8.0 ([#213](https://github.com/xmc-rs/xmc4-hal/issues/213)) ([4e456a9](https://github.com/xmc-rs/xmc4-hal/commit/4e456a9133fc275c98048934cd5403d788c91fb3))
+* **rtc:** adding argument for pac registers ([d689e08](https://github.com/xmc-rs/xmc4-hal/commit/d689e081f8d9d2c6ff31455b1f062cf76339ea2a))
+
 ## [0.3.3](https://github.com/xmc-rs/xmc4-hal/compare/v0.3.2...v0.3.3) (2023-12-25)
 
 
