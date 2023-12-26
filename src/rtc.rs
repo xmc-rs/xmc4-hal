@@ -197,31 +197,35 @@ impl Rtc {
         Self { regs: rtc }
     }
 
-    #[inline(always)]
-    fn wait_for_mirrsts(&self) {
+    pub fn start(&self) {
         let scu = unsafe { &*SCU_GENERAL::ptr() };
         while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
             // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
         }
-    }
-
-    pub fn start(&self) {
-        self.wait_for_mirrsts();
         self.regs.ctr().write(|w| w.enb().set_bit());
     }
 
     pub fn stop(&self) {
-        self.wait_for_mirrsts();
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs.ctr().write(|w| w.enb().clear_bit());
     }
 
     pub fn is_running(&self) -> bool {
-        self.wait_for_mirrsts();
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs.ctr().read().enb().bit_is_set()
     }
 
     pub fn set_prescaler(&self, prescaler: u16) {
-        self.wait_for_mirrsts();
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs
             .ctr()
             .write(|w| unsafe { w.div().bits(prescaler) });
@@ -234,14 +238,20 @@ impl Rtc {
         assert!(time.day < MAX_DAYS);
         assert!(time.year < MAX_YEAR);
 
-        self.wait_for_mirrsts();
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs.tim0().modify(|_, w| unsafe {
             w.se().bits(time.second);
             w.mi().bits(time.minute);
             w.ho().bits(time.hour);
             w.da().bits(time.day)
         });
-        self.wait_for_mirrsts();
+
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs.tim1().modify(|_, w| unsafe {
             w.dawe().bits(time.weekday as u8);
             w.mo().bits(time.month as u8);
@@ -282,14 +292,20 @@ impl Rtc {
         assert!(time.day < MAX_DAYS);
         assert!(time.year < MAX_YEAR);
 
-        self.wait_for_mirrsts();
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs.atim0().modify(|_, w| unsafe {
             w.ase().bits(time.second);
             w.ami().bits(time.minute);
             w.aho().bits(time.hour);
             w.ada().bits(time.day)
         });
-        self.wait_for_mirrsts();
+
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
         self.regs.atim1().modify(|_, w| unsafe {
             w.amo().bits(time.month as u8);
             w.aye().bits(time.year)
