@@ -400,7 +400,9 @@ impl Rtc {
     fn clear_event(&self, event: Event) {
         let scu = unsafe { &(*SCU_GENERAL::ptr()) };
         while scu.mirrsts().read().rtc_clrsr().bit_is_set() {}
-        self.regs.clrsr().write(|w| unsafe { w.bits(u32::from(event)) });
+        self.regs
+            .clrsr()
+            .write(|w| unsafe { w.bits(u32::from(event)) });
     }
 
     fn enable_hibernation_wake_up(&self, event: WakeupEvent) {
