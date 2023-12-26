@@ -19,7 +19,7 @@ xmc4100 = { version = "0.8.3", optional = true }
 xmc4200 = { version = "0.8.2", optional = true }
 xmc4300 = { version = "0.8.0", optional = true }
 xmc4400 = { version = "0.8.3", optional = true }
-xmc4500 = { version = "0.8.2", optional = true }
+xmc4500 = { version = "0.8.3", optional = true }
 xmc4700 = { version = "0.8.3", optional = true }
 xmc4800 = { version = "0.8.0", optional = true }
 cortex-m = {version = "0.7.7", features = ['critical-section-single-core']}
