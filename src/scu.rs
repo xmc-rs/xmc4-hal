@@ -145,32 +145,43 @@ impl From<Clock> for u32 {
 #[derive(Copy, Clone, Debug)]
 pub enum PeripheralClock {
     Vadc,
+    #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
     Dsd,
     Ccu40,
     Ccu41,
+    #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
     Ccu42,
     Ccu80,
+    #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
     Ccu81,
     Posif0,
+    #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
     Posif1,
     Usic0,
     Eru1,
     Hrpwm0,
+    #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
     Ccu43,
-    Ledts0,
+    Ledtscu0,
     Mcan,
     Dac,
-    Sdmmc,
+    #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+    Mmci,
     Usic1,
+    #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
     Usic2,
-    Ports,
+    Pports,
     Wdt,
+    #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
     Eth0,
-    Gpdma0,
-    Gpdma1,
+    Dma0,
+    #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+    Dma1,
     Fce,
     Usb0,
+    #[cfg(any(feature = "xmc4300", feature = "xmc4800"))]
     Ecat0,
+    #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
     Ebu,
 }
 
@@ -616,13 +627,97 @@ impl Scu {
     }
 
     #[cfg(not(feature = "xmc4500"))]
-    pub fn gate_peripheral_clock(&self, _clock: PeripheralClock) {
-        unimplemented!();
+    pub fn gate_peripheral_clock(&self, clock: PeripheralClock) {
+        let scu = unsafe { &*SCU_CLK::ptr() };
+
+        match clock {
+            PeripheralClock::Vadc => scu.cgatset0().write(|w| w.vadc().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Dsd => scu.cgatset0().write(|w| w.dsd().set_bit()),
+            PeripheralClock::Ccu40 => scu.cgatset0().write(|w| w.ccu40().set_bit()),
+            PeripheralClock::Ccu41 => scu.cgatset0().write(|w| w.ccu41().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu42 => scu.cgatset0().write(|w| w.ccu42().set_bit()),
+            PeripheralClock::Ccu80 => scu.cgatset0().write(|w| w.ccu80().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu81 => scu.cgatset0().write(|w| w.ccu81().set_bit()),
+            PeripheralClock::Posif0 => scu.cgatset0().write(|w| w.posif0().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Posif1 => scu.cgatset0().write(|w| w.posif1().set_bit()),
+            PeripheralClock::Usic0 => scu.cgatset0().write(|w| w.usic0().set_bit()),
+            PeripheralClock::Eru1 => scu.cgatset0().write(|w| w.eru1().set_bit()),
+            PeripheralClock::Hrpwm0 => unimplemented!(), // Appears to be missing from SVD
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu43 => scu.cgatset1().write(|w| w.ccu43().set_bit()),
+            PeripheralClock::Ledtscu0 => scu.cgatset1().write(|w| w.ledtscu0().set_bit()),
+            PeripheralClock::Mcan => scu.cgatset1().write(|w| w.mcan0().set_bit()),
+            PeripheralClock::Dac => scu.cgatset1().write(|w| w.dac().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Mmci => scu.cgatset1().write(|w| w.mmci().set_bit()),
+            PeripheralClock::Usic1 => scu.cgatset1().write(|w| w.usic1().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Usic2 => scu.cgatset1().write(|w| w.usic2().set_bit()),
+            PeripheralClock::Pports => scu.cgatset1().write(|w| w.pports().set_bit()),
+            PeripheralClock::Wdt => scu.cgatset2().write(|w| w.wdt().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Eth0 => scu.cgatset2().write(|w| w.eth0().set_bit()),
+            PeripheralClock::Dma0 => scu.cgatset2().write(|w| w.dma0().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Dma1 => scu.cgatset2().write(|w| w.dma1().set_bit()),
+            PeripheralClock::Fce => scu.cgatset2().write(|w| w.fce().set_bit()),
+            PeripheralClock::Usb0 => scu.cgatset2().write(|w| w.usb().set_bit()),
+            #[cfg(any(feature = "xmc4300", feature = "xmc4800"))]
+            PeripheralClock::Ecat0 => scu.cgatset2().write(|w| w.ecat0().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ebu => scu.cgatset3().write(|w| w.ebu().set_bit()),
+        }
     }
 
     #[cfg(not(feature = "xmc4500"))]
-    pub fn ungate_peripheral_clock(&self, _clock: PeripheralClock) {
-        unimplemented!();
+    pub fn ungate_peripheral_clock(&self, clock: PeripheralClock) {
+        let scu = unsafe { &*SCU_CLK::ptr() };
+
+        match clock {
+            PeripheralClock::Vadc => scu.cgatclr0().write(|w| w.vadc().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Dsd => scu.cgatclr0().write(|w| w.dsd().set_bit()),
+            PeripheralClock::Ccu40 => scu.cgatclr0().write(|w| w.ccu40().set_bit()),
+            PeripheralClock::Ccu41 => scu.cgatclr0().write(|w| w.ccu41().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu42 => scu.cgatclr0().write(|w| w.ccu42().set_bit()),
+            PeripheralClock::Ccu80 => scu.cgatclr0().write(|w| w.ccu80().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu81 => scu.cgatclr0().write(|w| w.ccu81().set_bit()),
+            PeripheralClock::Posif0 => scu.cgatclr0().write(|w| w.posif0().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Posif1 => scu.cgatclr0().write(|w| w.posif1().set_bit()),
+            PeripheralClock::Usic0 => scu.cgatclr0().write(|w| w.usic0().set_bit()),
+            PeripheralClock::Eru1 => scu.cgatclr0().write(|w| w.eru1().set_bit()),
+            PeripheralClock::Hrpwm0 => unimplemented!(), // Appears to be missing from SVD
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu43 => scu.cgatclr1().write(|w| w.ccu43().set_bit()),
+            PeripheralClock::Ledtscu0 => scu.cgatclr1().write(|w| w.ledtscu0().set_bit()),
+            PeripheralClock::Mcan => scu.cgatclr1().write(|w| w.mcan0().set_bit()),
+            PeripheralClock::Dac => scu.cgatclr1().write(|w| w.dac().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Mmci => scu.cgatclr1().write(|w| w.mmci().set_bit()),
+            PeripheralClock::Usic1 => scu.cgatclr1().write(|w| w.usic1().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Usic2 => scu.cgatclr1().write(|w| w.usic2().set_bit()),
+            PeripheralClock::Pports => scu.cgatclr1().write(|w| w.pports().set_bit()),
+            PeripheralClock::Wdt => scu.cgatclr2().write(|w| w.wdt().set_bit()),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Eth0 => scu.cgatclr2().write(|w| w.eth0().set_bit()),
+            PeripheralClock::Dma0 => scu.cgatclr2().write(|w| w.dma0().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Dma1 => scu.cgatclr2().write(|w| w.dma1().set_bit()),
+            PeripheralClock::Fce => scu.cgatclr2().write(|w| w.fce().set_bit()),
+            PeripheralClock::Usb0 => scu.cgatclr2().write(|w| w.usb().set_bit()),
+            #[cfg(any(feature = "xmc4300", feature = "xmc4800"))]
+            PeripheralClock::Ecat0 => scu.cgatclr2().write(|w| w.ecat0().set_bit()),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ebu => scu.cgatclr3().write(|w| w.ebu().set_bit()),
+        }
     }
 
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
