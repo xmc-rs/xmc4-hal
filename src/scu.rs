@@ -8,6 +8,7 @@ const PLL_NDIV_XTAL_8MHZ: u32 = 89;
 /// K2DIV for main PLL
 const PLL_K2DIV_XTAL_8MHZ: u32 = 2;
 
+#[derive(Debug)]
 pub struct Scu {}
 
 #[derive(Copy, Clone, Debug)]
