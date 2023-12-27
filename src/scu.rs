@@ -232,6 +232,7 @@ pub enum FofiCalibrationMode {
     Automatic,
 }
 
+#[repr(u8)]
 #[derive(Copy, Clone, Debug)]
 pub enum BootMode {
     Normal,
@@ -246,16 +247,7 @@ pub enum BootMode {
 
 impl From<BootMode> for u8 {
     fn from(bits: BootMode) -> u8 {
-        match bits {
-            BootMode::Normal => 0,
-            BootMode::AscBsl => 1,
-            BootMode::Bmi => 2,
-            BootMode::CanBsl => 3,
-            BootMode::PsramBoot => 4,
-            BootMode::Abm0 => 5,
-            BootMode::Abm1 => 6,
-            BootMode::Fabm => 7,
-        }
+        bits as u8
     }
 }
 
@@ -423,59 +415,7 @@ pub enum InterruptEvent {
 
 impl From<InterruptEvent> for u32 {
     fn from(bits: InterruptEvent) -> u32 {
-        match bits {
-            InterruptEvent::WdtPreWarn => 0,
-            InterruptEvent::RtcPeriodic => 1,
-            InterruptEvent::RtcAlarm => 2,
-            InterruptEvent::DlrRequestOverrun => 3,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Lpaclr => 6,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Lpacth0 => 7,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Lpacth1 => 8,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Lpacst => 9,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Lpacclr => 10,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Lpacset => 11,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Hintst => 12,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Hintclr => 13,
-            #[cfg(not(feature = "xmc4300"))]
-            #[cfg(not(feature = "xmc4500"))]
-            #[cfg(not(feature = "xmc4700"))]
-            InterruptEvent::Hintset => 14,
-            InterruptEvent::Hdcrclr => 17,
-            InterruptEvent::Hdcrset => 18,
-            InterruptEvent::Hdcr => 19,
-            InterruptEvent::Oscsictrl => 21,
-            InterruptEvent::Osculctrl => 23,
-            InterruptEvent::RtcCtr => 24,
-            InterruptEvent::RtcAtim0 => 25,
-            InterruptEvent::RtcAtim1 => 26,
-            InterruptEvent::RtcTim0 => 27,
-            InterruptEvent::RtcTim1 => 28,
-            InterruptEvent::RetentionMemory => 29,
-        }
+        bits as u32
     }
 }
 
