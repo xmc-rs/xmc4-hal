@@ -16,6 +16,8 @@ const MAX_YEAR: u16 = 65535;
 /// Offset for year in standard time representation
 const YEAR_OFFSET: u16 = 1900;
 
+#[repr(u32)]
+#[derive(Copy, Clone, Debug)]
 pub enum Event {
     Seconds = 0x01,
     Minutes = 0x02,
@@ -43,18 +45,12 @@ impl From<u32> for Event {
 
 impl From<Event> for u32 {
     fn from(bits: Event) -> Self {
-        match bits {
-            Event::Seconds => 0x01,
-            Event::Minutes => 0x02,
-            Event::Hours => 0x04,
-            Event::Days => 0x08,
-            Event::Months => 0x20,
-            Event::Years => 0x40,
-            Event::Alarm => 0x100,
-        }
+        bits as u32
     }
 }
 
+#[repr(u8)]
+#[derive(Copy, Clone, Debug)]
 /// Current month in RTC time
 pub enum Month {
     January,
@@ -86,30 +82,19 @@ impl From<u8> for Month {
             9 => Month::October,
             10 => Month::November,
             11 => Month::December,
-            _ => Month::January,
+            _ => unimplemented!(),
         }
     }
 }
 
 impl From<Month> for u8 {
     fn from(val: Month) -> Self {
-        match val {
-            Month::January => 0,
-            Month::February => 1,
-            Month::March => 2,
-            Month::April => 3,
-            Month::May => 4,
-            Month::June => 5,
-            Month::July => 6,
-            Month::August => 7,
-            Month::September => 8,
-            Month::October => 9,
-            Month::November => 10,
-            Month::December => 11,
-        }
+        val as u8
     }
 }
 
+#[repr(u8)]
+#[derive(Copy, Clone, Debug)]
 /// Current weekday in RTC time
 pub enum Weekday {
     Sunday,
@@ -138,15 +123,7 @@ impl From<u8> for Weekday {
 
 impl From<Weekday> for u8 {
     fn from(val: Weekday) -> Self {
-        match val {
-            Weekday::Sunday => 0,
-            Weekday::Monday => 1,
-            Weekday::Tuesday => 2,
-            Weekday::Wednesday => 3,
-            Weekday::Thursday => 4,
-            Weekday::Friday => 5,
-            Weekday::Saturday => 6,
-        }
+        val as u8
     }
 }
 
@@ -168,6 +145,8 @@ pub struct Time {
     pub year: u16,
 }
 
+#[repr(u8)]
+#[derive(Copy, Clone, Debug)]
 pub enum WakeupEvent {
     Alarm,
     Seconds,
