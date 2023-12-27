@@ -1,17 +1,15 @@
 #![no_main]
 #![no_std]
 
-#[allow(unused)]
-use panic_halt;
-
-use hal::{scu, wdt};
-use xmc4_hal as hal;
-
+extern crate panic_semihosting;
 use cortex_m_rt::entry;
+use hal::pac;
+use xmc4_hal as hal;
 
 #[entry]
 fn main() -> ! {
-    let watchdog = wdt::Wdt::new(scu::Scu::new());
+    let p = pac::Peripherals::take().unwrap();
+    let watchdog = wdt::Wdt::new(p.WDT, scu::Scu::new());
     watchdog.start();
     loop {
         continue;
