@@ -9,7 +9,7 @@ use xmc4_hal as hal;
 #[entry]
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
-    let watchdog = wdt::Wdt::new(p.WDT, scu::Scu::new());
+    let watchdog = hal::wdt::Wdt::new(p.WDT, hal::scu::Scu::new());
     watchdog.start();
     loop {
         continue;
