@@ -720,6 +720,51 @@ impl Scu {
         }
     }
 
+    pub fn is_peripheral_clock_gated(&self, clock: PeripheralClock) -> bool {
+        let scu = unsafe { &*SCU_CLK::ptr() };
+
+        match clock {
+            PeripheralClock::Vadc => scu.cgatstat0().read().vadc().bit_is_clear(),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Dsd => scu.cgatstat0().read().dsd().bit_is_clear(),
+            PeripheralClock::Ccu40 => scu.cgatstat0().read().ccu40().bit_is_clear(),
+            PeripheralClock::Ccu41 => scu.cgatstat0().read().ccu41().bit_is_clear(),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu42 => scu.cgatstat0().read().ccu42().bit_is_clear(),
+            PeripheralClock::Ccu80 => scu.cgatstat0().read().ccu80().bit_is_clear(),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu81 => scu.cgatstat0().read().ccu81().bit_is_clear(),
+            PeripheralClock::Posif0 => scu.cgatstat0().read().posif0().bit_is_clear(),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Posif1 => scu.cgatstat0().read().posif1().bit_is_clear(),
+            PeripheralClock::Usic0 => scu.cgatstat0().read().usic0().bit_is_clear(),
+            PeripheralClock::Eru1 => scu.cgatstat0().read().eru1().bit_is_clear(),
+            PeripheralClock::Hrpwm0 => unimplemented!(), // Appears to be missing from SVD
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ccu43 => scu.cgatstat1().read().ccu43().bit_is_clear(),
+            PeripheralClock::Ledtscu0 => scu.cgatstat1().read().ledtscu0().bit_is_clear(),
+            PeripheralClock::Mcan => scu.cgatstat1().read().mcan0().bit_is_clear(),
+            PeripheralClock::Dac => scu.cgatstat1().read().dac().bit_is_clear(),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Mmci => scu.cgatstat1().read().mmci().bit_is_clear(),
+            PeripheralClock::Usic1 => scu.cgatstat1().read().usic1().bit_is_clear(),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Usic2 => scu.cgatstat1().read().usic2().bit_is_clear(),
+            PeripheralClock::Pports => scu.cgatstat1().read().pports().bit_is_clear(),
+            PeripheralClock::Wdt => scu.cgatstat2().read().wdt().bit_is_clear(),
+            #[cfg(any(feature = "xmc4400", feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Eth0 => scu.cgatstat2().read().eth0().bit_is_clear(),
+            PeripheralClock::Dma0 => scu.cgatstat2().read().dma0().bit_is_clear(),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Dma1 => scu.cgatstat2().read().dma1().bit_is_clear(),
+            PeripheralClock::Fce => scu.cgatstat2().read().fce().bit_is_clear(),
+            PeripheralClock::Usb0 => scu.cgatstat2().read().usb().bit_is_clear(),
+            #[cfg(any(feature = "xmc4300", feature = "xmc4800"))]
+            PeripheralClock::Ecat0 => scu.cgatstat2().read().ecat0().bit_is_clear(),
+            #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
+            PeripheralClock::Ebu => scu.cgatstat3().read().ebu().bit_is_clear(),
+        }
+    }
     pub fn assert_peripheral_reset(&self, peripheral: PeripheralReset) {
         match peripheral {
             PeripheralReset::Wdt => {
