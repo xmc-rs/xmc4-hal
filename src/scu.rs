@@ -720,6 +720,7 @@ impl Scu {
         }
     }
 
+    #[cfg(not(feature = "xmc4500"))]
     pub fn is_peripheral_clock_gated(&self, clock: PeripheralClock) -> bool {
         let scu = unsafe { &*SCU_CLK::ptr() };
 
