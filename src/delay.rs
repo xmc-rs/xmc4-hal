@@ -29,7 +29,7 @@ use cortex_m::peripheral::SYST;
 use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 
 /// System timer (SysTick) as a delay provider
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Delay {
     scale: u32,
 }
