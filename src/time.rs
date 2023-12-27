@@ -46,39 +46,39 @@ impl U32Ext for u32 {
     }
 }
 
-impl Into<Hertz> for KiloHertz {
-    fn into(self) -> Hertz {
-        Hertz(self.0 * 1_000)
+impl From<KiloHertz> for Hertz {
+    fn from(val: KiloHertz) -> Self {
+        Hertz(val.0 * 1_000)
     }
 }
 
-impl Into<KiloHertz> for Hertz {
-    fn into(self) -> KiloHertz {
-        KiloHertz(self.0 / 1_000)
+impl From<Hertz> for KiloHertz {
+    fn from(val: Hertz) -> Self {
+        KiloHertz(val.0 / 1_000)
     }
 }
 
-impl Into<Hertz> for MegaHertz {
-    fn into(self) -> Hertz {
-        Hertz(self.0 * 1_000_000)
+impl From<MegaHertz> for Hertz {
+    fn from(val: MegaHertz) -> Self {
+        Hertz(val.0 * 1_000_000)
     }
 }
 
-impl Into<MegaHertz> for Hertz {
-    fn into(self) -> MegaHertz {
-        MegaHertz(self.0 / 1_000_000)
+impl From<Hertz> for MegaHertz {
+    fn from(val: Hertz) -> Self {
+        MegaHertz(val.0 / 1_000_000)
     }
 }
 
-impl Into<KiloHertz> for MegaHertz {
-    fn into(self) -> KiloHertz {
-        KiloHertz(self.0 * 1_000)
+impl From<MegaHertz> for KiloHertz {
+    fn from(val: MegaHertz) -> Self {
+        KiloHertz(val.0 * 1_000)
     }
 }
 
-impl Into<MegaHertz> for KiloHertz {
-    fn into(self) -> MegaHertz {
-        MegaHertz(self.0 / 1_000)
+impl From<KiloHertz> for MegaHertz {
+    fn from(val: KiloHertz) -> Self {
+        MegaHertz(val.0 / 1_000)
     }
 }
 
