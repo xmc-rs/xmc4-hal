@@ -167,6 +167,7 @@ pub enum WakeupEvent {
 //     }
 // }
 
+#[derive(Debug)]
 pub struct Rtc {
     pub regs: RTC,
 }
