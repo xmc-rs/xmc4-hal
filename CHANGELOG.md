@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.3.4...v0.4.0) (2023-12-27)
+
+
+### Features
+
+* **scu:** adding gate locked check ([d11f76e](https://github.com/xmc-rs/xmc4-hal/commit/d11f76ec2ed921cafb30bf4aa3b287c4f40578ec))
+* **scu:** implementing clock gating ([3cc7cd1](https://github.com/xmc-rs/xmc4-hal/commit/3cc7cd12642e53723c985ad6eba945acb25ba34d))
+
+
+### Bug Fixes
+
+* **delay:** adding debug derive to struct ([f2fdbe5](https://github.com/xmc-rs/xmc4-hal/commit/f2fdbe5a1307358df51a591b046aca79b0568201))
+* inlining function ([bd0191a](https://github.com/xmc-rs/xmc4-hal/commit/bd0191aee73d981f154978ef38fd33c1b4a10c09))
+* **rtc:** adding debug derive to struct ([076316c](https://github.com/xmc-rs/xmc4-hal/commit/076316cdc30cb0dd7e229d1df962bb79ed3a46ca))
+* **rtc:** cleaning up enums ([3b68c04](https://github.com/xmc-rs/xmc4-hal/commit/3b68c04149c98f46566af9b5ca050117113974b3))
+* **scu:** adding debug derive to struct ([157b1a6](https://github.com/xmc-rs/xmc4-hal/commit/157b1a6a5501b9b5d3ea22739dcba505f83660dd))
+* **scu:** blocking function from xmc4500 ([225806c](https://github.com/xmc-rs/xmc4-hal/commit/225806cb6a6d4ed9cd17546d1dda0bfc8a735fff))
+* **scu:** cleaning from impls ([0808f34](https://github.com/xmc-rs/xmc4-hal/commit/0808f3480ef37bb9a64f06a283eb0651613c612f))
+* **time:** replacing into with from ([c02dcae](https://github.com/xmc-rs/xmc4-hal/commit/c02dcaeeeb3a711f7175f4c733587797c87527f2))
+* **wdt:** cleaning up watchdog implementation ([df01e4f](https://github.com/xmc-rs/xmc4-hal/commit/df01e4fcb720065587a8330e34b1a458d95a772a))
+
 ## [0.3.4](https://github.com/xmc-rs/xmc4-hal/compare/v0.3.3...v0.3.4) (2023-12-26)
 
 
