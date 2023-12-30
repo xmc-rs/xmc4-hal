@@ -97,6 +97,10 @@ impl Flash {
         Self { regs: flash }
     }
 
+    pub fn is_busy(&self) -> bool {
+        self.regs.fsr().read().pbusy().bit_is_set()
+    }
+
     /// Enables the wait state for error correction process. It enables one additional wait state for ECC by setting WSECPF.
     pub fn enable_wait_state_for_ecc(&self) {
         self.regs.fcon().write(|w| w.wsecpf().set_bit());
