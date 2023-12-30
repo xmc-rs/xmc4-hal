@@ -150,21 +150,6 @@ impl Flash {
             .write(|w| unsafe { w.wspflash().bits(wait_states) });
     }
 
-    pub fn enable_instruction_buffer(&self) {
-        // TODO Not sure if i want this here
-        unimplemented!();
-    }
-
-    pub fn disable_instruction_buffer(&self) {
-        // TODO Not sure if i want this here
-        unimplemented!();
-    }
-
-    pub fn invalidate_instruction_buffer(&self) {
-        // TODO Not sure if i need or want this, or even have it here
-        unimplemented!();
-    }
-
     pub fn install_bmi(&self) {
         unimplemented!();
     }
