@@ -118,7 +118,7 @@ impl Flash {
         self.regs.fcon().write(|w| w.sleep().set_bit());
     }
 
-    pub fn disable_slee_request(&self) {
+    pub fn disable_sleep_request(&self) {
         self.regs.fcon().write(|w| w.sleep().clear_bit());
     }
 
