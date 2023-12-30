@@ -2,6 +2,16 @@ use crate::pac::FLASH0;
 
 pub type PageData = [u32; 64];
 
+const UNCACHED_BASE: u32 = 0xC000000;
+
+const PROTECTION_CONFIRM_CODE: u32 = 0x8AFE15C3;
+
+const PROTECTION_CONFIRM_OFFSET: u32 = 512;
+
+const BYTES_PER_UCB: u32 = 1024;
+
+const UCB0: u32 = UNCACHED_BASE;
+
 pub struct FlashSector {
     pub number: u8,
     pub offset: usize,
@@ -168,7 +178,7 @@ impl Flash {
             index += 2;
         }
 
-        let start_address = (0xC000000 + (user as u32 * 1024)) as *mut u32;
+        let start_address = (UCB0 + (user as u32 * BYTES_PER_UCB)) as *mut u32;
 
         self.write_ucb_page_command(start_address);
 
@@ -178,8 +188,8 @@ impl Flash {
     pub fn confirm_protection(&self, user: User) {
         // TODO, explain where all numbers came from
         self.enter_page_mode_command();
-        self.load_page_command(0x8AFE15C3, 0);
-        self.load_page_command(0x8AFE15C3, 0);
+        self.load_page_command(PROTECTION_CONFIRM_CODE, 0);
+        self.load_page_command(PROTECTION_CONFIRM_CODE, 0);
         let mut index = 0;
 
         while index < 60 {
@@ -187,7 +197,7 @@ impl Flash {
             index += 2;
         }
 
-        let start_address = (0xC000000 + (user as u32 * 1024) + 512) as *mut u32;
+        let start_address = (UNCACHED_BASE + (user as u32 * 1024) + 512) as *mut u32;
 
         self.write_ucb_page_command(start_address);
 
@@ -236,7 +246,7 @@ impl Flash {
     }
 
     pub fn resume_protection(&self) {
-        let address1 = 0xC005554 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
         unsafe {
             *address1 = 0x5E;
         }
@@ -254,8 +264,8 @@ impl Flash {
     }
 
     pub fn erase_ucb(&self, ucb_start_address: *mut u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00aaa8 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -271,14 +281,14 @@ impl Flash {
 
     /// Reset the status of the PFLASH
     pub fn reset(&self) {
-        let address1 = 0xC005554 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
         unsafe {
             *address1 = 0xF0;
         }
     }
 
     fn enter_page_mode_command(&self) {
-        let address = 0xC005554 as *mut u32;
+        let address = (UNCACHED_BASE + 0x5554) as *mut u32;
 
         unsafe {
             *address = 0x50;
@@ -286,8 +296,8 @@ impl Flash {
     }
 
     fn load_page_command(&self, low_word: u32, high_word: u32) {
-        let address_low = 0xC0055F0 as *mut u32;
-        let address_high = 0xC0055F4 as *mut u32;
+        let address_low = (UNCACHED_BASE + 0x55F0) as *mut u32;
+        let address_high = (UNCACHED_BASE + 0x55F4) as *mut u32;
 
         unsafe {
             *address_low = low_word;
@@ -296,8 +306,8 @@ impl Flash {
     }
 
     fn write_page_command(&self, start_address: *mut u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00AAA8 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -308,8 +318,8 @@ impl Flash {
     }
 
     fn write_ucb_page_command(&self, start_address: *mut u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00AAA8 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -320,8 +330,8 @@ impl Flash {
     }
 
     fn erase_sector_command(&self, start_address: *mut u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00aaa8 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -334,10 +344,10 @@ impl Flash {
     }
 
     fn disable_sector_write_protection_command(&self, user: User, password0: u32, password1: u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00aaa8 as *mut u32;
-        let address3 = 0xC00553C as *mut u32;
-        let address4 = 0xC005558 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
+        let address3 = (UNCACHED_BASE + 0x553C) as *mut u32;
+        let address4 = (UNCACHED_BASE + 0x5558) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -350,10 +360,10 @@ impl Flash {
     }
 
     fn disable_read_protection_command(&self, password0: u32, password1: u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00aaa8 as *mut u32;
-        let address3 = 0xC00553C as *mut u32;
-        let address4 = 0xC005558 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
+        let address3 = (UNCACHED_BASE + 0x553C) as *mut u32;
+        let address4 = (UNCACHED_BASE + 0x5558) as *mut u32;
 
         unsafe {
             *address1 = 0x55;
@@ -366,8 +376,8 @@ impl Flash {
     }
 
     fn erase_physical_sector_command(&self, start_address: *mut u32) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00aaa8 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -382,9 +392,9 @@ impl Flash {
     /// Command to erase physical sector4 which is starting with the specified address.
     /// This comand is only available if PROCON1.PRS = 1.
     fn repair_physical_sector_command(&self) {
-        let address1 = 0xC005554 as *mut u32;
-        let address2 = 0xC00aaa8 as *mut u32;
-        let sector4 = 0xC010000 as *mut u32;
+        let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
+        let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
+        let sector4 = (UNCACHED_BASE + 0x10000) as *mut u32;
 
         unsafe {
             *address1 = 0xAA;
@@ -397,7 +407,7 @@ impl Flash {
     }
 
     pub fn clear_status(&self) {
-        let address = 0xC005554 as *mut u32;
+        let address = (UNCACHED_BASE + 0x5554) as *mut u32;
         unsafe {
             *address = 0xF5;
         }
