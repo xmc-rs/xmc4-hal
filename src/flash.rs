@@ -165,12 +165,44 @@ impl Flash {
         unimplemented!();
     }
 
-    pub fn install_protection(&self, _user: u8, _mask: u32, _password0: u32, _password1: u32) {
-        unimplemented!();
+    pub fn install_protection(&self, user: User, mask: u32, password0: u32, password1: u32) {
+        // TODO, explain where all numbers came from
+        self.enter_page_mode_command();
+        self.load_page_command(mask, 0);
+        self.load_page_command(mask, 0);
+        self.load_page_command(password0, password1);
+        self.load_page_command(password0, password1);
+        let mut index = 0;
+
+        while index < 56 {
+            self.load_page_command(0, 0);
+            index += 2;
+        }
+
+        let start_address = (0xC000000 + (user as u32 * 1024)) as *mut u32;
+
+        self.write_ucb_page_command(start_address);
+
+        while self.regs.fsr().read().pbusy().bit_is_set() {}
     }
 
-    pub fn confirm_protection(&self, _user: u8) {
-        unimplemented!();
+    pub fn confirm_protection(&self, user: User) {
+        // TODO, explain where all numbers came from
+        self.enter_page_mode_command();
+        self.load_page_command(0x8AFE15C3, 0);
+        self.load_page_command(0x8AFE15C3, 0);
+        let mut index = 0;
+
+        while index < 60 {
+            self.load_page_command(0, 0);
+            index += 2;
+        }
+
+        let start_address = (0xC000000 + (user as u32 * 1024) + 512) as *mut u32;
+
+        self.write_ucb_page_command(start_address);
+
+        while self.regs.fsr().read().pbusy().bit_is_set() {}
     }
 
     pub fn verify_read_protection(&self, password0: u32, password1: u32) -> bool {
