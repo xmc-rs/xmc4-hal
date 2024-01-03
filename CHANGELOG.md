@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.4.0...v0.5.0) (2023-12-30)
+
+
+### Features
+
+* **flash:** adding apis ([#218](https://github.com/xmc-rs/xmc4-hal/issues/218)) ([3dd196e](https://github.com/xmc-rs/xmc4-hal/commit/3dd196e4f908ac8e2e6fd087f4d86ca93c423c7d))
+* **pref:** adidng methods found in flash module ([ebb69c7](https://github.com/xmc-rs/xmc4-hal/commit/ebb69c762b515f25759a35aca548f98c09ec4396))
+
 ## [0.4.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.3.4...v0.4.0) (2023-12-27)
 
 
