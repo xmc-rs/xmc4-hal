@@ -108,15 +108,11 @@ pub mod hrpwm;
 #[cfg(feature = "device-selected")]
 pub mod ledts;
 #[cfg(feature = "device-selected")]
-pub mod pba;
-#[cfg(feature = "device-selected")]
 pub mod pmu;
 #[cfg(feature = "device-selected")]
 pub mod port;
 #[cfg(feature = "device-selected")]
 pub mod posif;
-#[cfg(feature = "device-selected")]
-pub mod ppb;
 #[cfg(feature = "device-selected")]
 pub mod pref;
 #[cfg(feature = "device-selected")]
