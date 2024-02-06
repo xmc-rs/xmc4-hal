@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.1](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.0...v0.5.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate xmc4100 to 0.9.0 ([#224](https://github.com/xmc-rs/xmc4-hal/issues/224)) ([3918993](https://github.com/xmc-rs/xmc4-hal/commit/391899372ea1b4e87aa1f71b5aa45634ca4d2e1c))
+* **deps:** update rust crate xmc4200 to 0.9.0 ([#220](https://github.com/xmc-rs/xmc4-hal/issues/220)) ([6cc8da0](https://github.com/xmc-rs/xmc4-hal/commit/6cc8da0f0e77c2b3e4d774f87335178c057968ba))
+* **deps:** update rust crate xmc4400 to 0.9.0 ([#225](https://github.com/xmc-rs/xmc4-hal/issues/225)) ([c2b05e0](https://github.com/xmc-rs/xmc4-hal/commit/c2b05e0a2eedcf871d4d58281c7339e4d6b2276a))
+* **deps:** update rust crate xmc4800 to 0.9.0 ([#227](https://github.com/xmc-rs/xmc4-hal/issues/227)) ([01c2d2b](https://github.com/xmc-rs/xmc4-hal/commit/01c2d2bd8f3793f06d1e6440b696b79826f7bcec))
+* removing unneeded modules ([c0ac0b9](https://github.com/xmc-rs/xmc4-hal/commit/c0ac0b94a82404b3f6babea9c5267718561f3cbc))
+* removing unused mods ([843dab6](https://github.com/xmc-rs/xmc4-hal/commit/843dab6f50db0f377a45537dabfb3db7bcfb9ad5))
+
 ## [0.5.0](https://github.com/xmc-rs/xmc4-hal/compare/v0.4.0...v0.5.0) (2023-12-30)
 
 
