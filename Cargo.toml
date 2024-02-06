@@ -15,7 +15,7 @@ keywords = ["arm", "cortex-m", "hal", "xmc"]
 features = ["xmc4100"]
 
 [dependencies]
-xmc4100 = { version = "0.8.3", optional = true }
+xmc4100 = { version = "0.9.0", optional = true }
 xmc4200 = { version = "0.9.0", optional = true }
 xmc4300 = { version = "0.8.0", optional = true }
 xmc4400 = { version = "0.9.0", optional = true }
