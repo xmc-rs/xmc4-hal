@@ -106,12 +106,3 @@ impl DelayUs<u8> for Delay {
         self.delay_us(u32(us))
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}

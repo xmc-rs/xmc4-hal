@@ -453,12 +453,3 @@ impl Rtc {
         };
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}

@@ -460,12 +460,3 @@ impl Flash {
         while self.regs.fsr().read().pbusy().bit_is_set() {}
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}

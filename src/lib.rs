@@ -131,12 +131,3 @@ pub mod usic;
 pub mod vadc;
 #[cfg(feature = "device-selected")]
 pub mod wdt;
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}
