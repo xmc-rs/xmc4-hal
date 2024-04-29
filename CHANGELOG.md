@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.1...v0.5.2) (2024-04-29)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate cortex-m-rt to 0.7.4 ([#246](https://github.com/xmc-rs/xmc4-hal/issues/246)) ([3efc4a9](https://github.com/xmc-rs/xmc4-hal/commit/3efc4a9388ea53c485bd1e404f74a098787899f6))
+
 ## [0.5.1](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.0...v0.5.1) (2024-02-06)
 
 
