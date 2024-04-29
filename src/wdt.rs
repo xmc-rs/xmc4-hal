@@ -164,12 +164,3 @@ impl Wdt {
         self.wdt.wdtclr().write(|w| unsafe { w.bits(ALARM_CLEAR) });
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Exists just to track coverage
-    }
-}
