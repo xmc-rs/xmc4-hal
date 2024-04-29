@@ -333,12 +333,3 @@ impl Vadc {
         clear!(VADC, globcfg, sucal);
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}

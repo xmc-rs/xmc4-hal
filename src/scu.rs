@@ -879,12 +879,3 @@ impl Scu {
         scu.trapclr().write(|w| unsafe { w.bits(trap) });
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}
