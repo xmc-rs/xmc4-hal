@@ -40,12 +40,3 @@ impl Pref {
         // Need calls to intrinsics __DSB and __ISB
     }
 }
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn nothing() {
-        // Do nothing test
-    }
-}
