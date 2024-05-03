@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.4](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.3...v0.5.4) (2024-05-03)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate xmc4100 to 0.12.0 ([#250](https://github.com/xmc-rs/xmc4-hal/issues/250)) ([41e5b3f](https://github.com/xmc-rs/xmc4-hal/commit/41e5b3fe325ea6b8afc5e31d1aad92cf37848864))
+* **deps:** update rust crate xmc4200 to 0.12.0 ([#251](https://github.com/xmc-rs/xmc4-hal/issues/251)) ([2d353c7](https://github.com/xmc-rs/xmc4-hal/commit/2d353c7e603611978615fb9489af9bcc893d41e8))
+* **deps:** update rust crate xmc4300 to 0.11.0 ([#252](https://github.com/xmc-rs/xmc4-hal/issues/252)) ([7b758b9](https://github.com/xmc-rs/xmc4-hal/commit/7b758b91a6f8fba49948cee1f1275d51a6f715ba))
+* **deps:** update rust crate xmc4400 to 0.12.0 ([#253](https://github.com/xmc-rs/xmc4-hal/issues/253)) ([78832fc](https://github.com/xmc-rs/xmc4-hal/commit/78832fceb3ad705241be653e521b71a87d6c7efd))
+* **deps:** update rust crate xmc4500 to 0.12.0 ([#254](https://github.com/xmc-rs/xmc4-hal/issues/254)) ([d96cd40](https://github.com/xmc-rs/xmc4-hal/commit/d96cd401bd45355b4aa67c6a4d119868a580f17a))
+* **deps:** update rust crate xmc4700 to 0.11.0 ([#255](https://github.com/xmc-rs/xmc4-hal/issues/255)) ([2d7453d](https://github.com/xmc-rs/xmc4-hal/commit/2d7453d10b8d44e139995de92ee2043a5d169d18))
+* **deps:** update rust crate xmc4800 to 0.12.0 ([#256](https://github.com/xmc-rs/xmc4-hal/issues/256)) ([570d706](https://github.com/xmc-rs/xmc4-hal/commit/570d706f0a01ab35d75191f5585cafaee7ac3c71))
+
 ## [0.5.3](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.2...v0.5.3) (2024-04-29)
 
 
