@@ -7,14 +7,14 @@ jobs:
     name: Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       - uses: actions-rust-lang/audit@v1
 
   docs:
     name: Docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       - name: Install Toolchains
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -27,7 +27,7 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       - name: Install nightly toolchain with rustfmt available
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -67,7 +67,7 @@ jobs:
     name: Build-${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       - name: Install toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -86,7 +86,7 @@ jobs:
     name: Examples-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       - name: Setup toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
