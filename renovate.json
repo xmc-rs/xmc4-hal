@@ -1,5 +1,13 @@
 {
   "extends": [
     "local>xmc-rs/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "^xmc4*"
+      ],
+      "groupName": "xmc pac crates"
+    }
   ]
 }
