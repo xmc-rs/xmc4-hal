@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.5](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.4...v0.5.5) (2024-06-12)
+
+
+### Bug Fixes
+
+* **deps:** reverting version to 0.7.3 of cortex-m-rt due to yanking ([cb53c63](https://github.com/xmc-rs/xmc4-hal/commit/cb53c6358b2a442541c6ccd91316601f2d1e511e))
+* **deps:** update xmc pac crates ([#265](https://github.com/xmc-rs/xmc4-hal/issues/265)) ([a5c12ff](https://github.com/xmc-rs/xmc4-hal/commit/a5c12ffa3542ef7189dfa7cbf62ab1a5248340db))
+
 ## [0.5.4](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.3...v0.5.4) (2024-05-03)
 
 
