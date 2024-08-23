@@ -69,7 +69,7 @@ impl Wdt {
     pub fn new(wdt: WDT, scu: Scu) -> Self {
         // Haven't resolved yet fully how i want to deal with this.
         // Need to do more reading.
-        let w = Wdt { wdt: wdt, scu };
+        let w = Wdt { wdt, scu };
         w.enable();
         w
     }
