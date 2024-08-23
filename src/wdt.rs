@@ -10,7 +10,7 @@ use crate::pac::WDT;
 use crate::scu::PeripheralClock;
 use crate::scu::{Clock, PeripheralReset, Scu};
 
-///
+/// Bit value to clear alarms
 const ALARM_CLEAR: u32 = 2;
 
 ///Key applied to watchdog when serviced to reset timers.
