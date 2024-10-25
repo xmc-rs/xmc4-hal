@@ -43,7 +43,7 @@ sdmmc = []
 rt = ["cortex-m-rt/device"]
 
 [dev-dependencies]
-panic-halt = "0.2.0"
+panic-halt = "1.0.0"
 panic-semihosting = "0.6.0"
 panic-itm = "0.4.2"
 cortex-m-semihosting = "0.5.0"
