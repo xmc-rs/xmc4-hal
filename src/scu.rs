@@ -531,15 +531,15 @@ impl Scu {
             0 => match channel {
                 6 => scu.g0orcen().write(|w| w.enorc6().set_bit()),
                 7 => scu.g0orcen().write(|w| w.enorc7().set_bit()),
-                _ => (),
+                _ => unreachable!(),
             },
             1 => match channel {
                 6 => scu.g1orcen().write(|w| w.enorc6().set_bit()),
                 7 => scu.g1orcen().write(|w| w.enorc7().set_bit()),
-                _ => (),
+                _ => unreachable!(),
             },
-            _ => (),
-        }
+            _ => unreachable!(),
+        };
     }
 
     pub fn disable_out_of_range_comparator(&self, group: u32, channel: u32) {
@@ -549,15 +549,15 @@ impl Scu {
             0 => match channel {
                 6 => scu.g0orcen().write(|w| w.enorc6().clear_bit()),
                 7 => scu.g0orcen().write(|w| w.enorc7().clear_bit()),
-                _ => (),
+                _ => unreachable!(),
             },
             1 => match channel {
                 6 => scu.g1orcen().write(|w| w.enorc6().clear_bit()),
                 7 => scu.g1orcen().write(|w| w.enorc7().clear_bit()),
-                _ => (),
+                _ => unreachable!(),
             },
-            _ => (),
-        }
+            _ => unreachable!(),
+        };
     }
 
     pub fn read_gpr(&self, index: u32) -> u32 {
@@ -575,7 +575,7 @@ impl Scu {
             0 => scu.gpr0().write(|w| unsafe { w.bits(data) }),
             1 => scu.gpr1().write(|w| unsafe { w.bits(data) }),
             _ => unimplemented!(),
-        }
+        };
     }
 
     pub fn enable_hibernate_domain(&self) {
@@ -670,7 +670,7 @@ impl Scu {
             PeripheralClock::Ecat0 => scu.cgatset2().write(|w| w.ecat0().set_bit()),
             #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
             PeripheralClock::Ebu => scu.cgatset3().write(|w| w.ebu().set_bit()),
-        }
+        };
     }
 
     #[cfg(not(feature = "xmc4500"))]
@@ -717,7 +717,7 @@ impl Scu {
             PeripheralClock::Ecat0 => scu.cgatclr2().write(|w| w.ecat0().set_bit()),
             #[cfg(any(feature = "xmc4700", feature = "xmc4800"))]
             PeripheralClock::Ebu => scu.cgatclr3().write(|w| w.ebu().set_bit()),
-        }
+        };
     }
 
     #[cfg(not(feature = "xmc4500"))]
