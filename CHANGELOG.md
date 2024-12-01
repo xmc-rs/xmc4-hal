@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.5...v0.5.6) (2024-12-01)
+
+
+### Bug Fixes
+
+* **wdt:** removing redundant field name ([104d2de](https://github.com/xmc-rs/xmc4-hal/commit/104d2de18ee8448879e24cb2272edf35d3e2d594))
+
 ## [0.5.5](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.4...v0.5.5) (2024-06-12)
 
 
