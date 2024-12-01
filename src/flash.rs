@@ -142,7 +142,7 @@ impl Flash {
             Margin::Default => self.regs.marp().write(|w| w.margin().value1()),
             Margin::Tight0 => self.regs.marp().write(|w| w.margin().value2()),
             Margin::Tight1 => self.regs.marp().write(|w| w.margin().value3()),
-        }
+        };
     }
 
     pub fn enable_double_bit_error_trap(&self) {
@@ -425,7 +425,7 @@ impl Flash {
             Event::SingleBitError => self.regs.fcon().write(|w| w.pfsberm().set_bit()),
             Event::DoubleBitError => self.regs.fcon().write(|w| w.pfdberm().set_bit()),
             Event::EndOfBusy => self.regs.fcon().write(|w| w.eobm().set_bit()),
-        }
+        };
     }
 
     pub fn disable_event(&self, event: Event) {
@@ -436,7 +436,7 @@ impl Flash {
             Event::SingleBitError => self.regs.fcon().write(|w| w.pfsberm().clear_bit()),
             Event::DoubleBitError => self.regs.fcon().write(|w| w.pfdberm().clear_bit()),
             Event::EndOfBusy => self.regs.fcon().write(|w| w.eobm().clear_bit()),
-        }
+        };
     }
 
     pub fn program_page(&self, address: *mut u32, data: PageData) {
