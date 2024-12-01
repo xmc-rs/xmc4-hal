@@ -93,7 +93,7 @@ jobs:
             toolchain: 'stable'
             target: 'thumbv7em-none-eabihf'
       - name: Build Examples
-        run: cargo build --examples --features=${{ matrix.device }}
+        run: cargo build --examples --features=${{ matrix.device }} --target=thumbv7em-none-eabihf
 
   release-please:
     name: Execute release chores
