@@ -4,10 +4,10 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "^xmc4*"
-      ],
-      "groupName": "xmc pac crates"
+      "groupName": "xmc pac crates",
+      "matchPackageNames": [
+        "/^xmc4*/"
+      ]
     }
   ]
 }
