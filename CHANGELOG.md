@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.7](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.6...v0.5.7) (2024-12-01)
+
+
+### Bug Fixes
+
+* **deps:** update xmc pac crates (minor) ([#273](https://github.com/xmc-rs/xmc4-hal/issues/273)) ([f472607](https://github.com/xmc-rs/xmc4-hal/commit/f47260709677877854b3be2cbf924b47df8025fc))
+
 ## [0.5.6](https://github.com/xmc-rs/xmc4-hal/compare/v0.5.5...v0.5.6) (2024-12-01)
 
 
