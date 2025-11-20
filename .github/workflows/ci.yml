@@ -7,14 +7,14 @@ jobs:
     name: Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.3.1
+      - uses: actions/checkout@v6.0.0
       - uses: actions-rust-lang/audit@v1
 
   docs:
     name: Docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.3.1
+      - uses: actions/checkout@v6.0.0
       - name: Install Toolchains
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -27,7 +27,7 @@ jobs:
     name: Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.3.1
+      - uses: actions/checkout@v6.0.0
       - name: Install nightly toolchain with rustfmt available
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -67,7 +67,7 @@ jobs:
     name: Build-${{ matrix.rust-channel }}-${{ matrix.rust-target }}-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.3.1
+      - uses: actions/checkout@v6.0.0
       - name: Install toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -86,7 +86,7 @@ jobs:
     name: Examples-${{ matrix.device }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.3.1
+      - uses: actions/checkout@v6.0.0
       - name: Setup toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -124,7 +124,7 @@ jobs:
     environment: crates.io
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
