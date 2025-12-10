@@ -27,7 +27,7 @@ nb = "1.1.0"
 cortex-m-rt = "0.7.3"
 void = { version = "1.0.2", default-features = false }
 cast = { version = "0.3.0", default-features = false }
-embedded-hal = { version = "0.2.7", features = ["unproven"] }
+embedded-hal = { version = "1.0.0", features = ["unproven"] }
 
 [features]
 device-selected = []
