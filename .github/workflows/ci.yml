@@ -109,7 +109,7 @@ jobs:
       created: ${{ steps.release.outputs.release_created }}
 
     steps:
-      - uses: googleapis/release-please@v4
+      - uses: googleapis/release-please@v17
         id: release
         with:
           release-type: rust
