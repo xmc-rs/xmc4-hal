@@ -17,6 +17,7 @@ pub use crate::pmu::PmuExt as _;
 pub use crate::port::PortExt as _;
 pub use crate::posif::PosifExt as _;
 pub use crate::pref::PrefExt as _;
+pub use crate::rtc::RtcExt as _;
 pub use crate::usb::UsbExt as _;
 pub use crate::usic::UsicExt as _;
 pub use crate::vadc::VadcExt as _;

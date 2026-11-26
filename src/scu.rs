@@ -911,12 +911,17 @@ impl Scu {
             scu.pwrset().write(|w| w.hib().set_bit());
             while scu.pwrstat().read().hiben().bit_is_clear() {}
         }
+        let reset = unsafe { &*SCU_RESET::ptr() };
+        if reset.rststat().read().hibrs().bit_is_set() {
+            reset.rstclr().write(|w| w.hibrs().set_bit());
+            while reset.rststat().read().hibrs().bit_is_set() {}
+        }
     }
     pub fn is_hibernate_domain_enabled(&self) -> bool {
         let power = unsafe { &*SCU_POWER::ptr() };
         let reset = unsafe { &*SCU_RESET::ptr() };
 
-        power.pwrstat().read().hiben().bit_is_set() && reset.rststat().read().hibrs().bit_is_set()
+        power.pwrstat().read().hiben().bit_is_set() && reset.rststat().read().hibrs().bit_is_clear()
     }
 
     /// Access the currently programmed boot mode.
