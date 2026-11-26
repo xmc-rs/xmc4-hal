@@ -132,7 +132,7 @@ pub mod ledts;
 pub mod pmu;
 #[cfg(feature = "device-selected")]
 pub mod port;
-#[cfg(feature = "device-selected")]
+#[cfg(all(feature = "device-selected", not(feature = "xmc4300")))]
 pub mod posif;
 #[cfg(feature = "device-selected")]
 pub mod pref;

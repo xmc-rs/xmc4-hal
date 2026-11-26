@@ -31,6 +31,7 @@ pub use crate::hrpwm::HrpwmExt as _;
 pub use crate::ledts::LedtsExt as _;
 pub use crate::pmu::PmuExt as _;
 pub use crate::port::PortExt as _;
+#[cfg(not(feature = "xmc4300"))]
 pub use crate::posif::PosifExt as _;
 pub use crate::pref::PrefExt as _;
 pub use crate::rtc::RtcExt as _;
