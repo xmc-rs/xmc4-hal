@@ -143,6 +143,10 @@ pub mod rtc;
 pub mod sdmmc;
 
 #[cfg(feature = "device-selected")]
+pub mod i2c;
+#[cfg(feature = "device-selected")]
+pub mod i2s;
+#[cfg(feature = "device-selected")]
 pub mod scu;
 #[cfg(feature = "device-selected")]
 pub mod serial;
