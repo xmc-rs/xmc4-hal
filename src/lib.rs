@@ -112,6 +112,13 @@ pub mod ccu80;
 pub mod dac;
 #[cfg(feature = "device-selected")]
 pub mod dlr;
+#[cfg(any(
+    feature = "xmc4400",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
+pub mod dsd;
 
 #[cfg(feature = "ecat")]
 pub mod ecat;
