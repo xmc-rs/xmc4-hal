@@ -1,5 +1,6 @@
 //! Re-exports the extension traits used to promote PAC peripherals into HAL types.
 
+pub use crate::scu::ScuExt as _;
 pub use crate::time::U32Ext;
 
 pub use crate::can::CanExt as _;
