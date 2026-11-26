@@ -91,7 +91,7 @@ impl DelayMs<u32> for Delay {
         const MAX_MS: u32 = 0x0000_FFFF;
         while ms != 0 {
             let current_ms = if ms <= MAX_MS { ms } else { MAX_MS };
-            self.delay_us(current_ms * 1_000);
+            DelayUs::delay_us(self, current_ms * 1_000);
             ms -= current_ms;
         }
     }
@@ -101,13 +101,13 @@ impl DelayMs<u16> for Delay {
     fn delay_ms(&mut self, ms: u16) {
         // Call delay_us directly, so we don't have to use the additional
         // delay loop the u32 variant uses
-        self.delay_us(u32(ms) * 1_000);
+        DelayUs::delay_us(self, u32(ms) * 1_000);
     }
 }
 
 impl DelayMs<u8> for Delay {
     fn delay_ms(&mut self, ms: u8) {
-        self.delay_ms(u16(ms));
+        DelayMs::delay_ms(self, u16(ms));
     }
 }
 
@@ -119,12 +119,12 @@ impl DelayUs<u32> for Delay {
 
 impl DelayUs<u16> for Delay {
     fn delay_us(&mut self, us: u16) {
-        self.delay_us(u32(us))
+        DelayUs::delay_us(self, u32(us))
     }
 }
 
 impl DelayUs<u8> for Delay {
     fn delay_us(&mut self, us: u8) {
-        self.delay_us(u32(us))
+        DelayUs::delay_us(self, u32(us))
     }
 }
