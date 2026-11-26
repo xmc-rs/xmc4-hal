@@ -1,4 +1,4 @@
-/// Shameless reuse from https://github.com/stm32-rs
+//! Shameless reuse from https://github.com/stm32-rs
 
 /// Bits per second
 #[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
