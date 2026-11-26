@@ -5,19 +5,19 @@ macro_rules! periph {
     };
 }
 
-/// Set the bit of a register
+/// Set a register field without clearing sibling fields.
 macro_rules! set {
     ($periph:ident, $reg:ident, $bits:ident) => {
         let periph = periph!($periph);
-        periph.$reg().write(|w| w.$bits().set_bit());
+        periph.$reg().modify(|_, w| w.$bits().set_bit());
     };
 }
 
-/// Reset the bit of a register
+/// Clear a register field without clearing sibling fields.
 macro_rules! clear {
     ($periph:ident, $reg:ident, $bits:ident) => {
         let periph = periph!($periph);
-        periph.$reg().write(|w| w.$bits().clear_bit());
+        periph.$reg().modify(|_, w| w.$bits().clear_bit());
     };
 }
 

@@ -1,3 +1,11 @@
+//! Hardware abstraction for Infineon XMC4000 microcontrollers.
+//!
+//! The crate sits on the `xmc4xxx` peripheral access crates. Pick exactly one
+//! device feature (`xmc4100` … `xmc4800`). Drivers follow the stm32-rs model:
+//! extension traits consume a PAC peripheral, clocks come from [`scu`], and
+//! `embedded-hal` 1.0 traits are implemented where a trait exists. Watchdog,
+//! PWM, and ADC use `embedded-hal` 0.2, re-exported as [`hal_02`].
+
 #![no_std]
 #![allow(clippy::new_without_default)]
 #![allow(dead_code)]
@@ -44,7 +52,20 @@ compile_error!("Multiple targets specified. Can only specify `--features <target
 pub mod macros;
 
 pub mod delay;
+pub mod prelude;
 pub mod time;
+
+pub use embedded_hal as hal;
+pub use embedded_hal_02 as hal_02;
+pub use embedded_hal_nb as hal_nb;
+pub use nb;
+pub use nb::block;
+
+mod sealed {
+    pub trait Sealed {}
+}
+#[allow(unused_imports)]
+pub(crate) use sealed::Sealed;
 
 #[cfg(feature = "xmc4100")]
 pub use xmc4100;
