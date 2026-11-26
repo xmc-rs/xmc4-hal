@@ -123,6 +123,9 @@ pub mod dsd;
 #[cfg(feature = "ecat")]
 pub mod ecat;
 
+#[cfg(any(feature = "xmc4500", feature = "xmc4700", feature = "xmc4800"))]
+pub mod ebu;
+
 #[cfg(all(
     feature = "device-selected",
     not(any(feature = "xmc4100", feature = "xmc4200"))
