@@ -10,6 +10,7 @@ pub use crate::dac::DacExt as _;
 pub use crate::dlr::DlrExt as _;
 pub use crate::eru::EruExt as _;
 pub use crate::fce::FceExt as _;
+pub use crate::flash::FlashExt as _;
 pub use crate::gpdma::GpdmaExt as _;
 pub use crate::hrpwm::HrpwmExt as _;
 pub use crate::ledts::LedtsExt as _;

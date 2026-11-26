@@ -1,4 +1,17 @@
 use crate::pac::FLASH0;
+use crate::sealed::Sealed;
+
+pub trait FlashExt: Sealed {
+    fn constrain(self) -> Flash;
+}
+
+impl Sealed for FLASH0 {}
+
+impl FlashExt for FLASH0 {
+    fn constrain(self) -> Flash {
+        Flash::new(self)
+    }
+}
 
 pub type PageData = [u32; 64];
 
@@ -24,44 +37,80 @@ impl FlashSector {
     }
 }
 
+/// Logical sectors in the XMC4 uncached map. Sectors 0-7 are 16 KiB, sector 8 is
+/// 128 KiB, and every later sector is 256 KiB.
+const SECTORS: [(u8, usize, usize); 16] = [
+    (0, 0x0_0000, 0x4000),
+    (1, 0x0_4000, 0x4000),
+    (2, 0x0_8000, 0x4000),
+    (3, 0x0_C000, 0x4000),
+    (4, 0x1_0000, 0x4000),
+    (5, 0x1_4000, 0x4000),
+    (6, 0x1_8000, 0x4000),
+    (7, 0x1_C000, 0x4000),
+    (8, 0x2_0000, 0x2_0000),
+    (9, 0x4_0000, 0x4_0000),
+    (10, 0x8_0000, 0x4_0000),
+    (11, 0xC_0000, 0x4_0000),
+    (12, 0x10_0000, 0x4_0000),
+    (13, 0x14_0000, 0x4_0000),
+    (14, 0x18_0000, 0x4_0000),
+    (15, 0x1C_0000, 0x4_0000),
+];
+
 pub struct FlashSectorIterator {
-    index: u8,
-    start_sector: u8,
-    start_offset: usize,
-    end_offset: usize,
+    index: usize,
+    end: usize,
 }
 
 impl FlashSectorIterator {
-    fn new(start_sector: u8, start_offset: usize, end_offset: usize) -> Self {
-        Self {
-            index: 0,
-            start_sector,
-            start_offset,
-            end_offset,
-        }
+    fn new(end: usize) -> Self {
+        Self { index: 0, end }
     }
 }
 
 impl Iterator for FlashSectorIterator {
     type Item = FlashSector;
     fn next(&mut self) -> Option<Self::Item> {
-        if self.start_offset >= self.end_offset {
-            None
-        } else {
-            let size = match self.index {
-                8..=11 => 0x20000,
-                _ => 0x4000,
-            };
+        if self.index >= self.end {
+            return None;
+        }
+        let (number, offset, size) = SECTORS[self.index];
+        self.index += 1;
+        Some(FlashSector {
+            number,
+            offset,
+            size,
+        })
+    }
+}
 
-            let sector = FlashSector {
-                number: self.start_sector + self.index,
-                offset: self.start_offset,
-                size,
-            };
-            self.index += 1;
-            self.start_offset += size;
+/// Boot-mode index string programmed into user configuration block 2.
+///
+/// Layout matches `XMC_FLASH_BMI_STRING_t`, including the padding the C
+/// compiler inserts before the checksum word.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct BmiString {
+    pub bmi: u32,
+    pub mac_addr: [u8; 6],
+    pub ip_extension: [u8; 16],
+    pub usb_serial: [u8; 4],
+    reserved: u32,
+    reserved1: u16,
+}
 
-            Some(sector)
+const _: () = assert!(core::mem::size_of::<BmiString>() == 40);
+
+impl BmiString {
+    pub fn new(bmi: u32) -> Self {
+        Self {
+            bmi,
+            mac_addr: [0; 6],
+            ip_extension: [0; 16],
+            usb_serial: [0; 4],
+            reserved: 0,
+            reserved1: 0,
         }
     }
 }
@@ -100,9 +149,11 @@ pub struct Flash {
     pub regs: FLASH0,
 }
 
-// IMPLEMENT PERIPHERAL AFTER THIS LINE
-
 impl Flash {
+    /// Logical sectors 0 through `count` (at most 16).
+    pub fn sectors(&self, count: usize) -> FlashSectorIterator {
+        FlashSectorIterator::new(count.min(SECTORS.len()))
+    }
     pub fn new(flash: FLASH0) -> Self {
         Self { regs: flash }
     }
@@ -113,55 +164,84 @@ impl Flash {
 
     /// Enables the wait state for error correction process. It enables one additional wait state for ECC by setting WSECPF.
     pub fn enable_wait_state_for_ecc(&self) {
-        self.regs.fcon().write(|w| w.wsecpf().set_bit());
+        self.regs.fcon().modify(|_, w| w.wsecpf().set_bit());
     }
 
     pub fn disable_wait_state_for_ecc(&self) {
-        self.regs.fcon().write(|w| w.wsecpf().clear_bit());
+        self.regs.fcon().modify(|_, w| w.wsecpf().clear_bit());
     }
 
     pub fn enable_dynamic_idle(&self) {
-        self.regs.fcon().write(|w| w.idle().set_bit());
+        self.regs.fcon().modify(|_, w| w.idle().set_bit());
     }
 
     pub fn disable_dynamic_idle(&self) {
-        self.regs.fcon().write(|w| w.idle().clear_bit());
+        self.regs.fcon().modify(|_, w| w.idle().clear_bit());
     }
 
     pub fn enable_sleep_request(&self) {
-        self.regs.fcon().write(|w| w.sleep().set_bit());
+        self.regs.fcon().modify(|_, w| w.sleep().set_bit());
     }
 
     pub fn disable_sleep_request(&self) {
-        self.regs.fcon().write(|w| w.sleep().clear_bit());
+        self.regs.fcon().modify(|_, w| w.sleep().clear_bit());
     }
 
     pub fn set_margin(&self, margin: Margin) {
         match margin {
             // TODO Should look at updating the SVD so that'value' methods have real names
-            Margin::Default => self.regs.marp().write(|w| w.margin().value1()),
-            Margin::Tight0 => self.regs.marp().write(|w| w.margin().value2()),
-            Margin::Tight1 => self.regs.marp().write(|w| w.margin().value3()),
+            Margin::Default => self.regs.marp().modify(|_, w| w.margin().value1()),
+            Margin::Tight0 => self.regs.marp().modify(|_, w| w.margin().value2()),
+            Margin::Tight1 => self.regs.marp().modify(|_, w| w.margin().value3()),
         };
     }
 
     pub fn enable_double_bit_error_trap(&self) {
-        self.regs.marp().write(|w| w.trapdis().clear_bit());
+        self.regs.marp().modify(|_, w| w.trapdis().clear_bit());
     }
 
     pub fn disable_double_bit_error_trap(&self) {
-        self.regs.marp().write(|w| w.trapdis().set_bit());
+        self.regs.marp().modify(|_, w| w.trapdis().set_bit());
     }
 
     pub fn set_wait_states(&self, wait_states: u8) {
         // TODO The SVD is weird on this and should be improved to not be a 4 value enum that really can do 16 numbers.
         self.regs
             .fcon()
-            .write(|w| unsafe { w.wspflash().bits(wait_states) });
+            .modify(|_, w| unsafe { w.wspflash().bits(wait_states) });
     }
 
-    pub fn install_bmi(&self) {
-        unimplemented!();
+    /// Program a boot-mode index string into user configuration block 2.
+    ///
+    /// The checksum covers the first 30 bytes, matching `XMC_FLASH_InstallBMI`.
+    pub fn install_bmi(&self, bmi: &BmiString) {
+        let mut words = [0u32; 10];
+        unsafe {
+            let src = core::slice::from_raw_parts(bmi as *const BmiString as *const u8, 40);
+            let mut checksum = 0u8;
+            for byte in &src[..30] {
+                checksum ^= *byte;
+            }
+            core::ptr::copy_nonoverlapping(src.as_ptr(), words.as_mut_ptr() as *mut u8, 32);
+            words[8] = u32::from(checksum);
+        }
+
+        self.enter_page_mode_command();
+        self.load_page_command(words[0], words[1]);
+        self.load_page_command(words[2], words[3]);
+        self.load_page_command(words[4], words[5]);
+        self.load_page_command(words[6], words[7]);
+        self.load_page_command(words[8], 0);
+
+        let mut index = 0;
+        while index < 64 - 10 {
+            self.load_page_command(0, 0);
+            index += 2;
+        }
+
+        let ucb2_page = (UNCACHED_BASE + 0x800 + 256) as *mut u32;
+        self.write_ucb_page_command(ucb2_page);
+        while self.regs.fsr().read().pbusy().bit_is_set() {}
     }
 
     pub fn install_protection(&self, user: User, mask: u32, password0: u32, password1: u32) {
@@ -233,13 +313,20 @@ impl Flash {
         if wproinx {
             self.clear_status();
             self.disable_sector_write_protection_command(user, password0, password1);
-            let wprodisx = match user {
-                User::User0 => self.regs.fsr().read().wprodis0().bit_is_set(),
-                User::User1 => self.regs.fsr().read().wprodis1().bit_is_set(),
-                User::User2 => false, // Option does not exist, should not get here
+            // User 2 configures read protection. It has no write-protection disable bit.
+            let (disabled, procon) = match user {
+                User::User0 => (
+                    self.regs.fsr().read().wprodis0().bit_is_set(),
+                    self.regs.procon0().read().bits(),
+                ),
+                User::User1 => (
+                    self.regs.fsr().read().wprodis1().bit_is_set(),
+                    self.regs.procon1().read().bits(),
+                ),
+                User::User2 => (false, 0),
             };
 
-            result = wprodisx && self.regs.fsr().read().bits() == (_mask & 0xFFFF7FFF);
+            result = disabled && procon == (_mask & !0x8000);
         }
 
         result
@@ -424,23 +511,25 @@ impl Flash {
 
     pub fn enable_event(&self, event: Event) {
         match event {
-            Event::VerifyAndOperationError => self.regs.fcon().write(|w| w.voperm().set_bit()),
-            Event::CommandSequenceError => self.regs.fcon().write(|w| w.sqerm().set_bit()),
-            Event::ProtectionError => self.regs.fcon().write(|w| w.proerm().set_bit()),
-            Event::SingleBitError => self.regs.fcon().write(|w| w.pfsberm().set_bit()),
-            Event::DoubleBitError => self.regs.fcon().write(|w| w.pfdberm().set_bit()),
-            Event::EndOfBusy => self.regs.fcon().write(|w| w.eobm().set_bit()),
+            Event::VerifyAndOperationError => self.regs.fcon().modify(|_, w| w.voperm().set_bit()),
+            Event::CommandSequenceError => self.regs.fcon().modify(|_, w| w.sqerm().set_bit()),
+            Event::ProtectionError => self.regs.fcon().modify(|_, w| w.proerm().set_bit()),
+            Event::SingleBitError => self.regs.fcon().modify(|_, w| w.pfsberm().set_bit()),
+            Event::DoubleBitError => self.regs.fcon().modify(|_, w| w.pfdberm().set_bit()),
+            Event::EndOfBusy => self.regs.fcon().modify(|_, w| w.eobm().set_bit()),
         };
     }
 
     pub fn disable_event(&self, event: Event) {
         match event {
-            Event::VerifyAndOperationError => self.regs.fcon().write(|w| w.voperm().clear_bit()),
-            Event::CommandSequenceError => self.regs.fcon().write(|w| w.sqerm().clear_bit()),
-            Event::ProtectionError => self.regs.fcon().write(|w| w.proerm().clear_bit()),
-            Event::SingleBitError => self.regs.fcon().write(|w| w.pfsberm().clear_bit()),
-            Event::DoubleBitError => self.regs.fcon().write(|w| w.pfdberm().clear_bit()),
-            Event::EndOfBusy => self.regs.fcon().write(|w| w.eobm().clear_bit()),
+            Event::VerifyAndOperationError => {
+                self.regs.fcon().modify(|_, w| w.voperm().clear_bit())
+            }
+            Event::CommandSequenceError => self.regs.fcon().modify(|_, w| w.sqerm().clear_bit()),
+            Event::ProtectionError => self.regs.fcon().modify(|_, w| w.proerm().clear_bit()),
+            Event::SingleBitError => self.regs.fcon().modify(|_, w| w.pfsberm().clear_bit()),
+            Event::DoubleBitError => self.regs.fcon().modify(|_, w| w.pfdberm().clear_bit()),
+            Event::EndOfBusy => self.regs.fcon().modify(|_, w| w.eobm().clear_bit()),
         };
     }
 
