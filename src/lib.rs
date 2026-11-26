@@ -147,6 +147,8 @@ pub mod scu;
 #[cfg(feature = "device-selected")]
 pub mod serial;
 #[cfg(feature = "device-selected")]
+pub mod spi;
+#[cfg(feature = "device-selected")]
 pub mod usb;
 #[cfg(feature = "device-selected")]
 pub mod usic;
