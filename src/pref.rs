@@ -50,11 +50,15 @@ impl Pref {
     }
 
     /// Cache data fetches in the prefetch buffer.
+    ///
+    /// XMC4400 and XMC4500 prefetch blocks have no data-buffer bypass bit.
+    #[cfg(not(any(feature = "xmc4400", feature = "xmc4500")))]
     pub fn enable_data_buffer(&self) {
         self.regs.pcon().modify(|_, w| w.dbyp().clear_bit());
     }
 
     /// Bypass the data buffer.
+    #[cfg(not(any(feature = "xmc4400", feature = "xmc4500")))]
     pub fn disable_data_buffer(&self) {
         self.regs.pcon().modify(|_, w| w.dbyp().set_bit());
     }
