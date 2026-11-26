@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use core::convert::TryFrom;
+
 use crate::pac::{RTC, SCU_GENERAL, SCU_POWER, SCU_RESET};
 // use crate::scu::Scu;
 
@@ -17,7 +19,7 @@ const MAX_YEAR: u16 = 65535;
 const YEAR_OFFSET: u16 = 1900;
 
 #[repr(u32)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Event {
     Seconds = 0x01,
     Minutes = 0x02,
@@ -28,17 +30,19 @@ pub enum Event {
     Alarm = 0x100,
 }
 
-impl From<u32> for Event {
-    fn from(bits: u32) -> Self {
+impl TryFrom<u32> for Event {
+    type Error = u32;
+
+    fn try_from(bits: u32) -> Result<Self, Self::Error> {
         match bits {
-            0x01 => Event::Seconds,
-            0x02 => Event::Minutes,
-            0x04 => Event::Hours,
-            0x08 => Event::Days,
-            0x20 => Event::Months,
-            0x40 => Event::Years,
-            0x100 => Event::Alarm,
-            _ => unimplemented!(),
+            0x01 => Ok(Event::Seconds),
+            0x02 => Ok(Event::Minutes),
+            0x04 => Ok(Event::Hours),
+            0x08 => Ok(Event::Days),
+            0x20 => Ok(Event::Months),
+            0x40 => Ok(Event::Years),
+            0x100 => Ok(Event::Alarm),
+            other => Err(other),
         }
     }
 }
@@ -50,7 +54,7 @@ impl From<Event> for u32 {
 }
 
 #[repr(u8)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 /// Current month in RTC time
 pub enum Month {
     January,
@@ -67,23 +71,29 @@ pub enum Month {
     December,
 }
 
+impl Month {
+    pub fn from_u8(val: u8) -> Option<Self> {
+        match val {
+            0 => Some(Month::January),
+            1 => Some(Month::February),
+            2 => Some(Month::March),
+            3 => Some(Month::April),
+            4 => Some(Month::May),
+            5 => Some(Month::June),
+            6 => Some(Month::July),
+            7 => Some(Month::August),
+            8 => Some(Month::September),
+            9 => Some(Month::October),
+            10 => Some(Month::November),
+            11 => Some(Month::December),
+            _ => None,
+        }
+    }
+}
+
 impl From<u8> for Month {
     fn from(val: u8) -> Self {
-        match val {
-            0 => Month::January,
-            1 => Month::February,
-            2 => Month::March,
-            3 => Month::April,
-            4 => Month::May,
-            5 => Month::June,
-            6 => Month::July,
-            7 => Month::August,
-            8 => Month::September,
-            9 => Month::October,
-            10 => Month::November,
-            11 => Month::December,
-            _ => unimplemented!(),
-        }
+        Month::from_u8(val).unwrap_or(Month::January)
     }
 }
 
@@ -94,7 +104,7 @@ impl From<Month> for u8 {
 }
 
 #[repr(u8)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 /// Current weekday in RTC time
 pub enum Weekday {
     Sunday,
@@ -106,18 +116,24 @@ pub enum Weekday {
     Saturday,
 }
 
+impl Weekday {
+    pub fn from_u8(val: u8) -> Option<Self> {
+        match val {
+            0 => Some(Weekday::Sunday),
+            1 => Some(Weekday::Monday),
+            2 => Some(Weekday::Tuesday),
+            3 => Some(Weekday::Wednesday),
+            4 => Some(Weekday::Thursday),
+            5 => Some(Weekday::Friday),
+            6 => Some(Weekday::Saturday),
+            _ => None,
+        }
+    }
+}
+
 impl From<u8> for Weekday {
     fn from(val: u8) -> Self {
-        match val {
-            0 => Weekday::Sunday,
-            1 => Weekday::Monday,
-            2 => Weekday::Tuesday,
-            3 => Weekday::Wednesday,
-            4 => Weekday::Thursday,
-            5 => Weekday::Friday,
-            6 => Weekday::Saturday,
-            _ => Weekday::Sunday,
-        }
+        Weekday::from_u8(val).unwrap_or(Weekday::Sunday)
     }
 }
 
@@ -173,55 +189,61 @@ pub struct Rtc {
 }
 
 impl Rtc {
+    fn wait_for_rtc_ctr_ready() {
+        let scu = unsafe { &*SCU_GENERAL::ptr() };
+        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
+            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
+        }
+    }
+
+    fn wait_for_rtc_msksr_ready() {
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+        while general.mirrsts().read().rtc_msksr().bit_is_set() {
+            // Check SCU_MIRRSTS to ensure that the event mask register is accessible.
+        }
+    }
+
+    fn wait_for_rtc_clrsr_ready() {
+        let general = unsafe { &*SCU_GENERAL::ptr() };
+        while general.mirrsts().read().rtc_clrsr().bit_is_set() {
+            // Check SCU_MIRRSTS to ensure that the event clear register is accessible.
+        }
+    }
+
     pub fn new(rtc: RTC) -> Self {
         Self { regs: rtc }
     }
 
     pub fn start(&self) {
-        let scu = unsafe { &*SCU_GENERAL::ptr() };
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.ctr().write(|w| w.enb().set_bit());
     }
 
     pub fn stop(&self) {
-        let scu = unsafe { &*SCU_GENERAL::ptr() };
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.ctr().write(|w| w.enb().clear_bit());
     }
 
     pub fn is_running(&self) -> bool {
-        let scu = unsafe { &*SCU_GENERAL::ptr() };
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.ctr().read().enb().bit_is_set()
     }
 
     pub fn set_prescaler(&self, prescaler: u16) {
-        let scu = unsafe { &*SCU_GENERAL::ptr() };
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs
             .ctr()
             .write(|w| unsafe { w.div().bits(prescaler) });
     }
 
     pub fn set_time(&self, time: Time) {
-        assert!(time.second < MAX_SECONDS);
-        assert!(time.minute < MAX_MINUTES);
-        assert!(time.hour < MAX_HOURS);
+        assert!(time.second <= MAX_SECONDS);
+        assert!(time.minute <= MAX_MINUTES);
+        assert!(time.hour <= MAX_HOURS);
         assert!(time.day < MAX_DAYS);
         assert!(time.year < MAX_YEAR);
 
-        let scu = unsafe { &*SCU_GENERAL::ptr() };
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.tim0().modify(|_, w| unsafe {
             w.se().bits(time.second);
             w.mi().bits(time.minute);
@@ -229,9 +251,7 @@ impl Rtc {
             w.da().bits(time.day)
         });
 
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.tim1().modify(|_, w| unsafe {
             w.dawe().bits(time.weekday as u8);
             w.mo().bits(time.month as u8);
@@ -252,30 +272,33 @@ impl Rtc {
     }
 
     pub fn set_time_std_format(&self, time: Time) {
-        let mut std_time: Time = time;
-        std_time.day -= 1;
-        std_time.year += YEAR_OFFSET;
+        let mut std_time = time;
+        std_time.day = std_time
+            .day
+            .checked_sub(1)
+            .expect("day must be at least 1 in std format");
+        std_time.year = std_time
+            .year
+            .checked_add(YEAR_OFFSET)
+            .expect("year overflow while converting to RTC format");
         self.set_time(std_time);
     }
 
     pub fn get_time_std_format(&self) -> Time {
         let mut time = self.get_time();
-        time.day += 1;
-        time.year -= YEAR_OFFSET;
+        time.day = time.day.saturating_add(1);
+        time.year = time.year.saturating_sub(YEAR_OFFSET);
         time
     }
 
     pub fn set_alarm(&self, time: Time) {
-        assert!(time.second < MAX_SECONDS);
-        assert!(time.minute < MAX_MINUTES);
-        assert!(time.hour < MAX_HOURS);
+        assert!(time.second <= MAX_SECONDS);
+        assert!(time.minute <= MAX_MINUTES);
+        assert!(time.hour <= MAX_HOURS);
         assert!(time.day < MAX_DAYS);
         assert!(time.year < MAX_YEAR);
 
-        let scu = unsafe { &*SCU_GENERAL::ptr() };
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.atim0().modify(|_, w| unsafe {
             w.ase().bits(time.second);
             w.ami().bits(time.minute);
@@ -283,9 +306,7 @@ impl Rtc {
             w.ada().bits(time.day)
         });
 
-        while scu.mirrsts().read().rtc_ctr().bit_is_clear() {
-            // Check SCU_MIRRSTS to ensure that no transfer over serial interface is pending
-        }
+        Self::wait_for_rtc_ctr_ready();
         self.regs.atim1().modify(|_, w| unsafe {
             w.amo().bits(time.month as u8);
             w.aye().bits(time.year)
@@ -305,16 +326,22 @@ impl Rtc {
     }
 
     pub fn set_alarm_std_format(&self, time: Time) {
-        let mut std_time: Time = time;
-        std_time.day -= 1;
-        std_time.year += YEAR_OFFSET;
+        let mut std_time = time;
+        std_time.day = std_time
+            .day
+            .checked_sub(1)
+            .expect("day must be at least 1 in std format");
+        std_time.year = std_time
+            .year
+            .checked_add(YEAR_OFFSET)
+            .expect("year overflow while converting to RTC format");
         self.set_alarm(std_time);
     }
 
     pub fn get_alarm_std_format(&self) -> Time {
         let mut time = self.get_alarm();
-        time.day += 1;
-        time.year -= YEAR_OFFSET;
+        time.day = time.day.saturating_add(1);
+        time.year = time.year.saturating_sub(YEAR_OFFSET);
         time
     }
 
@@ -333,13 +360,11 @@ impl Rtc {
     pub fn is_enabled(&self) -> bool {
         let power = unsafe { &*SCU_POWER::ptr() };
         let reset = unsafe { &*SCU_RESET::ptr() };
-        return power.pwrstat().read().hiben().bit_is_set()
-            && !reset.rststat().read().hibrs().bit_is_set();
+        power.pwrstat().read().hiben().bit_is_set() && !reset.rststat().read().hibrs().bit_is_set()
     }
 
     fn enable_event(&self, event: Event) {
-        let general = unsafe { &*SCU_GENERAL::ptr() };
-        while general.mirrsts().read().rtc_msksr().bit_is_set() {}
+        Self::wait_for_rtc_msksr_ready();
         match event {
             Event::Seconds => {
                 self.regs.msksr().write(|w| w.mpse().set_bit());
@@ -366,8 +391,7 @@ impl Rtc {
     }
 
     fn disable_event(&self, event: Event) {
-        let general = unsafe { &*SCU_GENERAL::ptr() };
-        while general.mirrsts().read().rtc_msksr().bit_is_set() {}
+        Self::wait_for_rtc_msksr_ready();
         match event {
             Event::Seconds => {
                 self.regs.msksr().write(|w| w.mpse().clear_bit());
@@ -394,8 +418,7 @@ impl Rtc {
     }
 
     fn clear_event(&self, event: Event) {
-        let scu = unsafe { &(*SCU_GENERAL::ptr()) };
-        while scu.mirrsts().read().rtc_clrsr().bit_is_set() {}
+        Self::wait_for_rtc_clrsr_ready();
         self.regs
             .clrsr()
             .write(|w| unsafe { w.bits(u32::from(event)) });

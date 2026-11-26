@@ -263,7 +263,12 @@ impl Flash {
         while self.regs.fsr().read().pbusy().bit_is_set() {}
     }
 
-    pub fn erase_ucb(&self, ucb_start_address: *mut u32) {
+    /// # Safety
+    ///
+    /// The caller must ensure `ucb_start_address` points to a valid UCB location in the
+    /// flash memory region and that the device is in a state where the erase command sequence
+    /// can execute safely.
+    pub unsafe fn erase_ucb(&self, ucb_start_address: *mut u32) {
         let address1 = (UNCACHED_BASE + 0x5554) as *mut u32;
         let address2 = (UNCACHED_BASE + 0xAAA8) as *mut u32;
 
