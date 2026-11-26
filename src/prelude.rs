@@ -4,7 +4,14 @@ pub use crate::scu::ScuExt as _;
 pub use crate::time::U32Ext;
 
 pub use crate::can::CanExt as _;
-pub use crate::ccu40::Ccu40Ext as _;
+pub use crate::ccu40::{Ccu40Ext as _, Ccu41Ext as _};
+#[cfg(any(
+    feature = "xmc4400",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
+pub use crate::ccu40::{Ccu42Ext as _, Ccu43Ext as _};
 pub use crate::ccu80::Ccu80Ext as _;
 pub use crate::dac::DacExt as _;
 pub use crate::dlr::DlrExt as _;
