@@ -9,14 +9,12 @@
 //! # Example
 //!
 //! ``` no_run
-//! use xmc4_hal as hal;
-//!
-//! use crate::hal::delay::Delay;
+//! use xmc4_hal::delay::Delay;
+//! use xmc4_hal::time::Hertz;
 //! use cortex_m::peripheral::Peripherals;
 //!
 //! let mut cp = cortex_m::Peripherals::take().unwrap();
-//!
-//! let mut delay = Delay::new(cp.SYST);
+//! let mut delay = Delay::from_hz(cp.SYST, Hertz(120_000_000));
 //! loop {
 //!     delay.delay_ms(1_000_u16);
 //! }
@@ -25,8 +23,11 @@
 use cast::{u16, u32};
 use cortex_m::peripheral::syst::SystClkSource;
 use cortex_m::peripheral::SYST;
-
+use embedded_hal::delay::DelayNs;
 use embedded_hal_02::blocking::delay::{DelayMs, DelayUs};
+
+use crate::scu::Clocks;
+use crate::time::Hertz;
 
 /// System timer (SysTick) as a delay provider
 #[derive(Clone, Debug)]
@@ -37,15 +38,51 @@ pub struct Delay {
 const SYSTICK_RANGE: u32 = 0x0100_0000;
 
 impl Delay {
-    /// Configures the system timer (SysTick) as a delay provider
-    pub fn new(mut syst: SYST) -> Delay {
-        syst.set_clock_source(SystClkSource::Core);
+    /// Configures SysTick as a delay provider using the frozen CPU clock.
+    pub fn new(syst: SYST, clocks: &Clocks) -> Delay {
+        Self::from_hz(syst, clocks.cpu())
+    }
 
+    /// Configures SysTick from an explicit core frequency.
+    pub fn from_hz(mut syst: SYST, hz: Hertz) -> Delay {
+        syst.set_clock_source(SystClkSource::Core);
         syst.set_reload(SYSTICK_RANGE - 1);
         syst.clear_current();
         syst.enable_counter();
 
-        Delay { scale: 5 }
+        Delay {
+            scale: (hz.0 / 1_000_000).max(1),
+        }
+    }
+
+    fn delay_us_inner(&mut self, us: u32) {
+        const MAX_TICKS: u32 = 0x007F_FFFF;
+        let mut total_ticks = us.saturating_mul(self.scale);
+
+        while total_ticks != 0 {
+            let current_ticks = if total_ticks <= MAX_TICKS {
+                total_ticks
+            } else {
+                MAX_TICKS
+            };
+
+            let start_count = SYST::get_current();
+            total_ticks -= current_ticks;
+
+            while (start_count.wrapping_sub(SYST::get_current()) % SYSTICK_RANGE) < current_ticks {}
+        }
+    }
+}
+
+impl DelayNs for Delay {
+    fn delay_ns(&mut self, ns: u32) {
+        // `scale` is ticks per microsecond. Round sub-microsecond delays up to 1 µs.
+        let us = if ns == 0 { 0 } else { (ns / 1_000).max(1) };
+        self.delay_us_inner(us);
+    }
+
+    fn delay_us(&mut self, us: u32) {
+        self.delay_us_inner(us);
     }
 }
 
@@ -76,22 +113,7 @@ impl DelayMs<u8> for Delay {
 
 impl DelayUs<u32> for Delay {
     fn delay_us(&mut self, us: u32) {
-        const MAX_TICKS: u32 = 0x007F_FFFF;
-
-        let mut total_ticks = us * self.scale;
-
-        while total_ticks != 0 {
-            let current_ticks = if total_ticks <= MAX_TICKS {
-                total_ticks
-            } else {
-                MAX_TICKS
-            };
-
-            let start_count = SYST::get_current();
-            total_ticks -= current_ticks;
-
-            while (start_count.wrapping_sub(SYST::get_current()) % SYSTICK_RANGE) < current_ticks {}
-        }
+        self.delay_us_inner(us);
     }
 }
 
