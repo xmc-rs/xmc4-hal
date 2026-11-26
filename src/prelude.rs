@@ -26,6 +26,7 @@ pub use crate::eru::EruExt as _;
 pub use crate::fce::FceExt as _;
 pub use crate::flash::FlashExt as _;
 pub use crate::gpdma::GpdmaExt as _;
+#[cfg(any(feature = "xmc4100", feature = "xmc4200", feature = "xmc4400"))]
 pub use crate::hrpwm::HrpwmExt as _;
 pub use crate::ledts::LedtsExt as _;
 pub use crate::pmu::PmuExt as _;

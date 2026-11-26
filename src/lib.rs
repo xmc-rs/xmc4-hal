@@ -124,7 +124,7 @@ pub mod fce;
 pub mod flash;
 #[cfg(feature = "device-selected")]
 pub mod gpdma;
-#[cfg(feature = "device-selected")]
+#[cfg(any(feature = "xmc4100", feature = "xmc4200", feature = "xmc4400"))]
 pub mod hrpwm;
 #[cfg(feature = "device-selected")]
 pub mod ledts;
