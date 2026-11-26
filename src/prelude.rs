@@ -23,6 +23,8 @@ pub use crate::ccu80::Ccu81Ext as _;
 pub use crate::dac::DacExt as _;
 pub use crate::dlr::DlrExt as _;
 pub use crate::eru::EruExt as _;
+#[cfg(not(any(feature = "xmc4100", feature = "xmc4200")))]
+pub use crate::eth::EthExt as _;
 pub use crate::fce::FceExt as _;
 pub use crate::flash::FlashExt as _;
 pub use crate::gpdma::GpdmaExt as _;

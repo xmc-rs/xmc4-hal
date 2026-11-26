@@ -116,6 +116,12 @@ pub mod dlr;
 #[cfg(feature = "ecat")]
 pub mod ecat;
 
+#[cfg(all(
+    feature = "device-selected",
+    not(any(feature = "xmc4100", feature = "xmc4200"))
+))]
+pub mod eth;
+
 #[cfg(feature = "device-selected")]
 pub mod eru;
 #[cfg(feature = "device-selected")]
