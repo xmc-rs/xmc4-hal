@@ -21,6 +21,7 @@ pub use crate::rtc::RtcExt as _;
 pub use crate::usb::UsbExt as _;
 pub use crate::usic::UsicExt as _;
 pub use crate::vadc::VadcExt as _;
+pub use crate::wdt::WdtExt as _;
 
 #[cfg(feature = "ecat")]
 pub use crate::ecat::EcatExt as _;

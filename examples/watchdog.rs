@@ -4,14 +4,16 @@
 extern crate panic_semihosting;
 use cortex_m_rt::entry;
 use hal::pac;
+use hal::scu::ScuExt;
 use xmc4_hal as hal;
 
 #[entry]
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
-    let watchdog = hal::wdt::Wdt::new(p.WDT, hal::scu::Scu::new());
+    let mut scu = p.SCU_CLK.constrain();
+    let mut watchdog = hal::wdt::Wdt::new(p.WDT, &mut scu);
     watchdog.start();
     loop {
-        continue;
+        watchdog.service();
     }
 }

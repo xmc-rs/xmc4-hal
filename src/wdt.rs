@@ -1,7 +1,6 @@
-//! # Watchdog Module
+//! Watchdog timer.
 //!
-//! The watchdog module allows for use of the internal peripheral module that can be serviced periodically to ensure
-//! that the program is staying alive and not trailing off or getting stuck somewhere in a loop.
+//! The counter must be serviced inside its window or the device resets.
 
 #![allow(dead_code)]
 
@@ -9,40 +8,47 @@ use crate::pac::WDT;
 #[cfg(not(feature = "xmc4500"))]
 use crate::scu::PeripheralClock;
 use crate::scu::{Clock, PeripheralReset, Scu};
+use crate::sealed::Sealed;
+use embedded_hal_02::watchdog::{Watchdog, WatchdogEnable};
 
-/// Bit value to clear alarms
+/// Bit value that clears the pre-warning alarm.
 const ALARM_CLEAR: u32 = 2;
 
-///Key applied to watchdog when serviced to reset timers.
+/// Magic value written to the service register.
 const SERVICE_KEY: u32 = 0xABAD_CAFE;
 
-/// Main Watchdog module to configure and utilize.
+/// Owned watchdog.
 pub struct Wdt {
-    /// Watchdog registers based on the peripheral registers crate.
     wdt: WDT,
-    /// System Control Unit module to configure clock registers
-    scu: Scu,
 }
 
-#[repr(u32)]
-#[derive(PartialEq)]
-pub enum Mode {
-    Timeout,
-    Prewarning,
+pub trait WdtExt: Sealed {
+    fn constrain(self, scu: &mut Scu) -> Wdt;
 }
 
-impl From<Mode> for u32 {
-    fn from(bits: Mode) -> Self {
-        bits as u32
+impl Sealed for WDT {}
+
+impl WdtExt for WDT {
+    fn constrain(self, scu: &mut Scu) -> Wdt {
+        Wdt::new(self, scu)
     }
 }
 
-impl From<u32> for Mode {
-    fn from(bits: u32) -> Self {
+#[repr(u32)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum Mode {
+    Timeout = 0,
+    Prewarning = 1,
+}
+
+impl TryFrom<u32> for Mode {
+    type Error = u32;
+
+    fn try_from(bits: u32) -> Result<Self, Self::Error> {
         match bits {
-            0 => Mode::Timeout,
-            1 => Mode::Prewarning,
-            _ => unimplemented!(),
+            0 => Ok(Mode::Timeout),
+            1 => Ok(Mode::Prewarning),
+            other => Err(other),
         }
     }
 }
@@ -66,30 +72,27 @@ pub enum Status {
 }
 
 impl Wdt {
-    pub fn new(wdt: WDT, scu: Scu) -> Self {
-        // Haven't resolved yet fully how i want to deal with this.
-        // Need to do more reading.
-        let w = Wdt { wdt, scu };
-        w.enable();
+    /// Enable the watchdog clock and take it out of reset.
+    pub fn new(wdt: WDT, scu: &mut Scu) -> Self {
+        let w = Wdt { wdt };
+        w.enable(scu);
         w
     }
 
     /// Activate the watchdog peripheral, including the clock.
-    ///
-    /// Must be called after `disable()` has been called to use watchdog again.
-    pub fn enable(&self) {
-        self.scu.enable_clock(Clock::Wdt);
+    pub fn enable(&self, scu: &mut Scu) {
+        scu.enable_clock(Clock::Wdt);
         #[cfg(not(feature = "xmc4500"))]
-        self.scu.ungate_peripheral_clock(PeripheralClock::Wdt);
-        self.scu.deassert_peripheral_reset(PeripheralReset::Wdt);
+        scu.ungate_peripheral_clock(PeripheralClock::Wdt);
+        scu.deassert_peripheral_reset(PeripheralReset::Wdt);
     }
 
-    /// Completely shut off the watchdog peripheral, including resetting registers and stopping clocks.
-    pub fn disable(&self) {
-        self.scu.assert_peripheral_reset(PeripheralReset::Wdt);
+    /// Reset the watchdog and stop its clock.
+    pub fn disable(&self, scu: &mut Scu) {
+        scu.assert_peripheral_reset(PeripheralReset::Wdt);
         #[cfg(not(feature = "xmc4500"))]
-        self.scu.gate_peripheral_clock(PeripheralClock::Wdt);
-        self.scu.disable_clock(Clock::Wdt);
+        scu.gate_peripheral_clock(PeripheralClock::Wdt);
+        scu.disable_clock(Clock::Wdt);
     }
 
     pub fn set_window_bounds(&self, lower: u32, upper: u32) {
@@ -97,70 +100,77 @@ impl Wdt {
         self.wdt.wub().write(|w| unsafe { w.wub().bits(upper) });
     }
 
-    /// Start Watchdog peripheral so that it can be serviced.
+    /// Start the watchdog so that it must be serviced.
     pub fn start(&self) {
-        self.wdt.ctr().write(|w| w.enb().set_bit());
+        self.wdt.ctr().modify(|_, w| w.enb().set_bit());
     }
 
     /// Stop the watchdog so that it does not need to be serviced.
-    ///
-    /// This should be called when debugging code and wanting to step through
-    /// as the timer will not stop for the debugger.
     pub fn stop(&self) {
-        self.wdt.ctr().write(|w| w.enb().clear_bit());
+        self.wdt.ctr().modify(|_, w| w.enb().clear_bit());
     }
 
-    /// Set operating mode of watchdog.
-    ///
-    /// # Arugments
-    /// - `mode` -- Timeout or Prewarning.
+    /// Timeout mode resets on expiry. Pre-warning mode raises an alarm first.
     pub fn set_mode(&self, mode: Mode) {
-        if Mode::Timeout == mode {
-            self.wdt.ctr().write(|w| w.pre().clear_bit());
-        } else {
-            self.wdt.ctr().write(|w| w.pre().set_bit());
-        }
+        self.wdt.ctr().modify(|_, w| {
+            if mode == Mode::Timeout {
+                w.pre().clear_bit()
+            } else {
+                w.pre().set_bit()
+            }
+        });
     }
 
-    /// Set the window of time for the watchdog servicing.
-    ///
-    /// # Arguments
-    /// - `pulse_width` -- Width of ticks to service watchdog.
+    /// Width, in WDT clock ticks, of the service pulse.
     pub fn set_service_pulse_width(&self, pulse_width: u8) {
         self.wdt
             .ctr()
-            .write(|w| unsafe { w.spw().bits(pulse_width) });
+            .modify(|_, w| unsafe { w.spw().bits(pulse_width) });
     }
 
-    /// Activate or deactivate the debug mode of the peripheral when the CPU is in the HALT mode.
-    ///
-    /// # Arugments
-    /// - `mode` -- Run for run during debugging and halting, Stop to stop the watchdog during debugging.
+    /// Keep the watchdog running, or stop it, while the CPU is halted.
     pub fn set_debug_mode(&self, mode: DebugMode) {
-        if DebugMode::Run == mode {
-            self.wdt.ctr().write(|w| w.dsp().set_bit());
-        } else {
-            self.wdt.ctr().write(|w| w.dsp().clear_bit());
-        }
+        self.wdt.ctr().modify(|_, w| {
+            if mode == DebugMode::Run {
+                w.dsp().set_bit()
+            } else {
+                w.dsp().clear_bit()
+            }
+        });
     }
 
-    /// Access current watchdog counter value.
-    ///
-    /// # Returns
-    /// Current value of watchdog timer counter.
+    /// Current watchdog counter.
     pub fn get_counter(&self) -> u32 {
         self.wdt.tim().read().bits()
     }
 
-    /// Alert watchdog to be serviced. This will reset the timer.
+    /// Service the watchdog and restart its counter.
     pub fn service(&self) {
         self.wdt
             .srv()
             .write(|w| unsafe { w.srv().bits(SERVICE_KEY) });
     }
 
-    /// Clear the previously trigged pre-warning alarm flag.
+    /// Clear the pre-warning alarm.
     pub fn clear_alarm(&self) {
         self.wdt.wdtclr().write(|w| unsafe { w.bits(ALARM_CLEAR) });
+    }
+}
+
+impl Watchdog for Wdt {
+    fn feed(&mut self) {
+        self.service();
+    }
+}
+
+impl WatchdogEnable for Wdt {
+    type Time = u32;
+
+    fn start<T>(&mut self, period: T)
+    where
+        T: Into<Self::Time>,
+    {
+        self.set_window_bounds(0, period.into());
+        Wdt::start(self);
     }
 }
