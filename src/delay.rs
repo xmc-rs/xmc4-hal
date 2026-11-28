@@ -9,14 +9,12 @@
 //! # Example
 //!
 //! ``` no_run
-//! use xmc4_hal as hal;
-//!
-//! use crate::hal::delay::Delay;
+//! use xmc4_hal::delay::Delay;
+//! use xmc4_hal::time::Hertz;
 //! use cortex_m::peripheral::Peripherals;
 //!
 //! let mut cp = cortex_m::Peripherals::take().unwrap();
-//!
-//! let mut delay = Delay::new(cp.SYST);
+//! let mut delay = Delay::from_hz(cp.SYST, Hertz(120_000_000));
 //! loop {
 //!     delay.delay_ms(1_000_u16);
 //! }
@@ -25,8 +23,11 @@
 use cast::{u16, u32};
 use cortex_m::peripheral::syst::SystClkSource;
 use cortex_m::peripheral::SYST;
+use embedded_hal::delay::DelayNs;
+use embedded_hal_02::blocking::delay::{DelayMs, DelayUs};
 
-use embedded_hal::blocking::delay::{DelayMs, DelayUs};
+use crate::scu::Clocks;
+use crate::time::Hertz;
 
 /// System timer (SysTick) as a delay provider
 #[derive(Clone, Debug)]
@@ -37,48 +38,26 @@ pub struct Delay {
 const SYSTICK_RANGE: u32 = 0x0100_0000;
 
 impl Delay {
-    /// Configures the system timer (SysTick) as a delay provider
-    pub fn new(mut syst: SYST) -> Delay {
-        syst.set_clock_source(SystClkSource::Core);
+    /// Configures SysTick as a delay provider using the frozen CPU clock.
+    pub fn new(syst: SYST, clocks: &Clocks) -> Delay {
+        Self::from_hz(syst, clocks.cpu())
+    }
 
+    /// Configures SysTick from an explicit core frequency.
+    pub fn from_hz(mut syst: SYST, hz: Hertz) -> Delay {
+        syst.set_clock_source(SystClkSource::Core);
         syst.set_reload(SYSTICK_RANGE - 1);
         syst.clear_current();
         syst.enable_counter();
 
-        Delay { scale: 5 }
-    }
-}
-
-impl DelayMs<u32> for Delay {
-    fn delay_ms(&mut self, mut ms: u32) {
-        const MAX_MS: u32 = 0x0000_FFFF;
-        while ms != 0 {
-            let current_ms = if ms <= MAX_MS { ms } else { MAX_MS };
-            self.delay_us(current_ms * 1_000);
-            ms -= current_ms;
+        Delay {
+            scale: (hz.0 / 1_000_000).max(1),
         }
     }
-}
 
-impl DelayMs<u16> for Delay {
-    fn delay_ms(&mut self, ms: u16) {
-        // Call delay_us directly, so we don't have to use the additional
-        // delay loop the u32 variant uses
-        self.delay_us(u32(ms) * 1_000);
-    }
-}
-
-impl DelayMs<u8> for Delay {
-    fn delay_ms(&mut self, ms: u8) {
-        self.delay_ms(u16(ms));
-    }
-}
-
-impl DelayUs<u32> for Delay {
-    fn delay_us(&mut self, us: u32) {
+    fn delay_us_inner(&mut self, us: u32) {
         const MAX_TICKS: u32 = 0x007F_FFFF;
-
-        let mut total_ticks = us * self.scale;
+        let mut total_ticks = us.saturating_mul(self.scale);
 
         while total_ticks != 0 {
             let current_ticks = if total_ticks <= MAX_TICKS {
@@ -95,14 +74,57 @@ impl DelayUs<u32> for Delay {
     }
 }
 
+impl DelayNs for Delay {
+    fn delay_ns(&mut self, ns: u32) {
+        // `scale` is ticks per microsecond. Round sub-microsecond delays up to 1 µs.
+        let us = if ns == 0 { 0 } else { (ns / 1_000).max(1) };
+        self.delay_us_inner(us);
+    }
+
+    fn delay_us(&mut self, us: u32) {
+        self.delay_us_inner(us);
+    }
+}
+
+impl DelayMs<u32> for Delay {
+    fn delay_ms(&mut self, mut ms: u32) {
+        const MAX_MS: u32 = 0x0000_FFFF;
+        while ms != 0 {
+            let current_ms = if ms <= MAX_MS { ms } else { MAX_MS };
+            DelayUs::delay_us(self, current_ms * 1_000);
+            ms -= current_ms;
+        }
+    }
+}
+
+impl DelayMs<u16> for Delay {
+    fn delay_ms(&mut self, ms: u16) {
+        // Call delay_us directly, so we don't have to use the additional
+        // delay loop the u32 variant uses
+        DelayUs::delay_us(self, u32(ms) * 1_000);
+    }
+}
+
+impl DelayMs<u8> for Delay {
+    fn delay_ms(&mut self, ms: u8) {
+        DelayMs::delay_ms(self, u16(ms));
+    }
+}
+
+impl DelayUs<u32> for Delay {
+    fn delay_us(&mut self, us: u32) {
+        self.delay_us_inner(us);
+    }
+}
+
 impl DelayUs<u16> for Delay {
     fn delay_us(&mut self, us: u16) {
-        self.delay_us(u32(us))
+        DelayUs::delay_us(self, u32(us))
     }
 }
 
 impl DelayUs<u8> for Delay {
     fn delay_us(&mut self, us: u8) {
-        self.delay_us(u32(us))
+        DelayUs::delay_us(self, u32(us))
     }
 }

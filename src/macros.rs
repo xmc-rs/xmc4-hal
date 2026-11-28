@@ -5,22 +5,6 @@ macro_rules! periph {
     };
 }
 
-/// Set the bit of a register
-macro_rules! set {
-    ($periph:ident, $reg:ident, $bits:ident) => {
-        let periph = periph!($periph);
-        periph.$reg().write(|w| w.$bits().set_bit());
-    };
-}
-
-/// Reset the bit of a register
-macro_rules! clear {
-    ($periph:ident, $reg:ident, $bits:ident) => {
-        let periph = periph!($periph);
-        periph.$reg().write(|w| w.$bits().clear_bit());
-    };
-}
-
 // macro_rules! set_reg {
 //     ($periph:ident, $reg:ident, $value:expr) => {
 //         let periph = periph!($periph);

@@ -12,6 +12,7 @@ fn main() -> ! {
     let rtc = hal::rtc::Rtc::new(p.RTC);
 
     rtc.enable();
+    rtc.start();
 
     loop {
         continue;

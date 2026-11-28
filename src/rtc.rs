@@ -3,6 +3,7 @@
 use core::convert::TryFrom;
 
 use crate::pac::{RTC, SCU_GENERAL, SCU_POWER, SCU_RESET};
+use crate::sealed::Sealed;
 // use crate::scu::Scu;
 
 /// Maximum number of seconds for the RTC time
@@ -161,6 +162,17 @@ pub struct Time {
     pub year: u16,
 }
 
+/// Alarm compare value. The alarm registers have no weekday field.
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub struct Alarm {
+    pub second: u8,
+    pub minute: u8,
+    pub hour: u8,
+    pub day: u8,
+    pub month: Month,
+    pub year: u16,
+}
+
 #[repr(u8)]
 #[derive(Copy, Clone, Debug)]
 pub enum WakeupEvent {
@@ -173,15 +185,17 @@ pub enum WakeupEvent {
     Years,
 }
 
-// pub trait RtcExt {
-//     fn constrain(self) -> Rtc;
-// }
+pub trait RtcExt: Sealed {
+    fn constrain(self) -> Rtc;
+}
 
-// impl RtcExt for RTC {
-//     fn constrain(self) -> Rtc {
-//         Rtc {}
-//     }
-// }
+impl Sealed for RTC {}
+
+impl RtcExt for RTC {
+    fn constrain(self) -> Rtc {
+        Rtc::new(self)
+    }
+}
 
 #[derive(Debug)]
 pub struct Rtc {
@@ -216,12 +230,12 @@ impl Rtc {
 
     pub fn start(&self) {
         Self::wait_for_rtc_ctr_ready();
-        self.regs.ctr().write(|w| w.enb().set_bit());
+        self.regs.ctr().modify(|_, w| w.enb().set_bit());
     }
 
     pub fn stop(&self) {
         Self::wait_for_rtc_ctr_ready();
-        self.regs.ctr().write(|w| w.enb().clear_bit());
+        self.regs.ctr().modify(|_, w| w.enb().clear_bit());
     }
 
     pub fn is_running(&self) -> bool {
@@ -233,7 +247,7 @@ impl Rtc {
         Self::wait_for_rtc_ctr_ready();
         self.regs
             .ctr()
-            .write(|w| unsafe { w.div().bits(prescaler) });
+            .modify(|_, w| unsafe { w.div().bits(prescaler) });
     }
 
     pub fn set_time(&self, time: Time) {
@@ -291,7 +305,7 @@ impl Rtc {
         time
     }
 
-    pub fn set_alarm(&self, time: Time) {
+    pub fn set_alarm(&self, time: Alarm) {
         assert!(time.second <= MAX_SECONDS);
         assert!(time.minute <= MAX_MINUTES);
         assert!(time.hour <= MAX_HOURS);
@@ -313,19 +327,18 @@ impl Rtc {
         });
     }
 
-    pub fn get_alarm(&self) -> Time {
-        Time {
+    pub fn get_alarm(&self) -> Alarm {
+        Alarm {
             second: self.regs.atim0().read().ase().bits(),
             minute: self.regs.atim0().read().ami().bits(),
             hour: self.regs.atim0().read().aho().bits(),
             day: self.regs.atim0().read().ada().bits(),
-            weekday: Weekday::Sunday,
             month: Month::from(self.regs.atim1().read().amo().bits()),
             year: self.regs.atim1().read().aye().bits(),
         }
     }
 
-    pub fn set_alarm_std_format(&self, time: Time) {
+    pub fn set_alarm_std_format(&self, time: Alarm) {
         let mut std_time = time;
         std_time.day = std_time
             .day
@@ -338,7 +351,7 @@ impl Rtc {
         self.set_alarm(std_time);
     }
 
-    pub fn get_alarm_std_format(&self) -> Time {
+    pub fn get_alarm_std_format(&self) -> Alarm {
         let mut time = self.get_alarm();
         time.day = time.day.saturating_add(1);
         time.year = time.year.saturating_sub(YEAR_OFFSET);
@@ -355,6 +368,11 @@ impl Rtc {
             scu.pwrset().write(|w| w.hib().set_bit());
             while scu.pwrstat().read().hiben().bit_is_clear() {}
         }
+        let reset = unsafe { &*SCU_RESET::ptr() };
+        if reset.rststat().read().hibrs().bit_is_set() {
+            reset.rstclr().write(|w| w.hibrs().set_bit());
+            while reset.rststat().read().hibrs().bit_is_set() {}
+        }
     }
 
     pub fn is_enabled(&self) -> bool {
@@ -363,115 +381,117 @@ impl Rtc {
         power.pwrstat().read().hiben().bit_is_set() && !reset.rststat().read().hibrs().bit_is_set()
     }
 
-    fn enable_event(&self, event: Event) {
+    pub fn enable_event(&self, event: Event) {
         Self::wait_for_rtc_msksr_ready();
         match event {
             Event::Seconds => {
-                self.regs.msksr().write(|w| w.mpse().set_bit());
+                self.regs.msksr().modify(|_, w| w.mpse().set_bit());
             }
             Event::Minutes => {
-                self.regs.msksr().write(|w| w.mpmi().set_bit());
+                self.regs.msksr().modify(|_, w| w.mpmi().set_bit());
             }
             Event::Hours => {
-                self.regs.msksr().write(|w| w.mpho().set_bit());
+                self.regs.msksr().modify(|_, w| w.mpho().set_bit());
             }
             Event::Days => {
-                self.regs.msksr().write(|w| w.mpda().set_bit());
+                self.regs.msksr().modify(|_, w| w.mpda().set_bit());
             }
             Event::Months => {
-                self.regs.msksr().write(|w| w.mpmo().set_bit());
+                self.regs.msksr().modify(|_, w| w.mpmo().set_bit());
             }
             Event::Years => {
-                self.regs.msksr().write(|w| w.mpye().set_bit());
+                self.regs.msksr().modify(|_, w| w.mpye().set_bit());
             }
             Event::Alarm => {
-                self.regs.msksr().write(|w| w.mai().set_bit());
+                self.regs.msksr().modify(|_, w| w.mai().set_bit());
             }
         };
     }
 
-    fn disable_event(&self, event: Event) {
+    pub fn disable_event(&self, event: Event) {
         Self::wait_for_rtc_msksr_ready();
         match event {
             Event::Seconds => {
-                self.regs.msksr().write(|w| w.mpse().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mpse().clear_bit());
             }
             Event::Minutes => {
-                self.regs.msksr().write(|w| w.mpmi().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mpmi().clear_bit());
             }
             Event::Hours => {
-                self.regs.msksr().write(|w| w.mpho().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mpho().clear_bit());
             }
             Event::Days => {
-                self.regs.msksr().write(|w| w.mpda().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mpda().clear_bit());
             }
             Event::Months => {
-                self.regs.msksr().write(|w| w.mpmo().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mpmo().clear_bit());
             }
             Event::Years => {
-                self.regs.msksr().write(|w| w.mpye().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mpye().clear_bit());
             }
             Event::Alarm => {
-                self.regs.msksr().write(|w| w.mai().clear_bit());
+                self.regs.msksr().modify(|_, w| w.mai().clear_bit());
             }
         };
     }
 
-    fn clear_event(&self, event: Event) {
+    pub fn clear_event(&self, event: Event) {
         Self::wait_for_rtc_clrsr_ready();
         self.regs
             .clrsr()
             .write(|w| unsafe { w.bits(u32::from(event)) });
     }
 
-    fn enable_hibernation_wake_up(&self, event: WakeupEvent) {
+    pub fn enable_hibernation_wake_up(&self, event: WakeupEvent) {
+        Self::wait_for_rtc_ctr_ready();
         match event {
             WakeupEvent::Alarm => {
-                self.regs.ctr().write(|w| w.tae().set_bit());
+                self.regs.ctr().modify(|_, w| w.tae().set_bit());
             }
             WakeupEvent::Seconds => {
-                self.regs.ctr().write(|w| w.esec().set_bit());
+                self.regs.ctr().modify(|_, w| w.esec().set_bit());
             }
             WakeupEvent::Minutes => {
-                self.regs.ctr().write(|w| w.emic().set_bit());
+                self.regs.ctr().modify(|_, w| w.emic().set_bit());
             }
             WakeupEvent::Hours => {
-                self.regs.ctr().write(|w| w.ehoc().set_bit());
+                self.regs.ctr().modify(|_, w| w.ehoc().set_bit());
             }
             WakeupEvent::Days => {
-                self.regs.ctr().write(|w| w.edac().set_bit());
+                self.regs.ctr().modify(|_, w| w.edac().set_bit());
             }
             WakeupEvent::Months => {
-                self.regs.ctr().write(|w| w.emoc().set_bit());
+                self.regs.ctr().modify(|_, w| w.emoc().set_bit());
             }
             WakeupEvent::Years => {
-                self.regs.ctr().write(|w| w.eyec().set_bit());
+                self.regs.ctr().modify(|_, w| w.eyec().set_bit());
             }
         };
     }
 
-    fn disable_hibernation_wake_up(&self, event: WakeupEvent) {
+    pub fn disable_hibernation_wake_up(&self, event: WakeupEvent) {
+        Self::wait_for_rtc_ctr_ready();
         match event {
             WakeupEvent::Alarm => {
-                self.regs.ctr().write(|w| w.tae().clear_bit());
+                self.regs.ctr().modify(|_, w| w.tae().clear_bit());
             }
             WakeupEvent::Seconds => {
-                self.regs.ctr().write(|w| w.esec().clear_bit());
+                self.regs.ctr().modify(|_, w| w.esec().clear_bit());
             }
             WakeupEvent::Minutes => {
-                self.regs.ctr().write(|w| w.emic().clear_bit());
+                self.regs.ctr().modify(|_, w| w.emic().clear_bit());
             }
             WakeupEvent::Hours => {
-                self.regs.ctr().write(|w| w.ehoc().clear_bit());
+                self.regs.ctr().modify(|_, w| w.ehoc().clear_bit());
             }
             WakeupEvent::Days => {
-                self.regs.ctr().write(|w| w.edac().clear_bit());
+                self.regs.ctr().modify(|_, w| w.edac().clear_bit());
             }
             WakeupEvent::Months => {
-                self.regs.ctr().write(|w| w.emoc().clear_bit());
+                self.regs.ctr().modify(|_, w| w.emoc().clear_bit());
             }
             WakeupEvent::Years => {
-                self.regs.ctr().write(|w| w.eyec().clear_bit());
+                self.regs.ctr().modify(|_, w| w.eyec().clear_bit());
             }
         };
     }

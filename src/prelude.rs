@@ -1,0 +1,57 @@
+//! Re-exports the extension traits used to promote PAC peripherals into HAL types.
+
+pub use crate::scu::ScuExt as _;
+pub use crate::time::U32Ext;
+
+pub use crate::can::CanExt as _;
+pub use crate::ccu40::{Ccu40Ext as _, Ccu41Ext as _};
+#[cfg(any(
+    feature = "xmc4400",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
+pub use crate::ccu40::{Ccu42Ext as _, Ccu43Ext as _};
+pub use crate::ccu80::Ccu80Ext as _;
+#[cfg(any(
+    feature = "xmc4400",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
+pub use crate::ccu80::Ccu81Ext as _;
+pub use crate::dac::DacExt as _;
+pub use crate::dlr::DlrExt as _;
+#[cfg(any(
+    feature = "xmc4400",
+    feature = "xmc4500",
+    feature = "xmc4700",
+    feature = "xmc4800"
+))]
+pub use crate::dsd::{ChannelExt as _, DsdExt as _};
+#[cfg(any(feature = "xmc4500", feature = "xmc4700", feature = "xmc4800"))]
+pub use crate::ebu::EbuExt as _;
+pub use crate::eru::EruExt as _;
+#[cfg(not(any(feature = "xmc4100", feature = "xmc4200")))]
+pub use crate::eth::EthExt as _;
+pub use crate::fce::FceExt as _;
+pub use crate::flash::FlashExt as _;
+pub use crate::gpdma::GpdmaExt as _;
+#[cfg(any(feature = "xmc4100", feature = "xmc4200", feature = "xmc4400"))]
+pub use crate::hrpwm::HrpwmExt as _;
+pub use crate::ledts::LedtsExt as _;
+pub use crate::pmu::PmuExt as _;
+pub use crate::port::PortExt as _;
+#[cfg(not(feature = "xmc4300"))]
+pub use crate::posif::PosifExt as _;
+pub use crate::pref::PrefExt as _;
+pub use crate::rtc::RtcExt as _;
+pub use crate::usb::UsbExt as _;
+pub use crate::usic::UsicExt as _;
+pub use crate::vadc::{GroupExt as _, VadcExt as _};
+pub use crate::wdt::WdtExt as _;
+
+#[cfg(feature = "ecat")]
+pub use crate::ecat::EcatExt as _;
+#[cfg(feature = "sdmmc")]
+pub use crate::sdmmc::SdmmcExt as _;
