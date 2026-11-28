@@ -97,8 +97,14 @@ macro_rules! write_pc {
                     w.$pc().$valfn();
                 }
                 #[cfg(feature = "xmc4300")]
-                unsafe {
-                    w.$pc().bits($bits);
+                {
+                    // `bits` is unsafe. Newer rustc treats this closure as
+                    // already inside the outer `unsafe` block, so the inner
+                    // block is allowed rather than required.
+                    #[allow(unused_unsafe)]
+                    unsafe {
+                        w.$pc().bits($bits);
+                    }
                 }
                 w
             });
@@ -112,8 +118,11 @@ macro_rules! pin_drive {
             /// Pad driver strength.
             pub fn set_output_strength(&mut self, strength: OutputStrength) {
                 unsafe {
-                    (*crate::pac::$PORT::ptr()).$pdr().modify(|_, w| unsafe {
-                        w.$pd().bits(strength as u8);
+                    (*crate::pac::$PORT::ptr()).$pdr().modify(|_, w| {
+                        #[allow(unused_unsafe)]
+                        unsafe {
+                            w.$pd().bits(strength as u8);
+                        }
                         w
                     });
                 }

@@ -11,7 +11,7 @@ use xmc4_hal as hal;
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
     let mut scu = p.SCU_CLK.constrain();
-    let mut watchdog = hal::wdt::Wdt::new(p.WDT, &mut scu);
+    let watchdog = hal::wdt::Wdt::new(p.WDT, &mut scu);
     watchdog.start();
     loop {
         watchdog.service();

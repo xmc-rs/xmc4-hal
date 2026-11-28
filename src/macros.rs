@@ -5,22 +5,6 @@ macro_rules! periph {
     };
 }
 
-/// Set a register field without clearing sibling fields.
-macro_rules! set {
-    ($periph:ident, $reg:ident, $bits:ident) => {
-        let periph = periph!($periph);
-        periph.$reg().modify(|_, w| w.$bits().set_bit());
-    };
-}
-
-/// Clear a register field without clearing sibling fields.
-macro_rules! clear {
-    ($periph:ident, $reg:ident, $bits:ident) => {
-        let periph = periph!($periph);
-        periph.$reg().modify(|_, w| w.$bits().clear_bit());
-    };
-}
-
 // macro_rules! set_reg {
 //     ($periph:ident, $reg:ident, $value:expr) => {
 //         let periph = periph!($periph);
